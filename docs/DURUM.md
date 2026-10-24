@@ -23,7 +23,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F0-02 | Tahir | `gorev/F0-02-ortam` | 2026-10-24 | paketlerin hepsinin Python 3.14 sürümü var, kurulum başladı |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
