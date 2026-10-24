@@ -5,13 +5,15 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 **Son güncelleme:** 2026-10-24 · **Güncelleyen:** Tahir
 **Takvim:** 14 gün, Gün 1 = 26.10.2026 Pzt, teslim = 08.11.2026 Paz ([plan §4](PROJE_PLANI.md#4-takvim-14-gün))
 **Bugün:** Gün 0 (hazırlık) · **Güncel faz:** F0 — Altyapı
+**Depo:** https://github.com/TahirAytekin/Veri-Madenciligi-ve-Is-Zekasi-E-Ticaret
 
 ---
 
 ## Şu an
 - Veri altyapısı hazır: gerçek veri (son 3 ay, kişisel veri yok), 2 yıllık sahte veri, analiz tabloları.
 - Plan 2 haftaya göre yeniden yazıldı. Yöntem: modeller sahte veriyle eğitilir, gerçek verinin son 3 ayıyla doğrulanır ([MODEL_DOGRULAMA.md](MODEL_DOGRULAMA.md)).
-- **Sıradaki adım:** depoyu GitHub'a yüklemek (F0-01), ortamı doğrulamak (F0-02), API anahtarı (F0-03).
+- Depo GitHub'a yüklendi (2026-10-24).
+- **Sıradaki adım:** collaborator'ları eklemek ve `main` dalını korumak (F0-01), ortamı doğrulamak (F0-02), API anahtarı (F0-03).
 
 ## Aktif görevler
 
@@ -19,7 +21,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| F0-01 | Tahir | `main` | 2026-10-24 | depo yerelde hazır, GitHub'a push bekleniyor |
+| F0-01 | Tahir | `main` | 2026-10-24 | push edildi; collaborator'lar ve `main` koruması bekleniyor |
 
 ## Gün 1–3 için sıradaki görevler
 1. **F0-01:** GitHub'a push, collaborator'lar (Tahir)
@@ -53,7 +55,7 @@ Yarım bırakılıp devralınmayı bekleyen görevler (devir notu bağlantısıy
 ## Ekip
 | isim | GitHub | iz (plan §6) | kurulum (F0-04) |
 |---|---|---|---|
-| Tahir | — | proje sahibi, gerçek veri | ✅ |
+| Tahir | [TahirAytekin](https://github.com/TahirAytekin) | proje sahibi, gerçek veri | ✅ |
 
 ## Son devir notları
 - 2026-10-24 — Tahir — [Başlangıç: veri altyapısı ve proje planı](devir/2026-10-24-tahir-baslangic.md)

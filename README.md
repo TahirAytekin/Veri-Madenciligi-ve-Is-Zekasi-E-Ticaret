@@ -8,7 +8,7 @@ Bir Trendyol satıcısının sipariş, ürün, iade, finans, soru ve yorum veril
 
 üreten ve bunları bir web uygulamasında sunan ekip projesi.
 
-| | |
+| soru | doküman |
 |---|---|
 | **Şu an neredeyiz?** | [docs/DURUM.md](docs/DURUM.md) |
 | **Yol haritası ve görevler** | [docs/PROJE_PLANI.md](docs/PROJE_PLANI.md) |

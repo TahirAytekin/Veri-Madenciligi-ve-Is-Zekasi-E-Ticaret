@@ -162,7 +162,7 @@ gantt
 
 | ID | görev | öncelik | bağımlı | çıktı | sorumlu | durum |
 |---|---|---|---|---|---|---|
-| F0-01 | GitHub'a push, collaborator'lar, `main` koruması | P1 | — | depo bağlantısı DURUM.md'de | Tahir | ⬜ |
+| F0-01 | GitHub'a push, collaborator'lar, `main` koruması | P1 | — | depo bağlantısı DURUM.md'de | Tahir | 🟨 |
 | F0-02 | Ortam: paketlerin Python 3.14'te kurulduğunu doğrula (scikit-learn, lightgbm, torch, transformers, sentence-transformers, streamlit, plotly, anthropic, duckdb); kurulmayan varsa 3.12 sanal ortamına geç; `requirements.txt` güncelle | P1 | — | çalışan ortam + güncel `requirements.txt` | — | ⬜ |
 | F0-03 | Anthropic API anahtarı ve bütçe; `.env` içine `ANTHROPIC_API_KEY`, `.env.example` güncelle | P1 | — | anahtar çalışıyor | Tahir | ⬜ |
 | F0-04 | Ekip kurulumu: herkes `python guncelle.py --sahte` çalıştırır, dokümanları okur | P1 | F0-01 | DURUM.md "Ekip" tablosu | herkes | ⬜ |
