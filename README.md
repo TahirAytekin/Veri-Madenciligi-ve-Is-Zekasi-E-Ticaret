@@ -20,9 +20,13 @@ Bir Trendyol satıcısının sipariş, ürün, iade, finans, soru ve yorum veril
 ```bash
 git clone <depo-adresi> && cd trendyoll
 python -m venv .venv && .venv\Scripts\activate     # Mac/Linux: source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements.txt -r requirements-dev.txt
 python guncelle.py --sahte                           # sahte veri analiz tablolarını üretir
+python -m pytest                                     # ortam ve veri kontrolleri (~15 sn)
 ```
+
+Python 3.14 ile doğrulandı. Hazır modeller (Türkçe BERT, embedding) ilk kullanımda indirilir (~900 MB);
+önceden indirmek ve denemek için: `AGIR_TESTLER=1 python -m pytest -m agir`.
 
 Ekip üyeleri **sahte veriyle** çalışır; `.env` gerekmez. Gerçek veri ve API anahtarı yalnızca proje sahibindedir.
 

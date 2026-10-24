@@ -24,7 +24,6 @@ import sys
 
 import numpy as np
 import pandas as pd
-
 from ortak import VERI, hepsini_oku, kesim_uygula, ozel_gunler
 
 sys.stdout.reconfigure(encoding="utf-8")

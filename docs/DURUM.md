@@ -15,7 +15,8 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - Depo GitHub'a yüklendi (2026-10-24).
 - `main` dalı korumada: silinemez, `--force` push yapılamaz (doğrudan push serbest).
 - Ekip depoya eklendi: 4 collaborator (F0-01 ✅).
-- **Sıradaki adım:** ortamı doğrulamak (F0-02), API anahtarı (F0-03), herkesin kurulumu (F0-04).
+- Ortam doğrulandı (F0-02 ✅): Python 3.14'te tüm paketler kurulu; hazır modeller indirildi ve Türkçe örneklerle denendi; `python -m pytest` ile 19 kontrol.
+- **Sıradaki adım:** API anahtarı (F0-03), herkesin kurulumu (F0-04), metrik sözlüğü (F1-01).
 
 ## Aktif görevler
 
@@ -27,7 +28,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
-2. **F0-02:** paket kurulumlarını doğrula, `requirements.txt` güncelle
+2. ~~F0-02: paket kurulumları~~ ✅
 3. **F0-03:** Anthropic API anahtarı (Tahir)
 4. **F0-04:** herkes kurulumu yapar, "Ekip" tablosuna kendini ekler
 5. **F1-01 → F1-02:** metrik sözlüğü ve `analiz/metrikler.py` (web, tavsiye ve asistan buna bağlı)
@@ -51,7 +52,6 @@ Yarım bırakılıp devralınmayı bekleyen görevler (devir notu bağlantısıy
 
 ## Engeller ve açık sorular
 - **Anthropic API anahtarı ve bütçe (F0-03):** Asistan ve cevap önerici için gerekli; tahmini toplam ~20–30 $. Anahtar gelene kadar araçlar ve arama anahtarsız geliştirilebilir.
-- **Paket uyumluluğu (F0-02):** Python 3.14'te torch, lightgbm ve sentence-transformers kurulumu doğrulanmalı.
 - **Ürün maliyeti (isteğe bağlı, F1-05):** Senaryo simülatörü maliyetsiz de çalışır; satıcı `barkod, birim_maliyet` listesi verirse gerçek kâr hesaplanır.
 
 ## Ekip

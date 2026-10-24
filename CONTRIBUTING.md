@@ -20,9 +20,13 @@ git clone <depo-adresi>
 cd trendyoll
 python -m venv .venv
 .venv\Scripts\activate            # Windows   (Mac/Linux: source .venv/bin/activate)
-pip install -r requirements.txt
+pip install -r requirements.txt -r requirements-dev.txt
 python guncelle.py --sahte        # sahte veri için analiz tablolarını üretir (~10 sn)
+python -m pytest                  # ortam ve veri kontrolleri; hepsi geçmeli
 ```
+
+Python 3.14 ile doğrulandı. Hazır modeller ilk kullanımda indirilir (~900 MB): `AGIR_TESTLER=1 python -m pytest -m agir`.
+Araçları `python -m pytest`, `python -m ruff check .` şeklinde çalıştır (Windows'ta Scripts klasörü PATH'te olmayabilir).
 
 Gerçek veri (`veri/ham`, `veri/gercek`) ve API anahtarları (`.env`) **yalnızca proje sahibinde** bulunur ve GitHub'da
 yoktur. Sen sahte veriyle (`veri/sahte`) çalışırsın: aynı tablolar, aynı sütunlar. Yazdığın kod gerçek veride de
@@ -100,6 +104,7 @@ Devir notları birikerek **projenin günlüğü** olur. Her not ayrı bir dosya 
 - **Rastgelelik** sabit tohumla (`random_state=42`); sonuçlar tekrarlanabilir olmalı.
 - **Modeller sahte veriyle eğitilir, gerçek verinin son 3 ayıyla test edilir.** Gerçek veri eğitimde kullanılmaz; modelde ID değil aktarılabilir özellikler kullanılır (bkz. [MODEL_DOGRULAMA.md](docs/MODEL_DOGRULAMA.md)).
 - Yeni paket eklersen `requirements.txt` dosyasına ekle ve PR'da belirt.
+- PR açmadan önce `python -m ruff check .` ve `python -m pytest` temiz olmalı.
 
 ---
 

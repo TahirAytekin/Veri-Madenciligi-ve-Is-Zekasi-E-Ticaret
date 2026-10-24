@@ -21,7 +21,6 @@ from datetime import date, datetime, timedelta
 
 import numpy as np
 import pandas as pd
-
 from ortak import VERI, iade_neden_grubu, indirim_turu, kaydet, kesinti_grubu, ozel_gunler
 
 sys.stdout.reconfigure(encoding="utf-8")

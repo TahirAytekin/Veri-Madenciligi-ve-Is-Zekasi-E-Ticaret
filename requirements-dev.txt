@@ -1,0 +1,5 @@
+# Geliştirme araçları. Kurulum: pip install -r requirements.txt -r requirements-dev.txt
+pytest>=9.1
+ruff>=0.17
+nbstripout>=0.9
+ipykernel

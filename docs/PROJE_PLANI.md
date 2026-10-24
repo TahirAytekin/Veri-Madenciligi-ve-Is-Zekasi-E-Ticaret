@@ -163,7 +163,7 @@ gantt
 | ID | görev | öncelik | bağımlı | çıktı | sorumlu | durum |
 |---|---|---|---|---|---|---|
 | F0-01 | GitHub'a push, collaborator'lar, `main` koruması | P1 | — | depo bağlantısı DURUM.md'de | Tahir | ✅ |
-| F0-02 | Ortam: paketlerin Python 3.14'te kurulduğunu doğrula (scikit-learn, lightgbm, torch, transformers, sentence-transformers, streamlit, plotly, anthropic, duckdb); kurulmayan varsa 3.12 sanal ortamına geç; `requirements.txt` güncelle | P1 | — | çalışan ortam + güncel `requirements.txt` | — | ⬜ |
+| F0-02 | Ortam: paketlerin Python 3.14'te kurulduğunu doğrula (scikit-learn, lightgbm, torch, transformers, sentence-transformers, streamlit, plotly, anthropic, duckdb); kurulmayan varsa 3.12 sanal ortamına geç; `requirements.txt` güncelle | P1 | — | çalışan ortam + güncel `requirements.txt` | Tahir | ✅ |
 | F0-03 | Anthropic API anahtarı ve bütçe; `.env` içine `ANTHROPIC_API_KEY`, `.env.example` güncelle | P1 | — | anahtar çalışıyor | Tahir | ⬜ |
 | F0-04 | Ekip kurulumu: herkes `python guncelle.py --sahte` çalıştırır, dokümanları okur | P1 | F0-01 | DURUM.md "Ekip" tablosu | herkes | ⬜ |
 | F0-05 | GitHub Actions: yasaklı dosya kontrolü + `pytest` | P2 | F0-02 | `.github/workflows/kontrol.yml` | — | ⬜ |
@@ -215,8 +215,8 @@ Tasarım ayrıntısı bölüm 8'de.
 | ID | görev | öncelik | bağımlı | çıktı | sorumlu | durum |
 |---|---|---|---|---|---|---|
 | F4-01 | Bilgi tabanı: veri ve metrik sözlükleri, durum raporu, ürün sağlık kartı metinleri, kategori ve ay özetleri, tavsiyeler, model kartları → parçalara bölünmüş metinler | P1 | F1-03, F3-03 | `asistan/bilgi_tabani.py` | — | ⬜ |
-| F4-02 | Embedding ve arama: yerel çok dilli embedding modeli, vektörler `ciktilar/<veri>/indeks/` içinde, kosinüs benzerliğiyle arama | P1 | F4-01 | `asistan/arama.py` | — | ⬜ |
-| F4-03 | Araçlar: `metrik_hesapla`, `sql_sorgula` (DuckDB, salt okunur, yalnızca SELECT, satır sınırı), `tahmin_getir`, `urun_karti`, `tavsiyeleri_getir`, `senaryo_calistir`, `beden_oner`, `bilgi_ara` | P1 | F1-02, F1-05, F3-05 | `asistan/araclar.py` + testler | — | ⬜ |
+| F4-02 | Embedding ve arama: yerel çok dilli embedding modeli, vektörler `ciktilar/<veri>/indeks/` içinde, kosinüs benzerliğiyle arama. **Not (F0-02):** `multilingual-e5-small` zıt anlamlı cümleleri karıştırdı ("iade çok" sorusuna "en az iade" belgesi); `multilingual-e5-base` ve anahtar kelime (BM25) ile hibrit arama karşılaştırılmalı | P1 | F4-01 | `asistan/arama.py` | — | ⬜ |
+| F4-03 | Araçlar: `metrik_hesapla`, `sql_sorgula` (DuckDB 2.0, salt okunur, yalnızca SELECT, satır sınırı; ilişkilerde `fetchone()` yok, `fetchall()` kullanılır), `tahmin_getir`, `urun_karti`, `tavsiyeleri_getir`, `senaryo_calistir`, `beden_oner`, `bilgi_ara` | P1 | F1-02, F1-05, F3-05 | `asistan/araclar.py` + testler | — | ⬜ |
 | F4-04 | Sohbet döngüsü: Claude API + araç kullanımı, sistem talimatı (yalnızca veriye dayan, sayının kaynağını göster, emin değilsen söyle, Türkçe), akışlı cevap, önbellekleme, maliyet sınırı | P1 | F4-02, F4-03 | `asistan/sohbet.py` | — | ⬜ |
 | F4-05 | Değerlendirme seti: 30 soru (sayısal, karşılaştırma, "neden", "ne yapmalıyım"), beklenen cevaplar metrik fonksiyonlarından otomatik; sahte ve gerçek veride doğruluk, kaynak gösterme, maliyet | P1 | F4-04 | `asistan/degerlendirme/` + sonuç | — | ⬜ |
 | F4-06 | Güvenlik testleri: SQL ile yazma denemesi, yorum metnine gömülü talimat (prompt injection) | P2 | F4-04 | `tests/test_asistan_guvenlik.py` | — | ⬜ |
@@ -353,6 +353,9 @@ sequenceDiagram
 | K-08 | PR'lar "squash" edilmeden birleştirilir | alındı | hoca her commit'i görebilsin |
 | K-09 | Türkçe isimlendirme | alındı | mevcut kodla tutarlılık |
 | K-10 | Plan 2 haftalık takvime göre baştan yazıldı; önceki 14 haftalık planın görev ID'leri geçersiz | alındı | henüz görev başlamadığı için yeniden numaralandırma güvenli |
+| K-11 | Python 3.14 kalır; tüm paketler (torch 2.11 CPU, lightgbm, transformers, sentence-transformers, streamlit, anthropic, duckdb) kurulu ve test edildi | alındı | F0-02: hepsinin 3.14 sürümü var; GPU yok, 6 çekirdek CPU yeterli |
+| K-12 | Hazır modeller: duygu `savasy/bert-base-turkish-sentiment-cased`, embedding `intfloat/multilingual-e5-small` (F4-02'de büyüğüyle karşılaştırılacak) | alındı | F0-02'de Türkçe örneklerle denendi |
+| K-13 | Kod stili `ruff` (satır 120); mevcut `cekim/` ve `hazirlama/` kodunda uzun satıra izin var | alındı | yeni kodda kural tam geçerli |
 
 ---
 

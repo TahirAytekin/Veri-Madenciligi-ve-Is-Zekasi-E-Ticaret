@@ -1,0 +1,11 @@
+# Kod stili kontrolü: python -m ruff check .   (otomatik düzeltme: --fix)
+line-length = 120
+target-version = "py314"
+
+[lint]
+select = ["E", "F", "I", "W"]
+
+[lint.per-file-ignores]
+# Mevcut veri hattı kodunda uzun satırlara izin verilir; yeni kodda (analiz/, modeller/, web/ ...) kural geçerli
+"cekim/*.py" = ["E501"]
+"hazirlama/*.py" = ["E501"]
