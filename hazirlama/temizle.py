@@ -11,9 +11,7 @@ import json
 import sys
 
 import pandas as pd
-
-from ortak import (HAM, TABLOLAR, VERI, env_degeri, iade_neden_grubu, indirim_turu, kaydet, kesinti_grubu,
-                   soru_konusu)
+from ortak import HAM, TABLOLAR, VERI, env_degeri, iade_neden_grubu, indirim_turu, kaydet, kesinti_grubu, soru_konusu
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -97,29 +95,29 @@ for o in ham_siparisler:
             "tutar": x["discountAmount"],
         })
 
-    for l in o["lines"]:
-        for kalem in l.get("discountDetails") or []:
-            kalem_satir[int(kalem["lineItemId"])] = l["id"]
+    for ham_satir in o["lines"]:
+        for kalem in ham_satir.get("discountDetails") or []:
+            kalem_satir[int(kalem["lineItemId"])] = ham_satir["id"]
         satirlar.append({
-            "satir_id": l["id"],
+            "satir_id": ham_satir["id"],
             "paket_id": pid,
-            "barkod": l["barcode"],
-            "urun_kodu": l["productCode"],
-            "adet": l["quantity"],
-            "beden": l.get("productSize"),
-            "renk": l.get("productColor"),
-            "birim_brut_fiyat": l["amount"],
-            "birim_satici_indirimi": l.get("lineSellerDiscount", 0),
-            "birim_trendyol_indirimi": l.get("lineTyDiscount", 0),
-            "birim_net_fiyat": l["price"],
-            "satir_net_tutar": round(l["price"] * l["quantity"], 2),
-            "komisyon_orani": l.get("commission"),
-            "kdv_orani": l.get("vatRate"),
-            "is_birimi": l.get("businessUnit"),
-            "satir_durumu": l.get("orderLineItemStatusName"),
+            "barkod": ham_satir["barcode"],
+            "urun_kodu": ham_satir["productCode"],
+            "adet": ham_satir["quantity"],
+            "beden": ham_satir.get("productSize"),
+            "renk": ham_satir.get("productColor"),
+            "birim_brut_fiyat": ham_satir["amount"],
+            "birim_satici_indirimi": ham_satir.get("lineSellerDiscount", 0),
+            "birim_trendyol_indirimi": ham_satir.get("lineTyDiscount", 0),
+            "birim_net_fiyat": ham_satir["price"],
+            "satir_net_tutar": round(ham_satir["price"] * ham_satir["quantity"], 2),
+            "komisyon_orani": ham_satir.get("commission"),
+            "kdv_orani": ham_satir.get("vatRate"),
+            "is_birimi": ham_satir.get("businessUnit"),
+            "satir_durumu": ham_satir.get("orderLineItemStatusName"),
             # yalnızca katalog dışı ürünleri tamamlamak için
-            "_urun_adi": l.get("productName"),
-            "_kategori_id": l.get("productCategoryId"),
+            "_urun_adi": ham_satir.get("productName"),
+            "_kategori_id": ham_satir.get("productCategoryId"),
         })
 
 siparisler = pd.DataFrame(paketler)

@@ -1,3 +1,19 @@
+# Python 3.14 ile doğrulandı (F0-02, 2026-10-24). Kurulum: pip install -r requirements.txt
+
+# Veri
 numpy>=2.4
 pandas>=2.3
 requests>=2.32
+duckdb>=2.0
+
+# Makine öğrenimi ve derin öğrenme
+scikit-learn>=1.8
+lightgbm>=4.6
+torch>=2.11
+transformers>=5.20
+sentence-transformers>=6.2
+
+# Web ve asistan
+streamlit>=1.55
+plotly>=7.1
+anthropic>=2.3
