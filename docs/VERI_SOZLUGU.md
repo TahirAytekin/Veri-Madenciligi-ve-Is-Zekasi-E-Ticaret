@@ -169,7 +169,7 @@ bulup bulamadığını kontrol etmek için [MODEL_DOGRULAMA.md](MODEL_DOGRULAMA.
 ## Veride olmayanlar (gerçek sistem için önerilir)
 
 - **Ürün görüntülenme / sepete ekleme / favori sayıları:** API'de yok; satıcı panelinin ürün/satış analizi raporlarından (Excel) alınabilir. Dönüşüm oranı olmadan "talep yok" ile "görünmüyor" ayırt edilemez.
-- **Günlük fiyat ve stok geçmişi:** API geçmiş vermez; `cekim/urunler.py` her çalıştırmada o günün kaydını `veri/ham/urun_gecmisi/` altına yazıyor. Yeterli geçmiş biriktiğinde (birkaç ay) analiz tablolarına bağlanmalı.
+- **Günlük fiyat ve stok geçmişi:** API geçmiş vermez. `cekim/urunler.py` her çalıştırmada o günün kaydını `veri/ham/urun_gecmisi/` altına yazıyor, ancak bu projenin analizleri buna dayanmaz; fiyat ve indirim bilgisi satış satırlarından alınır.
 - **Ürün maliyeti:** Trendyol'da yok; `barkod, birim_maliyet` tablosu eklenmeli.
 - **Reklam kampanya detayı:** finans verisinde yalnızca bakiye alımı (`Reklam Bedeli`) var; hangi ürüne harcandığı panelin reklam raporlarındadır.
 - **Yurt dışı siparişler:** `cekim/siparisler.py` yalnızca Türkiye mağazasını çeker (`storeFrontCode: TR`).

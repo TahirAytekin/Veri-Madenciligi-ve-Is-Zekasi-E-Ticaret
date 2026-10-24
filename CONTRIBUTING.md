@@ -143,7 +143,7 @@ Bir görev ancak şunlar sağlandığında ✅ olur:
 
 **Model görevi (Faz 2–3)**
 - [ ] Baseline ile karşılaştırıldı ([MODEL_DOGRULAMA.md](docs/MODEL_DOGRULAMA.md))
-- [ ] Seviye 1 (sahte veri doğru cevapları) ve seviye 2 (kesimli zaman testi) sonuçları model kartında
+- [ ] Seviye 1 (sahte veri doğru cevapları) ve seviye 2 (geriye dönük zaman testi) sonuçları model kartında
 - [ ] Model kartı `docs/modeller/<ID>.md`: amaç, veri, özellikler, model, metrikler, sınırlar
 - [ ] Tahminler standart formatta `ciktilar/<veri>/` altında
 - [ ] Gerçek veride çalıştırılması proje sahibine devredildi (devir notunda komutla)

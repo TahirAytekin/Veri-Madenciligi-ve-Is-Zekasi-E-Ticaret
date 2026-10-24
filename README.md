@@ -118,7 +118,7 @@ Model ve analizleri `sahte` üzerinde geliştirin; hazır olduğunda klasör ad�
 veride çalıştırın. Tabloların ayrıntısı: [docs/VERI_SOZLUGU.md](docs/VERI_SOZLUGU.md).
 
 Model eğitirken `analiz/` yerine kesimli tabloları kullanın (`analiz/` tüm dönemi kapsar, geleceği sızdırır) ve
-sonucu üç seviyede doğrulayın: [docs/MODEL_DOGRULAMA.md](docs/MODEL_DOGRULAMA.md).
+sonucu elimizdeki veriyle iki seviyede doğrulayın: [docs/MODEL_DOGRULAMA.md](docs/MODEL_DOGRULAMA.md).
 
 ## Kişisel veriler (KVKK)
 

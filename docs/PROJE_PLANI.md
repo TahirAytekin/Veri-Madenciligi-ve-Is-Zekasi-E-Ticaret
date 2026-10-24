@@ -22,7 +22,7 @@ Bir Trendyol satıcısının kendi verisiyle, tek bir web uygulamasında:
 
 | ölçüt | hedef |
 |---|---|
-| P1 modelleri | her biri baseline'ı geçmiş ve 3 seviyede doğrulanmış ([MODEL_DOGRULAMA.md](MODEL_DOGRULAMA.md)) |
+| P1 modelleri | her biri baseline'ı geçmiş ve elimizdeki veriyle 2 seviyede doğrulanmış ([MODEL_DOGRULAMA.md](MODEL_DOGRULAMA.md)) |
 | Derin öğrenme | en az 2 problemde klasik modelle dürüst karşılaştırma (geçemese bile raporlanır) |
 | Tavsiye motoru | en az 10 tavsiye türü; her tavsiyenin kanıtı, beklenen etkisi ve güven düzeyi var |
 | Asistan | değerlendirme setinde sayısal sorularda ≥ %90 doğru cevap, her cevapta kaynak (kullanılan veri) gösterimi |
@@ -31,6 +31,7 @@ Bir Trendyol satıcısının kendi verisiyle, tek bir web uygulamasında:
 
 ### Kapsam dışı
 - Canlı mağazaya **yazma** (fiyat/stok değiştirme, soru cevaplama). Sistem salt okunurdur: önerir, uygulamaz.
+- **Zamana bağlı doğrulama:** yeni veri gelmesini bekleyen ileriye dönük testler ve satıcıyla A/B deneyleri. Tüm analiz, tahmin ve doğrulama elimizdeki veriyle yapılır.
 - Birden çok satıcıya hizmet veren yapı (multi-tenant): opsiyonel ileri adım.
 - Mobil uygulama, kullanıcı hesabı ve ödeme sistemi.
 
@@ -137,7 +138,7 @@ flowchart LR
 
 ### Faz 2 — Makine öğrenimi modelleri (Hafta 4–7)
 
-Her model görevi için: baseline karşılaştırması, 3 seviyeli doğrulama, model kartı (`docs/modeller/<ID>.md`) ve standart tahmin çıktısı (`ciktilar/<veri>/tahminler/<ID>.csv`).
+Her model görevi için: baseline karşılaştırması, elimizdeki veriyle 2 seviyeli doğrulama (sahte veride doğru cevaplar + geriye dönük zaman testi), model kartı (`docs/modeller/<ID>.md`) ve standart tahmin çıktısı (`ciktilar/<veri>/tahminler/<ID>.csv`).
 
 | ID | görev | öncelik | bağımlı | çıktı | sorumlu | durum |
 |---|---|---|---|---|---|---|
@@ -153,7 +154,6 @@ Her model görevi için: baseline karşılaştırması, 3 seviyeli doğrulama, m
 | F2-10 | Ürün portföy skorlaması (yıldız / sorunlu / ölü stok kümeleri) + anomali tespiti | P2 | F2-01 | ürün skorları + model kartı | — | ⬜ |
 | F2-11 | Reklam etkisi (adstock + regresyon; sahtede reklam çarpanını bul) | P3 | F2-01 | katsayılar + model kartı | — | ⬜ |
 | F2-12 | Kârlılık ve senaryo simülatörü ("iade %5 düşerse", "desi 1 azalırsa", "indirim %10 olursa"), ürün maliyeti girişi | P1 | F1-08 | `analiz/senaryo.py` | — | ⬜ |
-| F2-13 | İleriye dönük test: P1 modellerin tahminlerini tarihli kaydet (sonra Faz 7'de gerçekle karşılaştırılacak) | P1 | F2-02…F2-05 | `ciktilar/gercek/ileri_test/` (yerel) | Tahir | ⬜ |
 
 ### Faz 3 — Derin öğrenme (Hafta 7–10)
 
@@ -218,7 +218,6 @@ Tasarım ayrıntısı bölüm 5'te.
 |---|---|---|---|---|---|---|
 | F7-01 | Uçtan uca hat: `guncelle.py` → modelleri yeniden eğit / tahmin et → tavsiye → indeks → web | P1 | F2–F6 | tek komut | — | ⬜ |
 | F7-02 | Testler ve CI yeşil; gerçek veriyle son çalıştırma (yerel) | P1 | F7-01 | test raporu | Tahir | ⬜ |
-| F7-03 | İleriye dönük test sonuçları (F2-13 tahminleri ile gerçekleşenin karşılaştırması) | P1 | F2-13 | `docs/rapor/07_ileri_test.md` | Tahir | ⬜ |
 | F7-04 | Final rapor, sunum ve demo videosu | P1 | F7-01 | `docs/rapor/`, sunum | herkes | ⬜ |
 | F7-05 | Satıcı için kullanım kılavuzu ve geliştirici devir dokümanı | P2 | F7-01 | `docs/KULLANIM.md` | — | ⬜ |
 
@@ -344,6 +343,7 @@ Gerçek veri ve API anahtarı yalnızca proje sahibindedir. Diğer üyeler sahte
 | K-06 | Web: Streamlit | öneri (F6-01) | tamamen Python, hızlı geliştirme, hazır sohbet bileşeni; alternatif FastAPI + React daha esnek ama ekip için daha uzun |
 | K-07 | Asistan: Claude API + araç kullanımı + yerel embedding | öneri (F5-01) | sayılar araçlardan, metinler bilgi tabanından; embedding ücretsiz ve yerel |
 | K-08 | Ortak Python sürümü 3.12 | öneri (F0-03) | derin öğrenme kütüphaneleriyle uyum |
+| K-09 | Zamana bağlı doğrulama (ileriye dönük test, A/B deneyi) kapsam dışı; görev F2-13 ve F7-03 kaldırıldı | alındı | proje kısa vadeli; tüm sonuçlar elimizdeki veriyle elde edilir |
 
 ---
 
@@ -351,7 +351,7 @@ Gerçek veri ve API anahtarı yalnızca proje sahibindedir. Diğer üyeler sahte
 
 | risk | etki | önlem |
 |---|---|---|
-| Gerçek sipariş geçmişi kısa (Temmuz 2026'dan beri) | tahmin modelleri zayıf kalır | günlük çekimle birikiyor; finans tablosunda 1 yıllık satış var; ileriye dönük test (F2-13) |
+| Gerçek sipariş geçmişi kısa (Temmuz 2026'dan beri) | zaman serisi tahminleri gerçek veride kısa dönemle sınırlı | uzun dönem için finans tablosundaki 1 yıllık satış kayıtları; yöntem 2 yıllık sahte veride doğrulanır; sonuçlar sınırlarıyla birlikte raporlanır |
 | Sahte veride modelin "başarılı" görünmesi | yanıltıcı sonuç | sahte veri yalnızca yöntemi doğrular; sonuçlar gerçek veride raporlanır |
 | Kütüphane / Python sürümü uyumsuzluğu | kurulum kaybı | ortak sürüm (F0-03), `requirements` sabitlenir |
 | GPU yok | derin öğrenme yavaş | küçük modeller, Colab (yalnızca sahte veri) |

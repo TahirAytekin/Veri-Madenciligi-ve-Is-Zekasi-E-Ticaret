@@ -1,12 +1,12 @@
 # Model Doğrulama Rehberi
 
-Bir modelin tahminlerinin doğru olduğunu üç seviyede kontrol ediyoruz. Her model için üçünü de raporlayın.
+Bir modelin tahminlerinin doğru olduğunu iki seviyede kontrol ediyoruz. Her model için ikisini de raporlayın.
+Doğrulamanın tamamı **elimizdeki veriyle** yapılır; yeni veri gelmesini beklemeyi gerektiren hiçbir test yoktur.
 
 | seviye | veri | soru |
 |---|---|---|
 | 1. Doğru cevap kontrolü | `veri/sahte` + `veri/sahte/dogru_cevaplar/` | Model, veriyi üreten gizli gerçeği bulabiliyor mu? (yöntem doğru mu?) |
-| 2. Zaman bazlı test | `veri/gercek` (ve sahte) + `--kesim` | Geçmişle eğitilen model, görmediği dönemi ne kadar iyi tahmin ediyor? |
-| 3. İleriye dönük test | her gün gelen yeni gerçek veri | Bugün yapılan tahmin, gerçekleşen gelecekle tutuyor mu? |
+| 2. Geriye dönük zaman testi | `veri/gercek` (ve sahte) + `--kesim` | Mevcut verinin eski kısmıyla eğitilen model, yine mevcut verideki görmediği son dönemi ne kadar iyi tahmin ediyor? |
 
 ## Seviye 1: Doğru cevap kontrolü (yalnızca sahte veri)
 
@@ -38,7 +38,7 @@ print((x.tahmin == x.kalip_etiketi).mean())   # basit kural: ~%77 -> modeliniz b
 
 Bu seviye **yöntemin** doğru çalıştığını kanıtlar, gerçek dünyayı değil: ilişkileri sahte veriye biz koyduk.
 
-## Seviye 2: Zaman bazlı test (sızıntısız)
+## Seviye 2: Geriye dönük zaman testi (sızıntısız)
 
 Rastgele train/test ayırmayın: satışta ve iadede rastgele ayırma modele geleceği gösterir. Bunun yerine bir
 **kesim tarihi** seçin: özellikler kesime kadar bilinenlerden, hedef kesimden sonraki dönemden hesaplanır.
@@ -72,7 +72,7 @@ ortalama hatayı raporlayın.
 **Sızıntı kontrol listesi**
 - `analiz/` (kesimsiz) tablolar **tüm dönemi** kapsar; model eğitiminde yalnızca `analiz_kesim_*` kullanın.
 - `urunler` tablosundaki stok, fiyat, satışta ve arşivde bilgisi **bugünün** durumudur: özellik yapmayın.
-  Fiyatı satış satırlarından, ileride `veri/ham/urun_gecmisi/` kayıtlarından alın.
+  Fiyatı satış satırlarından alın.
 - `tahmini_teslim_*` ve `odeme_tarihi` kesimden sonrayı gösterebilir; bunlar sipariş/işlem anında bilinen
   **planlanmış** tarihlerdir, sızıntı değildir.
 - Aynı müşteri veya sipariş hem eğitimde hem testte olmasın (öneri sistemi, iade modeli): grup bazlı ayırın.
@@ -92,9 +92,13 @@ ortalama hatayı raporlayın.
 
 Derin öğrenme modelini her zaman klasik bir modelle (LightGBM vb.) karşılaştırın; geçemiyorsa bunu raporlamak da bir bulgudur.
 
-## Seviye 3: İleriye dönük test
+## Kapsam dışı: zamana bağlı doğrulama
 
-1. Tahminleri tarihli kaydedin (ör. `tahminler/2026-11-01_satis_30g.csv`), sonradan değiştirmeyin.
-2. `guncelle.py` gerçekleşen veriyi her gün ekler; ufuk dolunca tahmin ile gerçeği karşılaştırın.
-3. Satıcıyla küçük bir deney (A/B): modelin "dar" dediği ürünlerin yarısının açıklamasına "bir beden büyük
-   alın" eklenir, yarısına eklenmez. 4-6 hafta sonra iki grubun iade oranı farkı, modelin gerçek iş etkisidir.
+Yeni verinin gelmesini beklemeyi gerektiren yöntemler bu projede **kullanılmaz**:
+- ileriye dönük test (bugün tahmin edip ufuk dolunca gerçekleşenle karşılaştırmak),
+- satıcıyla A/B deneyi (değişikliğin haftalar sonra ölçülmesi).
+
+Bunların yerine seviye 2'deki kayan pencere testi, mevcut verinin son dönemlerini "gelecek" gibi kullanır.
+Gerçek sipariş geçmişi kısa olduğu için (Temmuz 2026'dan beri) gerçek veride sonuçlar kısa dönem üzerinden
+raporlanır. Uzun dönem gerektiren analizlerde (mevsimsellik, yıllık trend) gerçek veride finans tablosundaki
+1 yıllık satış kayıtları, yöntem doğrulamasında ise 2 yıllık sahte veri kullanılır.
