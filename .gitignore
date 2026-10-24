@@ -1,0 +1,21 @@
+# Gizli bilgiler
+.env
+
+# Gerçek veri (kişisel veri ve ticari bilgi içerir)
+veri/ham/
+veri/gercek/
+
+# Gerçek veriden üretilen sonuçlar
+ciktilar/gercek/
+
+# Yeniden üretilebilir tablolar (python guncelle.py --sahte)
+veri/sahte/analiz/
+veri/*/analiz_kesim_*/
+
+# Çalışma çıktıları ve ortam
+.venv/
+venv/
+loglar/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

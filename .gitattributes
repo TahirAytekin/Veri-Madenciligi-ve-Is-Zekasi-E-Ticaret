@@ -1,0 +1,6 @@
+# Metin dosyalarında satır sonlarını git yönetsin
+* text=auto
+
+# Veri dosyaları olduğu gibi saklanır (satır sonu dönüşümü yok, satır satır diff yok)
+*.csv -text -diff
+*.gz binary
