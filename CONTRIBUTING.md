@@ -44,12 +44,12 @@ değişmeden çalışır; gerçek veride çalıştırma işini proje sahibi yapa
 
 ### Üstlenirken
 1. [PROJE_PLANI.md](docs/PROJE_PLANI.md) dosyasında bağımlılıkları ✅ olan bir ⬜ görev seç (önce P1).
-2. Dal aç: `git switch -c gorev/F2-04-iade-riski`
+2. Dal aç: `git switch -c gorev/F2-02-iade-riski`
 3. Planda görevin satırına adını yaz, durumu 🟨 yap; [DURUM.md](docs/DURUM.md) → "Aktif görevler" tablosuna satır ekle.
 4. Bu değişikliği hemen commit + push et ve **taslak PR** (Draft Pull Request) aç: herkes kimin ne yaptığını görür, aynı işe iki kişi girmez.
 
 ### Bırakırken (yarım kalsa da, bitse de)
-1. Çalışan son halini commit + push et. Çalışmayan kodu commitliyorsan commit mesajında belirt: `F2-04: (yarım) özellik hazırlama`
+1. Çalışan son halini commit + push et. Çalışmayan kodu commitliyorsan commit mesajında belirt: `F2-02: (yarım) özellik hazırlama`
 2. **Devir notu yaz:** [docs/devir/_SABLON.md](docs/devir/_SABLON.md) dosyasını kopyala →
    `docs/devir/YYYY-AA-GG-<isim>-<görev-id>.md`. Şunları yaz: ne yapıldı, nerede kaldın (dosya / fonksiyon / notebook hücresi),
    devralanın atacağı ilk adım, nasıl çalıştırılır, bilinen sorunlar ve açık sorular.
@@ -58,7 +58,7 @@ değişmeden çalışır; gerçek veride çalıştırma işini proje sahibi yapa
 
 ### Devralırken
 1. DURUM.md → görevin satırı → son devir notu → taslak PR'ın açıklaması ve yorumları.
-2. Dalı al: `git fetch && git switch gorev/F2-04-iade-riski`
+2. Dalı al: `git fetch && git switch gorev/F2-02-iade-riski`
 3. Devir notundaki "nasıl çalıştırılır" komutunu çalıştır; çalışmıyorsa önce bunu düzelt.
 4. Planda ve DURUM.md'de sorumluyu kendin yap; devir notunun sonuna "devralındı: <isim>, <tarih>" ekle.
 
@@ -70,9 +70,9 @@ Devir notları birikerek **projenin günlüğü** olur. Her not ayrı bir dosya 
 
 | | kural | örnek |
 |---|---|---|
-| Dal | `gorev/<ID>-<kısa-konu>` | `gorev/F1-04-satis-zaman` |
-| Commit | `<ID>: <ne yapıldı>`, Türkçe, geçmiş zaman veya emir kipi, tek konu | `F1-04: Haftanın günü ve saat etkisi grafikleri eklendi` |
-| PR başlığı | `<ID>: <görev adı>` | `F1-04: Satış ve zaman keşifsel analizi` |
+| Dal | `gorev/<ID>-<kısa-konu>` | `gorev/F1-03-durum-analizi` |
+| Commit | `<ID>: <ne yapıldı>`, Türkçe, geçmiş zaman veya emir kipi, tek konu | `F1-03: Haftanın günü ve saat içgörüleri eklendi` |
+| PR başlığı | `<ID>: <görev adı>` | `F1-03: Durum analizi` |
 | PR boyutu | bir PR = bir görev (veya bir görevin anlamlı parçası) | |
 | İnceleme | en az bir ekip arkadaşının onayı | |
 | Birleştirme | **"Create a merge commit"**, squash yok | hoca tüm commit'leri görebilsin |
@@ -95,18 +95,18 @@ Devir notları birikerek **projenin günlüğü** olur. Her not ayrı bir dosya 
 - Her betik ve fonksiyon `veri="sahte" | "gercek"` ile iki veri setinde de çalışır.
 - **Metrik hesapları** yalnızca `analiz/metrikler.py` içinde yapılır; web, tavsiye ve asistan oradan çağırır.
 - **Rastgelelik** sabit tohumla (`random_state=42`); sonuçlar tekrarlanabilir olmalı.
-- Model eğitiminde `analiz/` değil, **kesimli** tablolar kullanılır (`ozellik_cikar.py --kesim`; bkz. [MODEL_DOGRULAMA.md](docs/MODEL_DOGRULAMA.md)).
+- **Modeller sahte veriyle eğitilir, gerçek verinin son 3 ayıyla test edilir.** Gerçek veri eğitimde kullanılmaz; modelde ID değil aktarılabilir özellikler kullanılır (bkz. [MODEL_DOGRULAMA.md](docs/MODEL_DOGRULAMA.md)).
 - Yeni paket eklersen `requirements.txt` dosyasına ekle ve PR'da belirt.
 
 ---
 
 ## 6. Notebook kuralları
 
-- Konum ve ad: `notebooks/<faz>/<görev-id>_<konu>.ipynb` (ör. `notebooks/faz1/F1-04_satis_zaman.ipynb`).
+- Konum ve ad: `notebooks/<faz>/<görev-id>_<konu>.ipynb` (ör. `notebooks/f1/F1-03_durum_analizi.ipynb`).
 - **Yalnızca sahte veriyle çalıştırılmış çıktılar commitlenir.** Gerçek veriyle çalıştırdığın notebook'un çıktısını
   committen önce temizle (`nbstripout` veya Jupyter'de "Clear All Outputs"): çıktılarda gerçek veri görünür.
 - Notebook keşif içindir. Tekrar kullanılacak kod (metrik, özellik, model) `analiz/` veya `modeller/` içine taşınır.
-- Notebook'un başında amaç, sonunda **bulgular** bölümü olur; bulgular Faz 1 özet raporuna ve tavsiyelere girdi olur.
+- Notebook'un başında amaç, sonunda **bulgular** bölümü olur; bulgular durum analizine (F1-03) ve tavsiyelere girdi olur.
 
 ---
 
@@ -137,22 +137,23 @@ Bir görev ancak şunlar sağlandığında ✅ olur:
 - [ ] PR incelendi ve birleştirildi
 - [ ] Plan ve DURUM.md güncellendi
 
-**Analiz görevi (Faz 1)**
+**Analiz görevi (F1)**
 - [ ] Notebook baştan sona çalışıyor, "Bulgular" bölümü var
 - [ ] Kullanılan metrikler `analiz/metrikler.py` üzerinden hesaplanıyor
 
-**Model görevi (Faz 2–3)**
+**Model görevi (F2)**
 - [ ] Baseline ile karşılaştırıldı ([MODEL_DOGRULAMA.md](docs/MODEL_DOGRULAMA.md))
-- [ ] Seviye 1 (sahte veri doğru cevapları) ve seviye 2 (geriye dönük zaman testi) sonuçları model kartında
+- [ ] Sahte veriyle eğitildi; seviye 1 (sahte veri doğru cevapları) ve seviye 2 (gerçek son 3 ayda test) sonuçları model kartında ve F2-12 tablosunda
 - [ ] Model kartı `docs/modeller/<ID>.md`: amaç, veri, özellikler, model, metrikler, sınırlar
 - [ ] Tahminler standart formatta `ciktilar/<veri>/` altında
 - [ ] Gerçek veride çalıştırılması proje sahibine devredildi (devir notunda komutla)
 
-**Web görevi (Faz 6)**
-- [ ] Sayfa sahte veriyle çalışıyor; sayılar kod içine yazılmamış, `analiz/` ve `ciktilar/` içinden geliyor
+**Web görevi (F5)**
+- [ ] Sayfa sahte ve gerçek veriyle çalışıyor; sayılar kod içine yazılmamış, `analiz/`, `ciktilar/` ve `tavsiye/` içinden geliyor
+- [ ] Sayfa bir karar veya aksiyonla bitiyor (tavsiye, öneri aracı, simülatör)
 - [ ] Ekran görüntüsü PR'da
 
-**Asistan görevi (Faz 5)**
+**Asistan görevi (F4)**
 - [ ] Değerlendirme seti çalıştırıldı, sonuç ve maliyet PR'da
 
 ---

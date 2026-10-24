@@ -3,14 +3,15 @@
 Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde ve her PR birleştirmesinde güncellenir.**
 
 **Son güncelleme:** 2026-10-24 · **Güncelleyen:** Tahir
-**Güncel faz:** Faz 0 — Ekip ve altyapı ([plan](PROJE_PLANI.md#faz-0--ekip-ve-altyapı-hafta-1))
+**Takvim:** 14 gün, Gün 1 = 26.10.2026 Pzt, teslim = 08.11.2026 Paz ([plan §4](PROJE_PLANI.md#4-takvim-14-gün))
+**Bugün:** Gün 0 (hazırlık) · **Güncel faz:** F0 — Altyapı
 
 ---
 
 ## Şu an
-- Veri altyapısı tamamlandı: çekim, temizleme, sahte veri, analiz tabloları, doğrulama araçları ([plan §2](PROJE_PLANI.md#2-mevcut-durum-tamamlanan-temel)).
-- Proje planı ve çalışma rehberi yazıldı.
-- **Sıradaki adım:** depoyu GitHub'a yüklemek ve ekibi eklemek (F0-01).
+- Veri altyapısı hazır: gerçek veri (son 3 ay, kişisel veri yok), 2 yıllık sahte veri, analiz tabloları.
+- Plan 2 haftaya göre yeniden yazıldı. Yöntem: modeller sahte veriyle eğitilir, gerçek verinin son 3 ayıyla doğrulanır ([MODEL_DOGRULAMA.md](MODEL_DOGRULAMA.md)).
+- **Sıradaki adım:** depoyu GitHub'a yüklemek (F0-01), ortamı doğrulamak (F0-02), API anahtarı (F0-03).
 
 ## Aktif görevler
 
@@ -20,12 +21,22 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 |---|---|---|---|---|
 | F0-01 | Tahir | `main` | 2026-10-24 | depo yerelde hazır, GitHub'a push bekleniyor |
 
-## Sıradaki önerilen görevler
-1. **F0-01:** GitHub deposu, ilk push, collaborator'lar, `main` koruması (Tahir)
-2. **F0-02:** herkes kurulumu yapar ve aşağıdaki "Ekip" tablosuna kendini ekler
-3. **F0-03:** ortak Python sürümü ve `requirements-dev.txt`
-4. **F0-04:** GitHub Actions kontrolleri
-5. **F1-01 → F1-02:** metrik sözlüğü ve `analiz/metrikler.py` (Faz 1'in temeli; web, tavsiye ve asistan buna bağlı)
+## Gün 1–3 için sıradaki görevler
+1. **F0-01:** GitHub'a push, collaborator'lar (Tahir)
+2. **F0-02:** paket kurulumlarını doğrula, `requirements.txt` güncelle
+3. **F0-03:** Anthropic API anahtarı (Tahir)
+4. **F0-04:** herkes kurulumu yapar, "Ekip" tablosuna kendini ekler
+5. **F1-01 → F1-02:** metrik sözlüğü ve `analiz/metrikler.py` (web, tavsiye ve asistan buna bağlı)
+6. **F5-01:** web iskeleti (F1-02 ile paralel)
+7. **F2-01:** model altyapısı: aktarılabilir özellikler, sahte → gerçek değerlendirme
+
+## Ara kontroller
+| kontrol | gün | ölçüt | durum |
+|---|---|---|---|
+| K1 | Gün 7 (01.11) | P1 modelleri gerçek veride test edildi, doğrulama tablosu hazır | ⬜ |
+| K2 | Gün 10 (04.11) | tavsiyeler, aksiyon planı ve asistan çalışıyor | ⬜ |
+| K3 | Gün 12 (06.11) | 10 web sayfası çalışıyor | ⬜ |
+| K4 | Gün 14 (08.11) | teslim: rapor, sunum, demo | ⬜ |
 
 ## Devredilebilir görevler
 Yarım bırakılıp devralınmayı bekleyen görevler (devir notu bağlantısıyla).
@@ -35,21 +46,21 @@ Yarım bırakılıp devralınmayı bekleyen görevler (devir notu bağlantısıy
 | — | | |
 
 ## Engeller ve açık sorular
-- **Web teknolojisi (F6-01):** Streamlit öneriliyor; ekip onayı bekleniyor.
-- **LLM API anahtarı ve bütçesi (F5-01):** asistan için Anthropic API anahtarını kim alacak, aylık bütçe ne olacak?
-- **Ürün maliyeti verisi (F2-12):** gerçek kârlılık için satıcıdan `barkod, birim_maliyet` listesi alınmalı (Tahir).
+- **Anthropic API anahtarı ve bütçe (F0-03):** Asistan ve cevap önerici için gerekli; tahmini toplam ~20–30 $. Anahtar gelene kadar araçlar ve arama anahtarsız geliştirilebilir.
+- **Paket uyumluluğu (F0-02):** Python 3.14'te torch, lightgbm ve sentence-transformers kurulumu doğrulanmalı.
+- **Ürün maliyeti (isteğe bağlı, F1-05):** Senaryo simülatörü maliyetsiz de çalışır; satıcı `barkod, birim_maliyet` listesi verirse gerçek kâr hesaplanır.
 
 ## Ekip
-| isim | GitHub | alan | kurulum (F0-02) |
+| isim | GitHub | iz (plan §6) | kurulum (F0-04) |
 |---|---|---|---|
 | Tahir | — | proje sahibi, gerçek veri | ✅ |
 
 ## Son devir notları
 - 2026-10-24 — Tahir — [Başlangıç: veri altyapısı ve proje planı](devir/2026-10-24-tahir-baslangic.md)
 
-## Ölçümler (güncellendikçe)
+## Ölçümler
 | ölçüm | değer | tarih |
 |---|---|---|
-| Gerçek veri: sipariş paketi | 3.266 (Temmuz 2026'dan beri, birikiyor) | 2026-10-24 |
+| Gerçek veri: sipariş paketi | 3.266 (16.07–23.10.2026) | 2026-10-24 |
 | Gerçek veri: iade talebi / finans hareketi | 6.350 / 65.055 | 2026-10-24 |
-| Asistan: soru başı maliyet | ölçülmedi (F5-04) | — |
+| Asistan: soru başı maliyet | ölçülmedi (F4-05) | — |

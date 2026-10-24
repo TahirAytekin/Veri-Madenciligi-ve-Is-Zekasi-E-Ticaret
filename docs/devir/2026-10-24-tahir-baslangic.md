@@ -24,7 +24,7 @@
    from ortak import VERI, hepsini_oku
    t = hepsini_oku(VERI / "sahte")
    ```
-3. Planda Faz 0'ın kalan görevlerinden (F0-03…F0-06) birini ya da F1-01'i (metrik sözlüğü) üstlen.
+3. [PROJE_PLANI.md](../PROJE_PLANI.md) bölüm 4'teki gün sırasına göre F0-02 (ortam) veya F1-01'i (metrik sözlüğü) üstlen.
 
 ## Nasıl çalıştırılır
 ```bash
@@ -35,12 +35,12 @@ python hazirlama/sahte_veri_uret.py                           # sahte veriyi ba�
 
 ## Bilinen sorunlar / dikkat edilecekler
 - **Gerçek veri kısa:** Siparişler Temmuz 2026'dan beri var ve her gün birikiyor. Finans tablosunda 1 yıllık satış kaydı, iade tablosunda 2024'ten beri iadeler var.
-- **Kesimsiz tablolar sızıntılı:** `analiz/` klasöründeki tablolar tüm dönemi kapsar. Model eğitiminde kesimli tabloları kullan.
+- **Doğrulama yöntemi:** Modeller sahte veriyle eğitilir, gerçek verinin son 3 ayıyla test edilir ([MODEL_DOGRULAMA.md](../MODEL_DOGRULAMA.md)). `analiz/` tablolarının tüm dönemi kapsayan özetlerini özellik olarak kullanma.
 - **`urunler` bugünün durumu:** Stok, fiyat ve satışta bilgisi bugüne ait, geçmişi yok. Fiyat ve stok geçmişi `veri/ham/urun_gecmisi/` altında yeni birikmeye başladı.
-- **Sahte metinler şablondan üretildi:** Metin modelleri (NLP) gerçek metinlerle eğitilmeli (F3-01).
-- **Python sürümü:** Proje şu an Python 3.14 ile çalışıyor. Derin öğrenme kütüphaneleri için ortak sürüm kararı F0-03'te verilecek.
+- **Sahte metinler şablondan üretildi:** Duygu analizi hazır eğitilmiş Türkçe BERT ile doğrudan gerçek yorumlarda ölçülür (F2-06).
+- **Python sürümü:** Proje şu an Python 3.14 ile çalışıyor. Derin öğrenme paketlerinin kurulumu F0-02'de doğrulanacak.
 
 ## Açık sorular ve bekleyen kararlar
-- Web teknolojisi (F6-01): Streamlit öneriliyor.
-- Asistan için LLM API anahtarı ve bütçe (F5-01).
-- Satıcıdan ürün maliyet listesi alınması (F2-12).
+- Web teknolojisi: Streamlit (karar K-05).
+- Asistan için Anthropic API anahtarı ve bütçe (F0-03).
+- Satıcıdan ürün maliyet listesi (isteğe bağlı; senaryo simülatöründe F1-05).

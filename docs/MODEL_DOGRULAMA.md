@@ -1,20 +1,37 @@
 # Model Doğrulama Rehberi
 
-Bir modelin tahminlerinin doğru olduğunu iki seviyede kontrol ediyoruz. Her model için ikisini de raporlayın.
-Doğrulamanın tamamı **elimizdeki veriyle** yapılır; yeni veri gelmesini beklemeyi gerektiren hiçbir test yoktur.
+**Temel kural:** modeller **sahte veriyle eğitilir**, **gerçek verinin son 3 ayıyla** (16 Temmuz – 23 Ekim 2026)
+test edilir. Gerçek veri eğitimde, hiperparametre seçiminde ya da özellik tasarımında **hiç kullanılmaz**.
+Yeni veri çekilmez, gelecekteki veri beklenmez.
+
+Her model için iki seviye raporlanır:
 
 | seviye | veri | soru |
 |---|---|---|
-| 1. Doğru cevap kontrolü | `veri/sahte` + `veri/sahte/dogru_cevaplar/` | Model, veriyi üreten gizli gerçeği bulabiliyor mu? (yöntem doğru mu?) |
-| 2. Geriye dönük zaman testi | `veri/gercek` (ve sahte) + `--kesim` | Mevcut verinin eski kısmıyla eğitilen model, yine mevcut verideki görmediği son dönemi ne kadar iyi tahmin ediyor? |
+| 1. Doğru cevap kontrolü | `veri/sahte` + `veri/sahte/dogru_cevaplar/` | Model, sahte veriyi üreten gizli gerçeği bulabiliyor mu? (yöntem doğru mu?) |
+| 2. Sahte → gerçek testi | eğitim `veri/sahte`, test `veri/gercek` | Sahtede öğrenilen, gerçek mağazada işe yarıyor mu? Baseline'ı geçiyor mu? |
 
-## Seviye 1: Doğru cevap kontrolü (yalnızca sahte veri)
+---
 
-`veri/sahte/dogru_cevaplar/` sahte veriyi üreten gizli parametreleri içerir: model kalıbı (dar/normal/bol), kalite,
-fiyat esnekliği, müşterilerin gerçek boy-kilosu, her satırın beden uyumu, günlük reklam ve kampanya çarpanları.
-Formüller klasördeki README'de. **Bu dosyalar modele özellik olarak verilmez**; yalnızca sonucu kontrol eder.
+## Seviye 1: Doğru cevap kontrolü (sahte veri)
 
-Örnek: iade nedenlerinden model kalıbını bulmak
+`veri/sahte/dogru_cevaplar/` sahte veriyi üreten gizli parametreleri içerir. Bunlar şunlardır:
+- model kalıbı (dar/normal/bol), kalite, fiyat esnekliği,
+- müşterilerin gerçek boy-kilosu,
+- her satırın beden uyumu,
+- günlük reklam ve kampanya çarpanları.
+
+Formüller klasördeki README'de. Bu dosyalar modele **özellik olarak verilmez**, yalnızca sonucu kontrol eder.
+
+| model | bulması gereken | dosya |
+|---|---|---|
+| beden uyumu / kalıp | dar-bol modeller, beden kaynaklı iadeler | `modeller.kalip`, `satirlar.beden_uyumu` |
+| iade riski | sorunlu ve uyumsuz satırların yüksek risk alması | `satirlar.sorunlu_urun`, `satirlar.beden_uyumu` |
+| talep tahmini | kampanya, mevsim ve haftanın günü etkileri | `gunluk_carpanlar` |
+| indirim etkisi | ürün bazında esneklik (1,2–2,2) | `modeller.fiyat_esnekligi` |
+| beden önerisi | müşterinin ideal bedeni | `musteriler.boy/kilo` |
+
+Örnek: basit kural, model kalıbını ~%77 doğrulukla buluyor. Modelin bunu geçmesi gerekir.
 
 ```python
 import pandas as pd
@@ -24,81 +41,78 @@ m = b.groupby("model_kodu")[["kucuk_geldi", "buyuk_geldi", "satis_adet"]].sum()
 m["tahmin"] = pd.cut((m.kucuk_geldi - m.buyuk_geldi) / m.satis_adet, [-1, -0.03, 0.03, 1],
                      labels=["bol", "normal", "dar"]).astype(str)
 x = m.join(dogru.set_index("model_kodu").kalip_etiketi).query("satis_adet >= 30")
-print((x.tahmin == x.kalip_etiketi).mean())   # basit kural: ~%77 -> modeliniz bunu geçmeli
+print((x.tahmin == x.kalip_etiketi).mean())
 ```
 
-| model | bulması gereken | doğru cevap dosyası |
+---
+
+## Seviye 2: Sahte → gerçek testi
+
+### Akış
+1. **Eğitim:** sahte veri. Hiperparametre seçimi için sahtenin son dönemi doğrulama kümesi olarak ayrılır.
+2. **Özellikler:** aynı fonksiyonla (`modeller/ortak/ozellikler.py`) hem sahte hem gerçek veriden üretilir.
+3. **Test:** model değiştirilmeden gerçek verinin test penceresine uygulanır.
+4. **Rapor:** gerçek veride model ve baseline aynı metrikle karşılaştırılır; sonuç `docs/rapor/02_dogrulama.md` tablosuna yazılır.
+
+### Kural 1: Aktarılabilir özellikler
+Sahte ve gerçek verideki ürün, model ve müşteri ID'leri farklıdır. Modelde ID veya ID'den türeyen embedding kullanılmaz.
+
+| kullanılabilir | kullanılamaz |
+|---|---|
+| kategori, iş birimi, renk grubu | `barkod`, `icerik_id`, `model_kodu`, `musteri_id` |
+| beden ve bedenin setteki konumu (küçük → büyük) | ürün adı kelimeleri (sahte adlar uydurma) |
+| fiyat, **kategori içi fiyat endeksi**, indirim oranı, indirim türü | mutlak tarih (sahte 2 yıl, gerçek 3 ay) |
+| ürünün **o tarihe kadarki** iade oranı, satış hızı, puanı (her veri setinde kendi geçmişinden hesaplanır) | |
+| haftanın günü, ay, özel gün, il, kargo firması, hızlı teslimat | |
+
+Ürünün geçmiş iade oranı gibi özellikler her veri setinde **o satırın tarihinden öncesine** bakılarak hesaplanmalı; yoksa sızıntı olur.
+
+### Kural 2: Etiketin "olgunlaşması"
+İade, teslimden sonraki ~15 gün içinde gelir. Gerçek verinin son günlerinde teslim edilen satırların iadesi henüz gelmemiş olabilir.
+
+| model | gerçek test penceresi |
+|---|---|
+| iade riski, beden uyumu | 16 Temmuz – 8 Ekim arası **teslim edilmiş** satırlar (son 15 gün hariç); etiket = `durum == "Accepted"` iade |
+| talep tahmini | son 6 hafta (gecikme özellikleri için önceki haftalar yalnızca girdi olarak) |
+| duygu analizi | tüm gerçek yorumlar; etiket puandan (1–2 olumsuz, 4–5 olumlu, 3 hariç) |
+| konu sınıflandırma | elle etiketlenmiş 100 gerçek soru |
+| segmentasyon | tüm gerçek müşteriler (etiket yok: kararlılık ve yorumlanabilirlik) |
+
+### Kural 3: Toplam oranı tutturmak başarı değildir
+Sahte veri, gerçek verinin **toplam** dağılımlarına göre ayarlandı: iade oranı, neden dağılımı, kategori payları. Bu yüzden
+"modelin tahmin ettiği ortalama iade oranı gerçeğe çok yakın" demek bir başarı göstergesi değildir. Başarı, **sıralama ve hata**
+metrikleriyle ölçülür:
+- riskli satırı risksizden ayırabiliyor mu? (AUC),
+- ürün bazında talebi doğru büyüklükte tahmin ediyor mu? (WAPE).
+
+### Baseline'lar ve metrikler
+
+| model | gerçek veride baseline | metrik |
 |---|---|---|
-| beden önerisi / iade riski | dar-bol modeller, iadenin beden kaynaklı olduğu satırlar | modeller.kalip, satirlar.beden_uyumu |
-| fiyat / indirim etkisi | ürün bazında esneklik (1,2–2,2) | modeller.fiyat_esnekligi, fiyat_kupon_degisimleri |
-| satış tahmini | kampanya, mevsim ve haftanın günü etkileri | gunluk_carpanlar |
-| reklam getirisi | reklam çarpanı (1.000 TL/7 gün ≈ +%6) | gunluk_carpanlar.reklam_carpani |
-| ürün skorlama | gizli kalite | modeller.kalite |
-| beden önerisi (boy-kilo) | müşterinin ideal bedeni | musteriler.boy/kilo |
+| iade riski | kategorinin ortalama iade oranı | ROC-AUC, PR-AUC, Brier skoru, kalibrasyon eğrisi |
+| beden uyumu | herkese "tam" (en sık sınıf) / kategori oranı | sınıf bazında PR-AUC, makro F1 |
+| beden önerisi | kullanıcının seçtiği beden | boy-kilo bilgili, memnun yorumlarda doğru beden oranı |
+| talep tahmini | son 4 haftanın ortalaması, geçen haftanın aynısı | WAPE, MAE (ürün × hafta ve mağaza toplamı) |
+| duygu analizi | olumlu/olumsuz kelime listesi | F1 (olumsuz sınıf), doğruluk |
+| konu sınıflandırma | mevcut kural tabanlı `soru_konusu()` | makro F1 |
+| derin öğrenme modelleri | aynı problemin klasik modeli (GBM) | aynı metrik |
 
-Bu seviye **yöntemin** doğru çalıştığını kanıtlar, gerçek dünyayı değil: ilişkileri sahte veriye biz koyduk.
+Derin öğrenme modeli klasik modeli geçemiyorsa bu da raporlanır; küçük tablo verisinde bu sık görülen ve değerli bir bulgudur.
 
-## Seviye 2: Geriye dönük zaman testi (sızıntısız)
+### Önerilen ek karşılaştırma: gerçek-içi referans
+Aynı modelin gerçek verinin ilk ~2 ayıyla eğitilip son ayda test edilen sürümü (`ozellik_cikar.py gercek --kesim 2026-09-15`).
+Sahte → gerçek sonucuyla yan yana konunca "sahte veriyle eğitmenin bedeli ne kadar?" sorusu cevaplanır. Bu referans
+yalnızca karşılaştırma içindir; kullanılan model sahtede eğitilen modeldir.
 
-Rastgele train/test ayırmayın: satışta ve iadede rastgele ayırma modele geleceği gösterir. Bunun yerine bir
-**kesim tarihi** seçin: özellikler kesime kadar bilinenlerden, hedef kesimden sonraki dönemden hesaplanır.
+### Sızıntı kontrol listesi
+- Gerçek veriye bakarak özellik veya eşik seçilmedi (yalnızca F1-04 dağılım karşılaştırması sonrası, gerekçesiyle).
+- Ürün geçmişi özellikleri satırın tarihinden öncesiyle hesaplandı.
+- `analiz/` tablolarının tüm dönemi kapsayan özetleri (ör. `urun_ozet.iade_orani`) özellik olarak kullanılmadı.
+- `urunler` tablosundaki stok, fiyat, satışta ve arşivde bilgisi bugünün durumu: özellik yapılmaz; fiyat satış satırlarından alınır.
+- `tahmini_teslim_*` ve `odeme_tarihi` planlanmış tarihlerdir, sızıntı değildir.
 
-```bash
-python hazirlama/ozellik_cikar.py sahte --kesim 2026-06-30   # -> veri/sahte/analiz_kesim_2026-06-30/
-```
+---
 
-```python
-import sys; sys.path.insert(0, "hazirlama")
-import pandas as pd
-from ortak import VERI, hepsini_oku, kesim_uygula
-
-KESIM, UFUK = pd.Timestamp("2026-06-30"), 30
-tum = hepsini_oku(VERI / "sahte")
-gecmis = kesim_uygula(tum, KESIM)          # kesim anında bilinen dünya (özellikler bundan)
-
-# Hedef: kesimden sonraki 30 günde ürün (renk) başına satış adedi
-X = pd.read_csv(VERI / "sahte" / "analiz_kesim_2026-06-30" / "urun_ozet.csv")
-s = tum["siparisler"]; l = tum["siparis_satirlari"].merge(s[["paket_id", "siparis_tarihi", "iptal"]])
-l = l.merge(tum["urunler"][["barkod", "icerik_id"]])
-gelecek = l[(l.siparis_tarihi > KESIM + pd.Timedelta(days=1)) &
-            (l.siparis_tarihi <= KESIM + pd.Timedelta(days=1 + UFUK)) & ~l.iptal]
-y = gelecek.groupby("icerik_id").adet.sum()
-veri = X.set_index("icerik_id").join(y.rename("hedef_30g_adet")).fillna({"hedef_30g_adet": 0})
-```
-
-**Kayan pencere (backtesting):** Tek bir kesim şanslı olabilir. Birkaç kesimle (ör. her ay sonu) eğitip
-ortalama hatayı raporlayın.
-
-**Sızıntı kontrol listesi**
-- `analiz/` (kesimsiz) tablolar **tüm dönemi** kapsar; model eğitiminde yalnızca `analiz_kesim_*` kullanın.
-- `urunler` tablosundaki stok, fiyat, satışta ve arşivde bilgisi **bugünün** durumudur: özellik yapmayın.
-  Fiyatı satış satırlarından alın.
-- `tahmini_teslim_*` ve `odeme_tarihi` kesimden sonrayı gösterebilir; bunlar sipariş/işlem anında bilinen
-  **planlanmış** tarihlerdir, sızıntı değildir.
-- Aynı müşteri veya sipariş hem eğitimde hem testte olmasın (öneri sistemi, iade modeli): grup bazlı ayırın.
-- Yeni ürün performansını ölçmek için bazı ürünleri tamamen teste ayırın (soğuk başlangıç).
-
-**Her model bir baseline'ı geçmeli**
-
-| model | baseline | metrik |
-|---|---|---|
-| iade riski | ürünün geçmiş iade oranı | AUC, Brier skoru, kalibrasyon eğrisi |
-| beden önerisi | herkese kendi bedeni | doğru beden oranı; sahtede kalıp doğruluğu (%77'yi geç) |
-| satış tahmini | geçen haftanın aynı günü (mevsimsel naive) | WAPE, MAE |
-| indirim etkisi | tek bir sabit esneklik | katsayı ve güven aralığı |
-| NLP (duygu/konu) | TF-IDF + lojistik regresyon | sınıf bazında F1 (elle etiketlenmiş 100-200 örnek) |
-| öneri sistemi | en çok satanlar | Recall@10, NDCG@10 |
-| segmentasyon | — | silhouette, farklı dönemlerde kararlılık, yorumlanabilirlik |
-
-Derin öğrenme modelini her zaman klasik bir modelle (LightGBM vb.) karşılaştırın; geçemiyorsa bunu raporlamak da bir bulgudur.
-
-## Kapsam dışı: zamana bağlı doğrulama
-
-Yeni verinin gelmesini beklemeyi gerektiren yöntemler bu projede **kullanılmaz**:
-- ileriye dönük test (bugün tahmin edip ufuk dolunca gerçekleşenle karşılaştırmak),
-- satıcıyla A/B deneyi (değişikliğin haftalar sonra ölçülmesi).
-
-Bunların yerine seviye 2'deki kayan pencere testi, mevcut verinin son dönemlerini "gelecek" gibi kullanır.
-Gerçek sipariş geçmişi kısa olduğu için (Temmuz 2026'dan beri) gerçek veride sonuçlar kısa dönem üzerinden
-raporlanır. Uzun dönem gerektiren analizlerde (mevsimsellik, yıllık trend) gerçek veride finans tablosundaki
-1 yıllık satış kayıtları, yöntem doğrulamasında ise 2 yıllık sahte veri kullanılır.
+## Kapsam dışı
+Yeni veri gelmesini beklemeyi gerektiren yöntemler kullanılmaz: ileriye dönük test (bugün tahmin edip gerçekleşmesini
+beklemek) ve satıcıyla A/B deneyi.

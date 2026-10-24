@@ -117,8 +117,8 @@ urun = pd.read_csv(VERI / "sahte" / "analiz" / "urun_ozet.csv")  # analiz tablol
 Model ve analizleri `sahte` üzerinde geliştirin; hazır olduğunda klasör adını `gercek` yaparak aynı kodu gerçek
 veride çalıştırın. Tabloların ayrıntısı: [docs/VERI_SOZLUGU.md](docs/VERI_SOZLUGU.md).
 
-Model eğitirken `analiz/` yerine kesimli tabloları kullanın (`analiz/` tüm dönemi kapsar, geleceği sızdırır) ve
-sonucu elimizdeki veriyle iki seviyede doğrulayın: [docs/MODEL_DOGRULAMA.md](docs/MODEL_DOGRULAMA.md).
+Modeller sahte veriyle eğitilir ve gerçek verinin son 3 ayıyla doğrulanır (gerçek veri eğitimde kullanılmaz):
+[docs/MODEL_DOGRULAMA.md](docs/MODEL_DOGRULAMA.md).
 
 ## Kişisel veriler (KVKK)
 

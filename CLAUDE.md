@@ -5,16 +5,16 @@ geliştiren ekip projesi. Yapay zekâ asistanları ve yeni ekip üyeleri için k
 
 ## Önce bunları oku
 - `docs/DURUM.md` — şu an neredeyiz, aktif görevler, son devir notları
-- `docs/PROJE_PLANI.md` — görevler (ID'ler: F0-01 ...), mimari, kararlar
+- `docs/PROJE_PLANI.md` — 14 günlük plan, görevler (ID'ler: F0-01 ...), mimari, kararlar
 - `CONTRIBUTING.md` — dal/commit/PR kuralları, devir protokolü, bitti tanımı
 - `docs/VERI_SOZLUGU.md`, `docs/MODEL_DOGRULAMA.md` — veri ve doğrulama
 
 ## Kesin kurallar
 - `.env`, `veri/ham/`, `veri/gercek/`, `ciktilar/gercek/` asla commitlenmez veya okunup dışarı aktarılmaz.
 - Geliştirme `veri/sahte/` ile yapılır; kod `sahte` ve `gercek` için aynı şekilde çalışmalı.
-- Model eğitiminde kesimli tablolar kullanılır (`hazirlama/ozellik_cikar.py --kesim`, `ortak.kesim_uygula`); `analiz/` tabloları tüm dönemi kapsar ve sızıntı yapar.
+- Modeller **sahte veriyle eğitilir, gerçek verinin son 3 ayıyla test edilir**; gerçek veri eğitimde kullanılmaz. ID yerine aktarılabilir özellikler (kategori, beden konumu, fiyat endeksi, geçmiş iade oranı ...). Ayrıntı: `docs/MODEL_DOGRULAMA.md`.
 - `veri/sahte/dogru_cevaplar/` yalnızca doğrulama içindir; modele özellik olarak verilmez.
-- Metrikler tek yerde hesaplanır (`analiz/metrikler.py`, Faz 1'de oluşturulacak).
+- Metrikler tek yerde hesaplanır (`analiz/metrikler.py`, görev F1-02).
 - Sistem Trendyol'a yazmaz; yalnızca okur ve önerir.
 - İş bitince planı, DURUM.md'yi güncelle; yarım kalan iş için `docs/devir/` altına not yaz.
 
