@@ -13,7 +13,8 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - Veri altyapısı hazır: gerçek veri (son 3 ay, kişisel veri yok), 2 yıllık sahte veri, analiz tabloları.
 - Plan 2 haftaya göre yeniden yazıldı. Yöntem: modeller sahte veriyle eğitilir, gerçek verinin son 3 ayıyla doğrulanır ([MODEL_DOGRULAMA.md](MODEL_DOGRULAMA.md)).
 - Depo GitHub'a yüklendi (2026-10-24).
-- **Sıradaki adım:** collaborator'ları eklemek ve `main` dalını korumak (F0-01), ortamı doğrulamak (F0-02), API anahtarı (F0-03).
+- `main` dalı korumada: silinemez, `--force` push yapılamaz (doğrudan push serbest).
+- **Sıradaki adım:** collaborator'ları eklemek (F0-01), ortamı doğrulamak (F0-02), API anahtarı (F0-03).
 
 ## Aktif görevler
 
@@ -21,7 +22,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| F0-01 | Tahir | `main` | 2026-10-24 | push edildi; collaborator'lar ve `main` koruması bekleniyor |
+| F0-01 | Tahir | `main` | 2026-10-24 | push edildi, `main-koruma` kuralı aktif; collaborator davetleri bekleniyor |
 
 ## Gün 1–3 için sıradaki görevler
 1. **F0-01:** GitHub'a push, collaborator'lar (Tahir)

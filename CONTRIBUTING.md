@@ -74,10 +74,13 @@ Devir notları birikerek **projenin günlüğü** olur. Her not ayrı bir dosya 
 | Commit | `<ID>: <ne yapıldı>`, Türkçe, geçmiş zaman veya emir kipi, tek konu | `F1-03: Haftanın günü ve saat içgörüleri eklendi` |
 | PR başlığı | `<ID>: <görev adı>` | `F1-03: Durum analizi` |
 | PR boyutu | bir PR = bir görev (veya bir görevin anlamlı parçası) | |
-| İnceleme | en az bir ekip arkadaşının onayı | |
+| İnceleme | mümkünse bir ekip arkadaşının onayı (takvim sıkışırsa kendin birleştirebilirsin) | |
 | Birleştirme | **"Create a merge commit"**, squash yok | hoca tüm commit'leri görebilsin |
 
-`main` dalına doğrudan push yapılmaz; her değişiklik PR ile gelir.
+**Ne zaman PR, ne zaman doğrudan `main`?**
+- **Görevler (kod, model, sayfa):** her zaman `gorev/...` dalı + PR. Hoca çalışma sürecini PR'lardan görür, devralan taslak PR'dan nerede kalındığını görür.
+- **Küçük düzeltmeler** (yazım hatası, DURUM.md güncellemesi, devir notu): doğrudan `main`'e push edilebilir.
+- Push etmeden önce her zaman `git pull`. **`git push --force` kullanılmaz**; GitHub'daki kural (`main-koruma`) zaten engeller ve `main` silinemez.
 
 ---
 
