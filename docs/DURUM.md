@@ -14,7 +14,8 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - Plan 2 haftaya göre yeniden yazıldı. Yöntem: modeller sahte veriyle eğitilir, gerçek verinin son 3 ayıyla doğrulanır ([MODEL_DOGRULAMA.md](MODEL_DOGRULAMA.md)).
 - Depo GitHub'a yüklendi (2026-10-24).
 - `main` dalı korumada: silinemez, `--force` push yapılamaz (doğrudan push serbest).
-- **Sıradaki adım:** collaborator'ları eklemek (F0-01), ortamı doğrulamak (F0-02), API anahtarı (F0-03).
+- Ekip depoya eklendi: 4 collaborator (F0-01 ✅).
+- **Sıradaki adım:** ortamı doğrulamak (F0-02), API anahtarı (F0-03), herkesin kurulumu (F0-04).
 
 ## Aktif görevler
 
@@ -22,10 +23,10 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| F0-01 | Tahir | `main` | 2026-10-24 | push edildi, `main-koruma` kuralı aktif; collaborator davetleri bekleniyor |
+| — | | | | |
 
 ## Gün 1–3 için sıradaki görevler
-1. **F0-01:** GitHub'a push, collaborator'lar (Tahir)
+1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
 2. **F0-02:** paket kurulumlarını doğrula, `requirements.txt` güncelle
 3. **F0-03:** Anthropic API anahtarı (Tahir)
 4. **F0-04:** herkes kurulumu yapar, "Ekip" tablosuna kendini ekler
@@ -57,6 +58,10 @@ Yarım bırakılıp devralınmayı bekleyen görevler (devir notu bağlantısıy
 | isim | GitHub | iz (plan §6) | kurulum (F0-04) |
 |---|---|---|---|
 | Tahir | [TahirAytekin](https://github.com/TahirAytekin) | proje sahibi, gerçek veri | ✅ |
+| — | [cgnarsln-arch](https://github.com/cgnarsln-arch) | — | ⬜ |
+| Deha Furkan Sarıer | [dehasarier2005](https://github.com/dehasarier2005) | — | ⬜ |
+| Selim | [selimmoroglu](https://github.com/selimmoroglu) | — | ⬜ |
+| Yakup | [yakup-ayata](https://github.com/yakup-ayata) | — | ⬜ |
 
 ## Son devir notları
 - 2026-10-24 — Tahir — [Başlangıç: veri altyapısı ve proje planı](devir/2026-10-24-tahir-baslangic.md)
