@@ -16,7 +16,9 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - `main` dalı korumada: silinemez, `--force` push yapılamaz (doğrudan push serbest).
 - Ekip depoya eklendi: 4 collaborator (F0-01 ✅).
 - Ortam doğrulandı (F0-02 ✅): Python 3.14'te tüm paketler kurulu; hazır modeller indirildi ve Türkçe örneklerle denendi; `python -m pytest` ile 19 kontrol.
-- **Sıradaki adım:** API anahtarı (F0-03), herkesin kurulumu (F0-04), metrik sözlüğü (F1-01).
+- Metrikler hazır (F1-01, F1-02 ✅): 39 metrik, `analiz/metrikler.py`, tanımlar `docs/METRIKLER.md`. İade oranı 21 gün olgunlaşma ve az örnek kuralıyla hesaplanıyor.
+- Gerçek veride iki düzeltme: bölünmüş (`UnPacked`) paketler çift sayılmıyor; iadeler pakete satır üzerinden bağlanıyor.
+- **Sıradaki adım:** API anahtarı (F0-03), herkesin kurulumu (F0-04), durum analizi (F1-03), web iskeleti (F5-01), model altyapısı (F2-01).
 
 ## Aktif görevler
 
@@ -24,16 +26,17 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| F1-01, F1-02 | Tahir | `gorev/F1-02-metrikler` | 2026-10-25 | metrik tanımları ve modül yazılıyor |
+| — | | | | |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
 2. ~~F0-02: paket kurulumları~~ ✅
 3. **F0-03:** Anthropic API anahtarı (Tahir)
 4. **F0-04:** herkes kurulumu yapar, "Ekip" tablosuna kendini ekler
-5. **F1-01 → F1-02:** metrik sözlüğü ve `analiz/metrikler.py` (web, tavsiye ve asistan buna bağlı)
-6. **F5-01:** web iskeleti (F1-02 ile paralel)
-7. **F2-01:** model altyapısı: aktarılabilir özellikler, sahte → gerçek değerlendirme
+5. ~~F1-01 → F1-02: metrik sözlüğü ve `analiz/metrikler.py`~~ ✅
+6. **F1-03 → F1-05:** durum analizi, gerçek–sahte karşılaştırma, senaryo simülatörü
+7. **F5-01:** web iskeleti (artık başlayabilir: metrikler hazır)
+8. **F2-01:** model altyapısı: aktarılabilir özellikler, sahte → gerçek değerlendirme
 
 ## Ara kontroller
 | kontrol | gün | ölçüt | durum |
