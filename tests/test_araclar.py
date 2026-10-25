@@ -17,8 +17,10 @@ def test_semalar_strict_ve_tam():
     for s in a.semalar():
         g = s["input_schema"]
         assert s["strict"] and g["additionalProperties"] is False
-        assert set(g["required"]) == set(g["properties"])                    # strict: tüm alanlar listede
+        assert set(g["required"]) <= set(g["properties"])
         assert s["description"] and all(p["description"] for p in g["properties"].values())
+        for p in g["properties"].values():                     # strict: birleşik tür yok (toplam sınır 16)
+            assert isinstance(p["type"], str) and "anyOf" not in p
 
 
 def test_dogrulama():

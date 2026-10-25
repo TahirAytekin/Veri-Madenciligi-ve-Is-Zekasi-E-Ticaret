@@ -45,19 +45,20 @@ ARACLAR = {}
 # ====================================================
 
 def _alan(tur, aciklama, zorunlu=False, enum=None):
-    sema = {"type": tur if zorunlu else [tur, "null"], "description": aciklama}
-    if enum:
-        sema["enum"] = enum + ([] if zorunlu else [None])
-    return sema, zorunlu
+    """(şema, kural). Şema API içindir; kural (tür, zorunlu, enum) koddaki doğrulama içindir. İsteğe bağlı alanlar
+    'required' listesine girmez (strict şemada birleşik türlü alan sayısı sınırlı: toplam 16)."""
+    sema = {"type": tur, "description": aciklama, **({"enum": enum} if enum else {})}
+    return sema, {"tur": tur, "zorunlu": zorunlu, "enum": enum}
 
 
 def arac(ad, aciklama, **alanlar):
-    """Araç fonksiyonunu kaydeder. Strict şema: tüm alanlar 'required', isteğe bağlılar null alabilir."""
+    """Araç fonksiyonunu kaydeder. Strict şema; 'required' yalnızca zorunlu alanlar, eksik alan None olur."""
     def kaydet(f):
         ozellikler = {k: v[0] for k, v in alanlar.items()}
-        ARACLAR[ad] = {"fonksiyon": f, "zorunlu": [k for k, v in alanlar.items() if v[1]], "sema": {
+        ARACLAR[ad] = {"fonksiyon": f, "kurallar": {k: v[1] for k, v in alanlar.items()}, "sema": {
             "name": ad, "description": aciklama, "strict": True,
-            "input_schema": {"type": "object", "properties": ozellikler, "required": list(ozellikler),
+            "input_schema": {"type": "object", "properties": ozellikler,
+                             "required": [k for k, v in alanlar.items() if v[1]["zorunlu"]],
                              "additionalProperties": False}}}
         return f
     return kaydet
@@ -71,24 +72,23 @@ def dogrula(ad, girdi):
         raise ValueError(f"bilinmeyen araç: {ad}")
     if not isinstance(girdi, dict):
         raise ValueError("girdi bir nesne olmalı")
-    a = ARACLAR[ad]
-    ozellikler = a["sema"]["input_schema"]["properties"]
-    fazla = set(girdi) - set(ozellikler)
+    kurallar = ARACLAR[ad]["kurallar"]
+    fazla = set(girdi) - set(kurallar)
     if fazla:
         raise ValueError(f"bilinmeyen alan: {sorted(fazla)}")
     temiz = {}
-    for k, s in ozellikler.items():
+    for k, kural in kurallar.items():
         v = girdi.get(k)
         if v is None:
-            if k in a["zorunlu"]:
+            if kural["zorunlu"]:
                 raise ValueError(f"zorunlu alan eksik: {k}")
             temiz[k] = None
             continue
-        tur = s["type"] if isinstance(s["type"], str) else s["type"][0]
+        tur = kural["tur"]
         if isinstance(v, bool) and tur in ("integer", "number") or not isinstance(v, _TURLER[tur]):
             raise ValueError(f"{k}: {tur} bekleniyordu")
-        if "enum" in s and v not in s["enum"]:
-            raise ValueError(f"{k}: izin verilen değerler {[e for e in s['enum'] if e is not None]}")
+        if kural["enum"] and v not in kural["enum"]:
+            raise ValueError(f"{k}: izin verilen değerler {kural['enum']}")
         temiz[k] = v
     return temiz
 
