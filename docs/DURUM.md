@@ -26,7 +26,8 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - **Sahte veri v2 (F1-06 ✅, [rapor](rapor/sahte_v2_kalibrasyon.md)):** sahte üretici test öncesi gerçek veriye (23.10.2025–15.07.2026) kalibre edildi; kalibrasyon hedeflerinin 15/16'sı tutuyor (v1: 6/16). `veri/sahte/` artık v2; v1 `--v1` ile birebir üretilebiliyor. F2-02 gerçekte ortalama 0,626 → 0,665 ve daha kararlı, ama ürün geçmişini (0,680) yine geçemiyor. Düzeltmeler: F2-02'nin v1 sonucu (0,671) şanslı bir tohumdu; beden düzeyinde eğilim önerisi geri çekildi (beden konumu gerçekte iadeyi öngörmüyor). MLP v2'de 0,590'a düştü. `docs/rapor/01_gercek_sahte.md` v1 verisine aittir.
 - **Beden uyumu (F2-04 ✅, [model kartı](modeller/F2-04.md)):** `beden_oner(boy, kilo)` gerçek müşterilerin %42–50'sine tam aldığı bedeni öneriyor (en sık beden: %11–28; 3/3 tohumda anlamlı). Kalıp tablosu: gerçekte 7 dar, 1 bol ürün. Kalıp skoru beden iadesinin yönünü gerçekte zayıf ayırıyor (AUC 0,586, sınırda); satır düzeyi yön modeli kalıp skorunu geçemedi.
 - **Talep tahmini (F2-05 ✅, [model kartı](modeller/F2-05.md)):** sahteyle eğitilen model gerçekte "geçen haftanın satışı"ndan anlamlı biçimde kötü (WAPE 0,56–0,65'e karşı 0,47; 3/3 tohum). İki tanı: gerçek çok satanlar sahte ölçeğin dışında (ağaç tavanı) ve gerçek talep kalıcı sıçramalar yapıyor, sahte ise ortalamaya dönüyor. Web'de stok tükenme tablosu geçen haftanın satış hızıyla hesaplanıyor (gerçekte 72 aktif ürün, 2'si 4 haftadan kısa sürede tükenecek).
-- **Sıradaki adım:** F2-06 BERT duygu; paralel: web iskeleti (F5-01), API anahtarı (F0-03). Ekip K-14'ü onaylamalı. İsteğe bağlı: sahte üreticiye talep dinamiği kalibrasyonu (test öncesi pencereyle).
+- **Duygu analizi (F2-06 ✅, [model kartı](modeller/F2-06.md)):** hazır Türkçe BERT gerçek yorumlarda AUC 0,910 (ürün yorumlarında 0,924), ama önceden sabitlenen kelime listesinden (0,833) anlamlı biçimde iyi değil (+0,020 [−0,036, +0,076]). Bulgu: BERT genel puandan çok metindeki şikâyeti yakalıyor (4★ yorumların %79'u şikâyetli). Web'de genel duygu puandan, şikâyet işareti ve konu BERT'ten; gerçekte en sık şikâyet beden/kalıp (56) ve kumaş/kalite (47).
+- **Sıradaki adım:** F2-12 doğrulama raporu (tüm modeller tek tabloda) → F3 tavsiye motoru; paralel: web iskeleti (F5-01), API anahtarı (F0-03). Ekip K-14'ü onaylamalı.
 
 ## Aktif görevler
 
@@ -44,7 +45,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 5. ~~F1-01 → F1-02: metrik sözlüğü ve `analiz/metrikler.py`~~ ✅
 6. ~~F1-03, F1-04, F1-05~~ ✅ · Faz 1 tamamlandı
 7. **F5-01:** web iskeleti (artık başlayabilir: metrikler hazır)
-8. ~~F2-01 model altyapısı~~ ✅ · ~~F2-02 iade riski (GBM)~~ ✅ · ~~F2-03 iade riski (MLP)~~ ✅ · ~~F1-06 sahte veri v2~~ ✅ · ~~F2-04 beden uyumu~~ ✅ · ~~F2-05 talep~~ ✅ · **F2-06:** BERT duygu
+8. ~~F2-01 model altyapısı~~ ✅ · ~~F2-02 iade riski (GBM)~~ ✅ · ~~F2-03 iade riski (MLP)~~ ✅ · ~~F1-06 sahte veri v2~~ ✅ · ~~F2-04 beden uyumu~~ ✅ · ~~F2-05 talep~~ ✅ · ~~F2-06 BERT duygu~~ ✅ · **F2-12:** doğrulama raporu
 
 ## Ara kontroller
 | kontrol | gün | ölçüt | durum |
