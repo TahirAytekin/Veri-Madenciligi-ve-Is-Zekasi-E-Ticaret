@@ -34,7 +34,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F2-06 | Tahir | `gorev/F2-06-duygu` | 2026-10-26 | tasarım, başarı ölçütü ve kelime listesi önceden yazıldı ([F2-06.md](modeller/F2-06.md)) |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅

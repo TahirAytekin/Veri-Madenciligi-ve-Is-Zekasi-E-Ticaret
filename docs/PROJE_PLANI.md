@@ -191,7 +191,7 @@ Her model için: aktarılabilir özellikler, gerçek veride baseline karşılaş
 | F2-03 | **İade riski (derin öğrenme, MLP):** kategorik embedding'li PyTorch MLP vs F2-02 | P1 | F2-02 | model + karşılaştırma | Tahir | ✅ |
 | F2-04 | **Beden uyumu ve kalıp:** "küçük geldi / büyük geldi" riski (çok sınıflı), model × beden kalıp eğilimi, boy-kilo → beden öneri fonksiyonu. Gerçek test: SMALLSIZE/BIGSIZE iadeleri + boy-kilo bilgili yorumlar | P1 | F2-01 | model + `beden_oner()` + kart | Tahir | ✅ |
 | F2-05 | **Talep tahmini:** ürün × hafta global GBM (gecikmeler, hareketli ortalamalar, takvim, fiyat, indirim) + mağaza toplamı + stok tükenme tarihi. Gerçek test: son 6 hafta | P1 | F2-01 | model + kart | Tahir | ✅ |
-| F2-06 | **Duygu analizi (derin öğrenme):** hazır eğitilmiş Türkçe BERT modeli ile ürün ve satıcı yorumları. Gerçek test etiketi = puan (1–2 olumsuz, 4–5 olumlu); baseline: kelime listesi | P1 | F0-02 | model + kart | — | ⬜ |
+| F2-06 | **Duygu analizi (derin öğrenme):** hazır eğitilmiş Türkçe BERT modeli ile ürün ve satıcı yorumları. Gerçek test etiketi = puan (1–2 olumsuz, 4–5 olumlu); baseline: kelime listesi | P1 | F0-02 | model + kart | Tahir | 🟨 |
 | F2-07 | **Talep tahmini (derin öğrenme, LSTM/GRU)** vs F2-05 | P2 | F2-05 | model + karşılaştırma | — | ⬜ |
 | F2-08 | **Konu sınıflandırma:** cümle embedding'i + sınıflandırıcı (sahte şablonlarla eğitilir) vs mevcut kural tabanlı sistem. Gerçek test: elle etiketlenmiş 100 soru | P2 | F2-01 | model + kart | — | ⬜ |
 | F2-09 | **Müşteri segmentasyonu:** RFM + K-Means sahtede kurulur, gerçeğe uygulanır; segment başına aksiyon | P2 | F1-02 | segmentler + kart | — | ⬜ |
