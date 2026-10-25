@@ -70,6 +70,9 @@ trendyoll/
 │   ├── duygu.py             F2-06 yorum duygusu ve şikâyet konuları (hazır Türkçe BERT)
 │   ├── surum_karsilastirma.py  sahte veri v1/v2 etkisi (F1-06)
 │   └── dogrulama_raporu.py  F2-12 tüm modellerin doğrulama tablosu (--yeniden: hepsini baştan çalıştırır)
+├── asistan/                 F4 veriyle konuşan asistan
+│   ├── bilgi_tabani.py      aranacak metin parçaları (metrik, belge, içgörü, tavsiye, ürün, kategori, ay)
+│   └── arama.py             yerel embedding (multilingual-e5-base) ile arama; test seti degerlendirme/
 ├── tavsiye/                 F3 tavsiye motoru (docs/TAVSIYE_KURALLARI.md)
 │   ├── sema.py              tavsiye yapısı: kanıt, aksiyon, aylık TL etkisi, güven
 │   ├── kurallar.py          14 kural (stok, kalıp, iade, zarar, indirim, kampanya, şikâyet, sezon ...)
@@ -120,6 +123,7 @@ python -m modeller.dogrulama_raporu --yeniden   # (gerçek veriyle) tüm modelle
 python -m modeller.beden_uyumu          # tek bir model (her model kendi ciktilar/ dosyalarını yazar)
 python -m tavsiye.motor --veri sahte    # tavsiyeler + haftalık aksiyon planı -> ciktilar/sahte/
 python -m tavsiye.urun_karti --veri sahte   # ürün sağlık kartları -> ciktilar/sahte/urun_kartlari.json
+python -m asistan.bilgi_tabani --veri sahte && python -m asistan.arama --soru "katkı payı ne demek"   # ilk seferde model iner (~1,1 GB)
 ```
 
 Çekimler **artımlıdır**: ilk çalıştırmada geçmiş alınır, sonrakilerde yalnızca son dönem (iade ve finans
