@@ -2,9 +2,9 @@
 
 Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde ve her PR birleştirmesinde güncellenir.**
 
-**Son güncelleme:** 2026-10-25 · **Güncelleyen:** Tahir
+**Son güncelleme:** 2026-10-26 · **Güncelleyen:** Tahir
 **Takvim:** 14 gün, Gün 1 = 26.10.2026 Pzt, teslim = 08.11.2026 Paz ([plan §4](PROJE_PLANI.md#4-takvim-14-gün))
-**Bugün:** Gün 0 (hazırlık) · **Güncel faz:** F0 — Altyapı
+**Bugün:** Gün 1 (26.10) · **Güncel faz:** F2 tamamlandı (P1) → F3 — Tavsiye motoru
 **Depo:** https://github.com/TahirAytekin/Veri-Madenciligi-ve-Is-Zekasi-E-Ticaret
 
 ---
@@ -27,7 +27,8 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - **Beden uyumu (F2-04 ✅, [model kartı](modeller/F2-04.md)):** `beden_oner(boy, kilo)` gerçek müşterilerin %42–50'sine tam aldığı bedeni öneriyor (en sık beden: %11–28; 3/3 tohumda anlamlı). Kalıp tablosu: gerçekte 7 dar, 1 bol ürün. Kalıp skoru beden iadesinin yönünü gerçekte zayıf ayırıyor (AUC 0,586, sınırda); satır düzeyi yön modeli kalıp skorunu geçemedi.
 - **Talep tahmini (F2-05 ✅, [model kartı](modeller/F2-05.md)):** sahteyle eğitilen model gerçekte "geçen haftanın satışı"ndan anlamlı biçimde kötü (WAPE 0,56–0,65'e karşı 0,47; 3/3 tohum). İki tanı: gerçek çok satanlar sahte ölçeğin dışında (ağaç tavanı) ve gerçek talep kalıcı sıçramalar yapıyor, sahte ise ortalamaya dönüyor. Web'de stok tükenme tablosu geçen haftanın satış hızıyla hesaplanıyor (gerçekte 72 aktif ürün, 2'si 4 haftadan kısa sürede tükenecek).
 - **Duygu analizi (F2-06 ✅, [model kartı](modeller/F2-06.md)):** hazır Türkçe BERT gerçek yorumlarda AUC 0,910 (ürün yorumlarında 0,924), ama önceden sabitlenen kelime listesinden (0,833) anlamlı biçimde iyi değil (+0,020 [−0,036, +0,076]). Bulgu: BERT genel puandan çok metindeki şikâyeti yakalıyor (4★ yorumların %79'u şikâyetli). Web'de genel duygu puandan, şikâyet işareti ve konu BERT'ten; gerçekte en sık şikâyet beden/kalıp (56) ve kumaş/kalite (47).
-- **Sıradaki adım:** F2-12 doğrulama raporu (tüm modeller tek tabloda) → F3 tavsiye motoru; paralel: web iskeleti (F5-01), API anahtarı (F0-03). Ekip K-14'ü onaylamalı.
+- **Doğrulama raporu (F2-12 ✅, [02_dogrulama.md](rapor/02_dogrulama.md)):** tüm modeller tek tabloda; web için `docs/rapor/02_dogrulama.json`. `python -m modeller.dogrulama_raporu --yeniden` tüm modelleri baştan çalıştırıp (~3 dk) aynı sayıları üretiyor. Gerçekte başarılı: F2-04C beden önerisi; diğerleri basit referansları geçemedi. **Faz 2'nin P1 görevleri tamamlandı (K1 ✅, plandan 6 gün önce).**
+- **Sıradaki adım:** F3-01 tavsiye motoru veri sözleşmesi → F3-02 tavsiye kuralları; paralel: web iskeleti (F5-01), API anahtarı (F0-03). Ekip K-14'ü onaylamalı.
 
 ## Aktif görevler
 
@@ -45,12 +46,12 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 5. ~~F1-01 → F1-02: metrik sözlüğü ve `analiz/metrikler.py`~~ ✅
 6. ~~F1-03, F1-04, F1-05~~ ✅ · Faz 1 tamamlandı
 7. **F5-01:** web iskeleti (artık başlayabilir: metrikler hazır)
-8. ~~F2-01 model altyapısı~~ ✅ · ~~F2-02 iade riski (GBM)~~ ✅ · ~~F2-03 iade riski (MLP)~~ ✅ · ~~F1-06 sahte veri v2~~ ✅ · ~~F2-04 beden uyumu~~ ✅ · ~~F2-05 talep~~ ✅ · ~~F2-06 BERT duygu~~ ✅ · **F2-12:** doğrulama raporu
+8. ~~F2-01 model altyapısı~~ ✅ · ~~F2-02 iade riski (GBM)~~ ✅ · ~~F2-03 iade riski (MLP)~~ ✅ · ~~F1-06 sahte veri v2~~ ✅ · ~~F2-04 beden uyumu~~ ✅ · ~~F2-05 talep~~ ✅ · ~~F2-06 BERT duygu~~ ✅ · ~~F2-12 doğrulama raporu~~ ✅ · **F3:** tavsiye motoru
 
 ## Ara kontroller
 | kontrol | gün | ölçüt | durum |
 |---|---|---|---|
-| K1 | Gün 7 (01.11) | P1 modelleri gerçek veride test edildi, doğrulama tablosu hazır | ⬜ |
+| K1 | Gün 7 (01.11) | P1 modelleri gerçek veride test edildi, doğrulama tablosu hazır | ✅ 26.10 |
 | K2 | Gün 10 (04.11) | tavsiyeler, aksiyon planı ve asistan çalışıyor | ⬜ |
 | K3 | Gün 12 (06.11) | 10 web sayfası çalışıyor | ⬜ |
 | K4 | Gün 14 (08.11) | teslim: rapor, sunum, demo | ⬜ |

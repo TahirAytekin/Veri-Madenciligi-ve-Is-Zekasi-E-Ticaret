@@ -1,0 +1,336 @@
+{
+  "satirlar": [
+    {
+      "id": "F2-02",
+      "ad": "İade riski (GBM)",
+      "soru": "Bu sipariş satırı iade edilecek mi?",
+      "yontem": "LightGBM, monoton kısıt adayı",
+      "metrik": "ROC-AUC",
+      "yon": "yuksek_iyi",
+      "gercek_model": 0.6683657271368092,
+      "referans_adi": "ürün geçmiş iade oranı",
+      "gercek_referans": 0.6802936491175562,
+      "fark": -0.01198343975113053,
+      "alt": -0.025633076924107986,
+      "ust": 0.0010550262687984422,
+      "karar": "basarisiz",
+      "seviye1": {
+        "model": 0.6908829109227789,
+        "referans": 0.6941283662825598,
+        "kahin": 0.8313238917655679
+      },
+      "tohumlar": {
+        "42": {
+          "model": 0.6683657271368092,
+          "fark": -0.01198343975113053,
+          "alt": -0.025633076924107986,
+          "ust": 0.0010550262687984422
+        },
+        "1": {
+          "model": 0.6828272049208184,
+          "fark": 0.002426338405446404,
+          "alt": -0.012797655684564016,
+          "ust": 0.01703045351641581
+        },
+        "2": {
+          "model": 0.6439525428564635,
+          "fark": -0.036501820493893535,
+          "alt": -0.06051653416479871,
+          "ust": -0.01289860316058844
+        }
+      },
+      "not": "seçilen varyant: gbm",
+      "web": "Ürün düzeyinde risk ürün geçmişinden; model yeni (geçmişi az) ürünlerde yedek",
+      "kart": "docs/modeller/F2-02.md"
+    },
+    {
+      "id": "F2-03",
+      "ad": "İade riski (derin öğrenme)",
+      "soru": "Bu sipariş satırı iade edilecek mi?",
+      "yontem": "PyTorch MLP, kategorik gömme, 5 tohumlu topluluk",
+      "metrik": "ROC-AUC",
+      "yon": "yuksek_iyi",
+      "gercek_model": 0.5902199011752398,
+      "referans_adi": "ürün geçmiş iade oranı",
+      "gercek_referans": 0.6802936491175562,
+      "fark": -0.08959882038112445,
+      "alt": -0.11849249354863854,
+      "ust": -0.05944058055533046,
+      "karar": "basarisiz",
+      "seviye1": {
+        "model": 0.6920380390096381,
+        "referans": 0.6941283662825598,
+        "kahin": 0.8313238917655679
+      },
+      "tohumlar": {},
+      "not": "seçilen varyant: mlp; F2-02'ye göre fark -0.078 [-0.106, -0.048]",
+      "web": "Kullanılmaz (F2-02 daha iyi); karşılaştırma için",
+      "kart": "docs/modeller/F2-03.md"
+    },
+    {
+      "id": "F2-04A",
+      "ad": "Kalıp skoru",
+      "soru": "Beden iadesi küçük mü büyük mü gelecek? (ürün kalıbından)",
+      "yontem": "Eğitimsiz: Beta yumuşatmalı küçük geldi payı",
+      "metrik": "ROC-AUC",
+      "yon": "yuksek_iyi",
+      "gercek_model": 0.5860696517412934,
+      "referans_adi": "sabit tahmin",
+      "gercek_referans": 0.5,
+      "fark": 0.08606965174129344,
+      "alt": -0.0005022997457300726,
+      "ust": 0.16499048240489345,
+      "karar": "basarisiz",
+      "seviye1": {
+        "model": 0.9873563218390805
+      },
+      "tohumlar": {},
+      "not": "Seviye 1: gizli dar kalıbı ayırt etme AUC'si",
+      "web": "Kalıbı dar/bol ürün tavsiyesi, kanıt sayısıyla",
+      "kart": "docs/modeller/F2-04.md"
+    },
+    {
+      "id": "F2-04B",
+      "ad": "Beden iadesi yönü",
+      "soru": "Beden iadesi küçük mü büyük mü gelecek? (satır düzeyi)",
+      "yontem": "LightGBM, kalıp skorunda monoton",
+      "metrik": "ROC-AUC",
+      "yon": "yuksek_iyi",
+      "gercek_model": 0.5464676616915423,
+      "referans_adi": "kalıp skoru",
+      "gercek_referans": 0.5849856511512086,
+      "fark": -0.03851798945966637,
+      "alt": -0.1248007077843926,
+      "ust": 0.0482983903606064,
+      "karar": "basarisiz",
+      "seviye1": {
+        "model": 0.8192982456140351,
+        "referans": 0.7676023391812866
+      },
+      "tohumlar": {
+        "42": {
+          "model": 0.5464676616915423,
+          "referans": null,
+          "fark": -0.03851798945966637,
+          "alt": -0.1248007077843926,
+          "ust": 0.0482983903606064
+        },
+        "1": {
+          "model": 0.6272139303482587,
+          "referans": null,
+          "fark": 0.04111419154287869,
+          "alt": -0.030074564255301212,
+          "ust": 0.11547423182669643
+        },
+        "2": {
+          "model": 0.5511940298507463,
+          "referans": null,
+          "fark": -0.03417429540908627,
+          "alt": -0.12416521836725478,
+          "ust": 0.055118038078564455
+        }
+      },
+      "not": "",
+      "web": "Kullanılmaz",
+      "kart": "docs/modeller/F2-04.md"
+    },
+    {
+      "id": "F2-04C",
+      "ad": "Beden önerisi",
+      "soru": "Boyu ve kilosu bilinen müşteriye hangi beden?",
+      "yontem": "Doğrusal regresyon (boy, kilo) + kalıp düzeltmesi",
+      "metrik": "tam isabet",
+      "yon": "yuksek_iyi",
+      "gercek_model": 0.4189189189189189,
+      "referans_adi": "en sık beden",
+      "gercek_referans": 0.28378378378378377,
+      "fark": 0.13513513513513514,
+      "alt": 0.013175675675675695,
+      "ust": 0.25675675675675674,
+      "karar": "basarili",
+      "seviye1": {
+        "model": 0.56112029563357,
+        "referans": 0.22600408441116407
+      },
+      "tohumlar": {
+        "42": {
+          "model": 0.4189189189189189,
+          "referans": 0.28378378378378377,
+          "fark": 0.13513513513513514,
+          "alt": 0.013175675675675695,
+          "ust": 0.25675675675675674
+        },
+        "1": {
+          "model": 0.5,
+          "referans": 0.28378378378378377,
+          "fark": 0.21621621621621623,
+          "alt": 0.0945945945945946,
+          "ust": 0.33783783783783783
+        },
+        "2": {
+          "model": 0.4864864864864865,
+          "referans": 0.10810810810810811,
+          "fark": 0.3783783783783784,
+          "alt": 0.24324324324324326,
+          "ust": 0.5003378378378376
+        }
+      },
+      "not": "±1 beden isabeti 0.743; 74 gerçek yorum",
+      "web": "Beden önerici (müşteri boy-kilo girer)",
+      "kart": "docs/modeller/F2-04.md"
+    },
+    {
+      "id": "F2-05",
+      "ad": "Haftalık talep",
+      "soru": "Bu ürün gelecek hafta kaç adet satar?",
+      "yontem": "LightGBM (Poisson)",
+      "metrik": "WAPE",
+      "yon": "dusuk_iyi",
+      "gercek_model": 0.6512921446202653,
+      "referans_adi": "geçen haftanın satışı",
+      "gercek_referans": 0.4686213991769547,
+      "fark": 0.1826707454433106,
+      "alt": 0.006882250956129693,
+      "ust": 0.2985604604374315,
+      "karar": "basarisiz",
+      "seviye1": {
+        "model": 0.5102365028008149,
+        "referans": 0.5173519009725907,
+        "kahin": 0.4325404583675305
+      },
+      "tohumlar": {
+        "42": {
+          "model": 0.6512921446202653,
+          "referans": 0.4686213991769547,
+          "fark": 0.1826707454433106,
+          "alt": 0.006882250956129693,
+          "ust": 0.2985604604374315
+        },
+        "1": {
+          "model": 0.5735510112539932,
+          "referans": 0.4686213991769547,
+          "fark": 0.10492961207703858,
+          "alt": 0.013940388823790015,
+          "ust": 0.1734536022194764
+        },
+        "2": {
+          "model": 0.5585109626093097,
+          "referans": 0.4686213991769547,
+          "fark": 0.08988956343235469,
+          "alt": 0.00315221837130651,
+          "ust": 0.2442188462403852
+        }
+      },
+      "not": "mağaza toplamı WAPE: model 0.270, naif 0.140",
+      "web": "Kullanılmaz; stok tükenme tablosu geçen haftanın satış hızıyla",
+      "kart": "docs/modeller/F2-05.md"
+    },
+    {
+      "id": "F2-06",
+      "ad": "Yorum duygusu (BERT)",
+      "soru": "Bu yorum olumlu mu olumsuz mu?",
+      "yontem": "Hazır Türkçe BERT, sıfır atış",
+      "metrik": "ROC-AUC",
+      "yon": "yuksek_iyi",
+      "gercek_model": 0.9095357305416476,
+      "referans_adi": "kelime listesi",
+      "gercek_referans": 0.8331816112881202,
+      "fark": 0.02027030756945407,
+      "alt": -0.03620230854485968,
+      "ust": 0.07611894500219711,
+      "karar": "basarisiz",
+      "seviye1": {
+        "model": 0.9468499627862178,
+        "referans": 0.7480626942778337
+      },
+      "tohumlar": {},
+      "not": "221 gerçek yorum (52 olumsuz); ürün yorumlarında BERT 0.924, sözlük 0.822",
+      "web": "Şikâyet işareti ve şikâyet konusu (genel duygu puandan)",
+      "kart": "docs/modeller/F2-06.md"
+    }
+  ],
+  "sahte_v1_v2": [
+    {
+      "surum": "v1",
+      "tohum": 42,
+      "secilen": "gbm_monoton_goreli",
+      "sahte_dogrulama_auc": 0.6909516018424023,
+      "gercek_auc": 0.6705573263328964,
+      "aktarim_acigi": 0.0203942755095059,
+      "fark_urun_gecmisi": -0.00982618801905689,
+      "fark_alt": -0.034629708053909906,
+      "fark_ust": 0.016591438313446023,
+      "urun_ici_auc": 0.5341865403583254,
+      "ortalama_tahmin": 0.10585267470963083
+    },
+    {
+      "surum": "v1",
+      "tohum": 1,
+      "secilen": "gbm_monoton_goreli",
+      "sahte_dogrulama_auc": 0.6805081615120275,
+      "gercek_auc": 0.5676773384167619,
+      "aktarim_acigi": 0.1128308230952656,
+      "fark_urun_gecmisi": -0.1126998824521487,
+      "fark_alt": -0.14578170860726244,
+      "fark_ust": -0.07949365503203043,
+      "urun_ici_auc": 0.44925452275138433,
+      "ortalama_tahmin": 0.10677686830870009
+    },
+    {
+      "surum": "v1",
+      "tohum": 2,
+      "secilen": "gbm_monoton_goreli",
+      "sahte_dogrulama_auc": 0.7305412319873715,
+      "gercek_auc": 0.6384945237992008,
+      "aktarim_acigi": 0.09204670818817073,
+      "fark_urun_gecmisi": -0.04222734463509279,
+      "fark_alt": -0.06430112312749166,
+      "fark_ust": -0.018334513419142138,
+      "urun_ici_auc": 0.488851518031728,
+      "ortalama_tahmin": 0.11169060956450144
+    },
+    {
+      "surum": "v2",
+      "tohum": 42,
+      "secilen": "gbm",
+      "sahte_dogrulama_auc": 0.6908829109227789,
+      "gercek_auc": 0.6683657271368092,
+      "aktarim_acigi": 0.022517183785969674,
+      "fark_urun_gecmisi": -0.01198343975113053,
+      "fark_alt": -0.025633076924107986,
+      "fark_ust": 0.0010550262687984422,
+      "urun_ici_auc": 0.45412787562741275,
+      "ortalama_tahmin": 0.09079716571313695
+    },
+    {
+      "surum": "v2",
+      "tohum": 1,
+      "secilen": "gbm_monoton",
+      "sahte_dogrulama_auc": 0.7103846120709284,
+      "gercek_auc": 0.6828272049208184,
+      "aktarim_acigi": 0.027557407150110014,
+      "fark_urun_gecmisi": 0.002426338405446404,
+      "fark_alt": -0.012797655684564016,
+      "fark_ust": 0.01703045351641581,
+      "urun_ici_auc": 0.5480039352359788,
+      "ortalama_tahmin": 0.09258309571684435
+    },
+    {
+      "surum": "v2",
+      "tohum": 2,
+      "secilen": "gbm_monoton_goreli",
+      "sahte_dogrulama_auc": 0.7013238590537242,
+      "gercek_auc": 0.6439525428564635,
+      "aktarim_acigi": 0.05737131619726066,
+      "fark_urun_gecmisi": -0.036501820493893535,
+      "fark_alt": -0.06051653416479871,
+      "fark_ust": -0.01289860316058844,
+      "urun_ici_auc": 0.4612523301788134,
+      "ortalama_tahmin": 0.08480303250269719
+    }
+  ],
+  "test_donemi": {
+    "baslangic": "2026-07-16",
+    "bitis": "2026-10-01"
+  }
+}
