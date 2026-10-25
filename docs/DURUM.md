@@ -36,7 +36,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F3-01…03 | Tahir | `gorev/F3-01-tavsiye-motoru` | 2026-10-26 | tavsiye şeması, kurallar, önceliklendirme ve haftalık aksiyon planı |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
