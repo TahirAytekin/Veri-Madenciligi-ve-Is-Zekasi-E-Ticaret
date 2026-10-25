@@ -29,7 +29,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F2-02 | Tahir | `gorev/F2-02-iade-riski` | 2026-10-25 | iade riski modeli (LightGBM) eğitiliyor; çıta gerçek veride AUC 0,680 |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
