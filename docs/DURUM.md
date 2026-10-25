@@ -31,7 +31,8 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - **Tavsiye motoru (F3-01…03 ✅, [kurallar](TAVSIYE_KURALLARI.md)):** 14 kural; her tavsiyede kanıt, aksiyon, aylık TL etkisi (senaryo simülatörüyle aynı birim modeli) ve doğrulama raporuna bağlı güven. `python -m tavsiye.motor --veri gercek` → gerçekte 36 tavsiye; haftalık planın ilk 10 aksiyonu aylık ~28,7 bin TL (üst sınır). En büyük kalem: beden önerici (~10,4 bin TL/ay), stok tükenmek üzere olan çok satan jean (~6,9 bin TL/ay).
 - **Ürün sağlık kartı (F3-05 ✅):** `python -m tavsiye.urun_karti --veri gercek` → 76 ürün: 53 iyi, 8 dikkat, 15 sorunlu. Bulgu: gerçek stokların çoğu temsili (1000, 999 …): 72 aktif ürünün 64'ünde stok süresi hesaplanamaz. Stok tablosu ve stok tavsiyeleri buna göre düzeltildi.
 - **Soru cevap önerici (F3-04 ✅, [kart](modeller/F3-04.md)):** önerilen beden 235 gerçek satıcı cevabında satıcıyla %45–50 tam, %94–96 ±1 beden aynı (en sık beden %19; 3/3 tohumda anlamlı) → gerçekte doğrulanan ikinci sonuç. LLM taslak (Haiku 5.5, cevap başına ≈ 0,02 sent) önerilen bedeni %88 yazdı (ölçüt %90, tutmadı); sonradan eklenen güvenlik kontrolü yanlış bedenli taslağı şablona çeviriyor. **Faz 3 tamamlandı.**
-- **Sıradaki adım:** F4 asistan (RAG: bilgi tabanı + araçlar) ve F5 web; ekip K-14'ü onaylamalı.
+- **Bilgi tabanı ve arama (F4-01, F4-02 ✅, [kart](modeller/F4-02.md)):** 7 kaynaktan parça (sahte 434, gerçek 352). 5 arama yöntemi önceden kayıtlı 30 soruluk testte karşılaştırıldı: seçilen `multilingual-e5-base` (isabet@5 0,90); küçük model başa baş, BM25 hibriti yardım etmedi. Sıralama ve sayı soruları ("en az iade", "bitmek üzere") aramayla bulunamıyor → araçlar gerekli (F4-03).
+- **Sıradaki adım:** F4-03 araçlar + F4-06 güvenlik → F4-04 sohbet + F4-05 değerlendirme; paralel F5 web. Ekip K-14'ü onaylamalı.
 
 ## Aktif görevler
 
@@ -49,7 +50,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 5. ~~F1-01 → F1-02: metrik sözlüğü ve `analiz/metrikler.py`~~ ✅
 6. ~~F1-03, F1-04, F1-05~~ ✅ · Faz 1 tamamlandı
 7. **F5-01:** web iskeleti (artık başlayabilir: metrikler hazır)
-8. ~~F2-01 model altyapısı~~ ✅ · ~~F2-02 iade riski (GBM)~~ ✅ · ~~F2-03 iade riski (MLP)~~ ✅ · ~~F1-06 sahte veri v2~~ ✅ · ~~F2-04 beden uyumu~~ ✅ · ~~F2-05 talep~~ ✅ · ~~F2-06 BERT duygu~~ ✅ · ~~F2-12 doğrulama raporu~~ ✅ · ~~F3-01…03 tavsiye motoru~~ ✅ · ~~F3-05 ürün kartı~~ ✅ · ~~F3-04 cevap önerici~~ ✅ · **F4 / F5**
+8. ~~F2-01 model altyapısı~~ ✅ · ~~F2-02 iade riski (GBM)~~ ✅ · ~~F2-03 iade riski (MLP)~~ ✅ · ~~F1-06 sahte veri v2~~ ✅ · ~~F2-04 beden uyumu~~ ✅ · ~~F2-05 talep~~ ✅ · ~~F2-06 BERT duygu~~ ✅ · ~~F2-12 doğrulama raporu~~ ✅ · ~~F3-01…03 tavsiye motoru~~ ✅ · ~~F3-05 ürün kartı~~ ✅ · ~~F3-04 cevap önerici~~ ✅ · ~~F4-01/02 bilgi tabanı ve arama~~ ✅ · **F4-03:** araçlar
 
 ## Ara kontroller
 | kontrol | gün | ölçüt | durum |
