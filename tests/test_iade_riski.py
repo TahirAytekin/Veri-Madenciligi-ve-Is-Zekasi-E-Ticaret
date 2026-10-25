@@ -49,12 +49,13 @@ def test_olasiliklar_aralikta(sahte_egitilmis):
     assert len(p) == len(dogrulama) and ((p >= 0) & (p <= 1)).all()
 
 
-def test_sahtede_referanslari_gecer(sahte_egitilmis):
-    # Sahte doğrulamada model, eğitimsiz referansların ikisini de geçmeli (gerçekte geçemiyor; bkz. model kartı)
+def test_sahtede_ogreniyor(sahte_egitilmis):
+    # Model kategori geçmişini geçmeli ve ürün geçmişinden belirgin biçimde kötü olmamalı. Sahte v2'de (F1-06) ürün
+    # geçmişini geçmesi beklenmez: gerçekte olduğu gibi sinyalin çoğu ürün geçmişinde (bkz. model kartı)
     paket, dogrulama = sahte_egitilmis
     auc = siniflandirma_olcutleri(dogrulama.iade, ir.tahmin(paket, dogrulama))["roc_auc"]
-    assert auc > siniflandirma_olcutleri(dogrulama.iade, dogrulama.model_onceki_iade_orani)["roc_auc"]
     assert auc > siniflandirma_olcutleri(dogrulama.iade, dogrulama.kategori_onceki_iade_orani)["roc_auc"]
+    assert auc > siniflandirma_olcutleri(dogrulama.iade, dogrulama.model_onceki_iade_orani)["roc_auc"] - 0.03
 
 
 def test_monotonluk_kisiti(sahte_egitilmis):
@@ -71,8 +72,8 @@ def test_monotonluk_kisiti(sahte_egitilmis):
 def test_kahin_skoru_formulu():
     df = iade_veri_seti("sahte").head(200)
     k = ir.kahin_skoru(df)
-    # Ölçeklenmemiş ham olasılık (üretici sonra ortalamaya ölçekler); yalnızca sıralaması anlamlı
-    assert (k >= 0.04).all() and k.std() > 0.05
+    # Üreticinin kaydettiği gerçek iade talebi olasılığı (sahte v2; üretici 0,9'da keser)
+    assert ((k > 0) & (k <= 0.9)).all() and k.std() > 0.05
 
 
 def test_bootstrap_auc_farki():

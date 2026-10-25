@@ -26,7 +26,7 @@ Formüller klasördeki README'de. Bu dosyalar modele **özellik olarak verilmez*
 | model | bulması gereken | dosya |
 |---|---|---|
 | beden uyumu / kalıp | dar-bol modeller, beden kaynaklı iadeler | `modeller.kalip`, `satirlar.beden_uyumu` |
-| iade riski | sorunlu ve uyumsuz satırların yüksek risk alması | `satirlar.sorunlu_urun`, `satirlar.beden_uyumu` |
+| iade riski | sorunlu ve uyumsuz satırların yüksek risk alması; kâhin = gerçek olasılık | `satirlar.sorunlu_urun`, `satirlar.beden_uyumu`, `satirlar.iade_olasiligi` (v2) |
 | talep tahmini | kampanya, mevsim ve haftanın günü etkileri | `gunluk_carpanlar` |
 | indirim etkisi | ürün bazında esneklik (1,2–2,2) | `modeller.fiyat_esnekligi` |
 | beden önerisi | müşterinin ideal bedeni | `musteriler.boy/kilo` |

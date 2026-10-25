@@ -23,7 +23,8 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - Model altyapısı hazır (F2-01 ✅, F1-04 ✅): `modeller/ortak/` (aktarılabilir özellikler, sızıntısız geçmiş özellikleri, sahte → gerçek değerlendirme). Gerçek–sahte raporu: 4 özellik (`ay`, `saat`, `indirim_orani`, `model_onceki_puan`) gerçekte ters ilişkili, modellerden çıkarıldı. Beden–iade ilişkisi iki veride aynı. Çıta: eğitimsiz referans AUC 0,680.
 - İade riski modeli hazır (F2-02 ✅, [model kartı](modeller/F2-02.md)): sahtede referansları geçiyor (AUC 0,691 vs 0,664), gerçekte mağazanın ürün geçmişini geçemiyor (0,671 vs 0,680; fark anlamlı değil). Monotonluk kısıtı gerçek AUC'yi 0,58'den 0,67'ye taşıdı. Karar: ürün düzeyinde risk için ürün geçmişi, beden/sepet eğilimi için model kullanılacak.
 - Derin öğrenme iade riski tamamlandı (F2-03 ✅, [model kartı](modeller/F2-03.md)); tasarım ve ölçüt eğitimden önce commitlendi. PyTorch MLP gerçekte 0,669: ürün geçmişini geçemedi, F2-02'den ayırt edilemiyor, sahtede F2-02'den kötü. Web F2-02'yi kullanır. Bulgu: iki model ailesi aynı tavana (~0,68 = ürün geçmişi) çarptı; sahte doğrulama aktarılabilirliği ölçemiyor → karar önerisi K-14.
-- **Sıradaki adım:** F2-04 beden uyumu ve kalıp; paralel: web iskeleti (F5-01), API anahtarı (F0-03). Ekip K-14'ü onaylamalı.
+- **Sahte veri v2 (F1-06 ✅, [rapor](rapor/sahte_v2_kalibrasyon.md)):** sahte üretici test öncesi gerçek veriye (23.10.2025–15.07.2026) kalibre edildi; kalibrasyon hedeflerinin 15/16'sı tutuyor (v1: 6/16). `veri/sahte/` artık v2; v1 `--v1` ile birebir üretilebiliyor. F2-02 gerçekte ortalama 0,626 → 0,665 ve daha kararlı, ama ürün geçmişini (0,680) yine geçemiyor. Düzeltmeler: F2-02'nin v1 sonucu (0,671) şanslı bir tohumdu; beden düzeyinde eğilim önerisi geri çekildi (beden konumu gerçekte iadeyi öngörmüyor). MLP v2'de 0,590'a düştü. `docs/rapor/01_gercek_sahte.md` v1 verisine aittir.
+- **Sıradaki adım:** F2-04 beden uyumu ve kalıp (beden riski ürünün küçük/büyük geldi geçmişinden; en az 3 tohum); paralel: web iskeleti (F5-01), API anahtarı (F0-03). Ekip K-14'ü onaylamalı.
 
 ## Aktif görevler
 
@@ -41,7 +42,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 5. ~~F1-01 → F1-02: metrik sözlüğü ve `analiz/metrikler.py`~~ ✅
 6. ~~F1-03, F1-04, F1-05~~ ✅ · Faz 1 tamamlandı
 7. **F5-01:** web iskeleti (artık başlayabilir: metrikler hazır)
-8. ~~F2-01 model altyapısı~~ ✅ · ~~F2-02 iade riski (GBM)~~ ✅ · ~~F2-03 iade riski (MLP)~~ ✅ · **F2-04:** beden uyumu
+8. ~~F2-01 model altyapısı~~ ✅ · ~~F2-02 iade riski (GBM)~~ ✅ · ~~F2-03 iade riski (MLP)~~ ✅ · ~~F1-06 sahte veri v2~~ ✅ · **F2-04:** beden uyumu
 
 ## Ara kontroller
 | kontrol | gün | ölçüt | durum |
