@@ -10,6 +10,7 @@ Gerçek veride bu bilgiler yoktur. Ayrıntı: `docs/MODEL_DOGRULAMA.md`.
 | icerikler.csv | icerik_id | `renk_talep_payi`: rengin model içindeki talep payı |
 | musteriler.csv | musteri_id | müşterinin gerçek boy, kilo ve ayak numarası |
 | satirlar.csv | satir_id | `beden_uyumu` (<0 dar geldi, 0 tam, >0 bol geldi), `sorunlu_urun` (defolu/yanlış ürün), `iade_olasiligi` (teslim edilen birimin gerçek iade talebi olasılığı; kâhin skoru) |
+| gunluk_talep.csv | tarih, model_kodu | `beklenen_adet`: o gün beklenen birincil sipariş adedi (Poisson ortalaması; sepete eklenen tamamlayıcı ürünler hariç) — F2-05 kâhini |
 | gunluk_carpanlar.csv | tarih | trend, haftanın günü, özel gün, maaş günü, sepet indirimi, reklam harcaması ve çarpanı, mevsim eğrileri |
 | fiyat_kupon_degisimleri.csv | model_kodu, tarih | liste fiyatı değişimleri ve ürüne özel kupon dönemleri |
 

@@ -1300,6 +1300,14 @@ dogru_kaydet(pd.DataFrame({
     "iade_olasiligi": pd.Series(iade_olasiligi, index=teslim_edilen.index).reindex(satirlar.index).round(5),
 }), "satirlar")
 
+# Ürün × gün beklenen birincil sipariş adedi (Poisson ortalaması; sepete eklenen tamamlayıcı ürünler hariç). F2-05 kâhini
+_model_talep = pd.DataFrame(TALEP).groupby(c_model).sum()
+_gunluk = _model_talep.rename_axis(index="m", columns="gun").stack().rename("beklenen_adet").reset_index()
+_gunluk = _gunluk[_gunluk.beklenen_adet > 1e-4]
+dogru_kaydet(pd.DataFrame({"tarih": GUNLER[_gunluk.gun.to_numpy()].date,
+                           "model_kodu": [modeller[i]["model_kodu"] for i in _gunluk.m],
+                           "beklenen_adet": _gunluk.beklenen_adet.round(4).to_numpy()}), "gunluk_talep")
+
 dogru_kaydet(pd.DataFrame({
     "tarih": GUNLER.date, "trend": trend.round(4), "haftanin_gunu_carpani": HAFTA_GUNU[GUNLER.dayofweek],
     "ozel_gun": OZEL_AD, "ozel_gun_carpani": OZEL, "maas_carpani": maas, "sepet_indirimi": SEPET,
