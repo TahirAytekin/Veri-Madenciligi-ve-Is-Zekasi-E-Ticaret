@@ -61,13 +61,25 @@ trendyoll/
 │   ├── metrikler.py         tek doğruluk kaynağı: 39 metrik (docs/METRIKLER.md)
 │   ├── durum.py             durum raporu: sağlık skoru ve otomatik içgörüler
 │   └── senaryo.py           ne olur simülatörü: iade, indirim, komisyon, desi, ürün maliyeti
-├── modeller/
-│   └── ortak/               aktarılabilir özellikler, sahte → gerçek değerlendirme, kayıt, gerçek–sahte karşılaştırma
+├── modeller/                 tahmin modelleri: sahte veriyle eğitilir, gerçek veriyle test edilir (docs/modeller/)
+│   ├── ortak/               aktarılabilir özellikler, sahte → gerçek değerlendirme, kayıt, gerçek–sahte karşılaştırma
+│   ├── iade_riski.py        F2-02 iade riski (LightGBM)
+│   ├── iade_riski_mlp.py    F2-03 iade riski (PyTorch MLP)
+│   ├── beden_uyumu.py       F2-04 kalıp skoru, beden iadesi yönü, beden_oner()
+│   ├── talep.py             F2-05 haftalık talep ve stok tükenme
+│   ├── duygu.py             F2-06 yorum duygusu ve şikâyet konuları (hazır Türkçe BERT)
+│   ├── surum_karsilastirma.py  sahte veri v1/v2 etkisi (F1-06)
+│   └── dogrulama_raporu.py  F2-12 tüm modellerin doğrulama tablosu (--yeniden: hepsini baştan çalıştırır)
+├── tavsiye/                 F3 tavsiye motoru (docs/TAVSIYE_KURALLARI.md)
+│   ├── sema.py              tavsiye yapısı: kanıt, aksiyon, aylık TL etkisi, güven
+│   ├── kurallar.py          14 kural (stok, kalıp, iade, zarar, indirim, kampanya, şikâyet, sezon ...)
+│   └── motor.py             önceliklendirme ve haftalık aksiyon planı
 ├── ciktilar/                üretilen raporlar, tahminler, tavsiyeler (git'e girmez, yeniden üretilir)
 ├── hazirlama/
 │   ├── ortak.py             tablo şemaları, kampanya takvimi, sınıflandırma kuralları
 │   ├── temizle.py           veri/ham → veri/gercek (kişisel veriler atılır)
-│   ├── sahte_veri_uret.py   aynı şemada sahte veri → veri/sahte
+│   ├── sahte_veri_uret.py   aynı şemada sahte veri → veri/sahte (v2; --v1, --tohum N)
+│   ├── kalibrasyon.py       sahte verinin iade yapısını test öncesi gerçek veriyle karşılaştırır (F1-06)
 │   └── ozellik_cikar.py     temel tablolar → analiz tabloları
 ├── veri/
 │   ├── ham/                 API çıktıları + urun_gecmisi/ (günlük fiyat/stok) — PAYLAŞMAYIN
@@ -101,6 +113,10 @@ python hazirlama/ozellik_cikar.py sahte --kesim 2026-06-30   # sızıntısız: y
 
 python -m analiz.durum --veri sahte     # durum raporu: sağlık skoru + içgörüler -> ciktilar/sahte/
 python -m analiz.senaryo --veri sahte --beden-iade-azalis 0.5   # ne olur: katkı payı bugün vs senaryo
+
+python -m modeller.dogrulama_raporu --yeniden   # (gerçek veriyle) tüm modeller + doğrulama raporu, ~3 dk
+python -m modeller.beden_uyumu          # tek bir model (her model kendi ciktilar/ dosyalarını yazar)
+python -m tavsiye.motor --veri sahte    # tavsiyeler + haftalık aksiyon planı -> ciktilar/sahte/
 ```
 
 Çekimler **artımlıdır**: ilk çalıştırmada geçmiş alınır, sonrakilerde yalnızca son dönem (iade ve finans
