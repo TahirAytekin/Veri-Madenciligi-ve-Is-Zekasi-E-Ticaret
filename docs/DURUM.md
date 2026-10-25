@@ -4,7 +4,7 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 
 **Son güncelleme:** 2026-10-26 · **Güncelleyen:** Tahir
 **Takvim:** 14 gün, Gün 1 = 26.10.2026 Pzt, teslim = 08.11.2026 Paz ([plan §4](PROJE_PLANI.md#4-takvim-14-gün))
-**Bugün:** Gün 0 (hazırlık) · **Güncel faz:** F0 — Altyapı
+**Bugün:** Gün 1 (26.10) · **Güncel faz:** F2 tamamlandı (P1) → F3 — Tavsiye motoru
 **Depo:** https://github.com/TahirAytekin/Veri-Madenciligi-ve-Is-Zekasi-E-Ticaret
 
 ---
