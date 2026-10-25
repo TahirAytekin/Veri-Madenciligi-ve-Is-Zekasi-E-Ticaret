@@ -28,7 +28,7 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - **Talep tahmini (F2-05 ✅, [model kartı](modeller/F2-05.md)):** sahteyle eğitilen model gerçekte "geçen haftanın satışı"ndan anlamlı biçimde kötü (WAPE 0,56–0,65'e karşı 0,47; 3/3 tohum). İki tanı: gerçek çok satanlar sahte ölçeğin dışında (ağaç tavanı) ve gerçek talep kalıcı sıçramalar yapıyor, sahte ise ortalamaya dönüyor. Web'de stok tükenme tablosu geçen haftanın satış hızıyla hesaplanıyor (gerçekte 72 aktif ürün, 2'si 4 haftadan kısa sürede tükenecek).
 - **Duygu analizi (F2-06 ✅, [model kartı](modeller/F2-06.md)):** hazır Türkçe BERT gerçek yorumlarda AUC 0,910 (ürün yorumlarında 0,924), ama önceden sabitlenen kelime listesinden (0,833) anlamlı biçimde iyi değil (+0,020 [−0,036, +0,076]). Bulgu: BERT genel puandan çok metindeki şikâyeti yakalıyor (4★ yorumların %79'u şikâyetli). Web'de genel duygu puandan, şikâyet işareti ve konu BERT'ten; gerçekte en sık şikâyet beden/kalıp (56) ve kumaş/kalite (47).
 - **Doğrulama raporu (F2-12 ✅, [02_dogrulama.md](rapor/02_dogrulama.md)):** tüm modeller tek tabloda; web için `docs/rapor/02_dogrulama.json`. `python -m modeller.dogrulama_raporu --yeniden` tüm modelleri baştan çalıştırıp (~3 dk) aynı sayıları üretiyor. Gerçekte başarılı: F2-04C beden önerisi; diğerleri basit referansları geçemedi. **Faz 2'nin P1 görevleri tamamlandı (K1 ✅, plandan 6 gün önce).**
-- **Sıradaki adım:** F3-01 tavsiye motoru veri sözleşmesi → F3-02 tavsiye kuralları; paralel: web iskeleti (F5-01), API anahtarı (F0-03). Ekip K-14'ü onaylamalı.
+- **Sıradaki adım:** F3-01 tavsiye motoru veri sözleşmesi → F3-02 tavsiye kuralları; paralel: web iskeleti (F5-01). Ekip K-14'ü onaylamalı.
 
 ## Aktif görevler
 
@@ -41,7 +41,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
 2. ~~F0-02: paket kurulumları~~ ✅
-3. **F0-03:** Anthropic API anahtarı (Tahir)
+3. ~~F0-03: Anthropic API anahtarı~~ ✅ (26.10, test isteği başarılı)
 4. **F0-04:** herkes kurulumu yapar, "Ekip" tablosuna kendini ekler
 5. ~~F1-01 → F1-02: metrik sözlüğü ve `analiz/metrikler.py`~~ ✅
 6. ~~F1-03, F1-04, F1-05~~ ✅ · Faz 1 tamamlandı
@@ -64,7 +64,7 @@ Yarım bırakılıp devralınmayı bekleyen görevler (devir notu bağlantısıy
 | — | | |
 
 ## Engeller ve açık sorular
-- **Anthropic API anahtarı ve bütçe (F0-03):** Asistan ve cevap önerici için gerekli; tahmini toplam ~20–30 $. Anahtar gelene kadar araçlar ve arama anahtarsız geliştirilebilir.
+- ~~Anthropic API anahtarı (F0-03)~~ ✅ 26.10: `.env` → `ANTHROPIC_API_KEY` (yalnızca proje sahibinde). Bütçe takibi: tahmini toplam ~20–30 $; F4-05'te ölçülecek. Anahtarı olmayan ekip üyeleri asistanın araç ve arama kısmını anahtarsız geliştirebilir.
 - **Ürün maliyeti (isteğe bağlı, F1-05):** Senaryo simülatörü maliyetsiz de çalışır; satıcı `barkod, birim_maliyet` listesi verirse gerçek kâr hesaplanır.
 
 ## Ekip
