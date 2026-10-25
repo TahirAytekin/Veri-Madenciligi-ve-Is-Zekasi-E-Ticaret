@@ -44,6 +44,30 @@ def siniflandirma_olcutleri(y, p):
     }
 
 
+def bootstrap_auc_farki(y, p1, p2, tekrar=1000, tohum=0):
+    """AUC(p1) − AUC(p2) için bootstrap ortalaması ve %95 güven aralığı. Aralık 0'ı içeriyorsa fark anlamlı değildir."""
+    y, p1, p2 = (np.asarray(x, dtype=float) for x in (y, p1, p2))
+    rng, farklar = np.random.default_rng(tohum), []
+    for _ in range(tekrar):
+        i = rng.integers(0, len(y), len(y))
+        if y[i].min() != y[i].max():
+            farklar.append(roc_auc_score(y[i], p1[i]) - roc_auc_score(y[i], p2[i]))
+    return {"ortalama": float(np.mean(farklar)), "alt": float(np.percentile(farklar, 2.5)),
+            "ust": float(np.percentile(farklar, 97.5))}
+
+
+def grup_ici_auc(df, skor, grup="model_kodu", hedef="iade", min_satir=20):
+    """Aynı grubun (ör. aynı ürünün) satırları arasında ayırt etme gücü; gruplar satır sayısıyla ağırlıklandırılır.
+
+    Ürün düzeyinde sabit olan bir skor (ör. ürünün geçmiş iade oranı) burada tanım gereği 0,5 alır."""
+    toplam, agirlik = 0.0, 0
+    for _, g in df.assign(_skor=np.asarray(skor)).groupby(grup):
+        if g[hedef].nunique() == 2 and len(g) >= min_satir:
+            toplam += roc_auc_score(g[hedef], g._skor) * len(g)
+            agirlik += len(g)
+    return {"auc": toplam / agirlik if agirlik else None, "satir": agirlik}
+
+
 def kalibrasyon_tablosu(y, p, dilim=10):
     """Tahminler dilimlere ayrılır; her dilimde ortalama tahmin ile gerçekleşen oran karşılaştırılır."""
     t = pd.DataFrame({"y": np.asarray(y, dtype=float), "p": np.asarray(p, dtype=float)})

@@ -2,7 +2,7 @@
 
 Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde ve her PR birleştirmesinde güncellenir.**
 
-**Son güncelleme:** 2026-10-24 · **Güncelleyen:** Tahir
+**Son güncelleme:** 2026-10-25 · **Güncelleyen:** Tahir
 **Takvim:** 14 gün, Gün 1 = 26.10.2026 Pzt, teslim = 08.11.2026 Paz ([plan §4](PROJE_PLANI.md#4-takvim-14-gün))
 **Bugün:** Gün 0 (hazırlık) · **Güncel faz:** F0 — Altyapı
 **Depo:** https://github.com/TahirAytekin/Veri-Madenciligi-ve-Is-Zekasi-E-Ticaret
@@ -21,7 +21,8 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - Durum analizi hazır (F1-03 ✅): `python -m analiz.durum --veri sahte` → sağlık skoru + 11 kuraldan içgörüler (gerçek veride 81/100, 18 içgörü).
 - Senaryo simülatörü hazır (F1-05 ✅): değişiklik yokken gerçek katkı payını %1,6 farkla tutturuyor. Gerçek veride beden iadelerini yarıya indirmek aylık +26 bin TL, 1 desi küçültmek yalnızca +0,9 bin TL (Trendyol Express'te 0–2 desi aynı ücret).
 - Model altyapısı hazır (F2-01 ✅, F1-04 ✅): `modeller/ortak/` (aktarılabilir özellikler, sızıntısız geçmiş özellikleri, sahte → gerçek değerlendirme). Gerçek–sahte raporu: 4 özellik (`ay`, `saat`, `indirim_orani`, `model_onceki_puan`) gerçekte ters ilişkili, modellerden çıkarıldı. Beden–iade ilişkisi iki veride aynı. Çıta: eğitimsiz referans AUC 0,680.
-- **Sıradaki adım:** F2-02 iade riski (GBM) → F2-03 (MLP) → F2-04 beden; paralel: web iskeleti (F5-01), API anahtarı (F0-03).
+- İade riski modeli hazır (F2-02 ✅, [model kartı](modeller/F2-02.md)): sahtede referansları geçiyor (AUC 0,691 vs 0,664), gerçekte mağazanın ürün geçmişini geçemiyor (0,671 vs 0,680; fark anlamlı değil). Monotonluk kısıtı gerçek AUC'yi 0,58'den 0,67'ye taşıdı. Karar: ürün düzeyinde risk için ürün geçmişi, beden/sepet eğilimi için model kullanılacak.
+- **Sıradaki adım:** F2-03 iade riski (MLP, F2-02 ile karşılaştırma) → F2-04 beden; paralel: web iskeleti (F5-01), API anahtarı (F0-03).
 
 ## Aktif görevler
 
@@ -39,7 +40,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 5. ~~F1-01 → F1-02: metrik sözlüğü ve `analiz/metrikler.py`~~ ✅
 6. ~~F1-03, F1-04, F1-05~~ ✅ · Faz 1 tamamlandı
 7. **F5-01:** web iskeleti (artık başlayabilir: metrikler hazır)
-8. ~~F2-01 model altyapısı~~ ✅ · **F2-02:** iade riski (GBM), çıta AUC 0,680
+8. ~~F2-01 model altyapısı~~ ✅ · ~~F2-02 iade riski (GBM)~~ ✅ · **F2-03:** iade riski (MLP), çıta AUC 0,680
 
 ## Ara kontroller
 | kontrol | gün | ölçüt | durum |
