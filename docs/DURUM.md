@@ -41,7 +41,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F4-04, F4-05 | Tahir | `gorev/F4-04-sohbet` | 2026-10-26 | Claude araç döngüsü ve 32 soruluk değerlendirme (Opus 5.5 / Haiku 5.5) |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
