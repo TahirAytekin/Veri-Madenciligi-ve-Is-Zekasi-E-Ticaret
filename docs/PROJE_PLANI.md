@@ -187,7 +187,7 @@ Her model için: aktarılabilir özellikler, gerçek veride baseline karşılaş
 |---|---|---|---|---|---|---|
 | F2-01 | `modeller/ortak/`: iki veride aynı özellik üretimi (`ozellikler.py`), sahte → gerçek değerlendirme (`degerlendir.py`), baseline'lar, model kartı şablonu, çıktı formatı | P1 | F1-02 | modül + şablon | Tahir | ✅ |
 | F2-02 | **İade riski (GBM):** satır bazında iade olasılığı. Gerçek test: son 3 aydaki teslim edilmiş satırlar (son 21 gün hariç), etiket = kabul edilen iade | P1 | F2-01 | model + kart | Tahir | ✅ |
-| F2-03 | **İade riski (derin öğrenme, MLP):** kategorik embedding'li PyTorch MLP vs F2-02 | P1 | F2-02 | model + karşılaştırma | Tahir | 🟨 |
+| F2-03 | **İade riski (derin öğrenme, MLP):** kategorik embedding'li PyTorch MLP vs F2-02 | P1 | F2-02 | model + karşılaştırma | Tahir | ✅ |
 | F2-04 | **Beden uyumu ve kalıp:** "küçük geldi / büyük geldi" riski (çok sınıflı), model × beden kalıp eğilimi, boy-kilo → beden öneri fonksiyonu. Gerçek test: SMALLSIZE/BIGSIZE iadeleri + boy-kilo bilgili yorumlar | P1 | F2-01 | model + `beden_oner()` + kart | — | ⬜ |
 | F2-05 | **Talep tahmini:** ürün × hafta global GBM (gecikmeler, hareketli ortalamalar, takvim, fiyat, indirim) + mağaza toplamı + stok tükenme tarihi. Gerçek test: son 6 hafta | P1 | F2-01 | model + kart | — | ⬜ |
 | F2-06 | **Duygu analizi (derin öğrenme):** hazır eğitilmiş Türkçe BERT modeli ile ürün ve satıcı yorumları. Gerçek test etiketi = puan (1–2 olumsuz, 4–5 olumlu); baseline: kelime listesi | P1 | F0-02 | model + kart | — | ⬜ |
@@ -356,6 +356,7 @@ sequenceDiagram
 | K-11 | Python 3.14 kalır; tüm paketler (torch 2.11 CPU, lightgbm, transformers, sentence-transformers, streamlit, anthropic, duckdb) kurulu ve test edildi | alındı | F0-02: hepsinin 3.14 sürümü var; GPU yok, 6 çekirdek CPU yeterli |
 | K-12 | Hazır modeller: duygu `savasy/bert-base-turkish-sentiment-cased`, embedding `intfloat/multilingual-e5-small` (F4-02'de büyüğüyle karşılaştırılacak) | alındı | F0-02'de Türkçe örneklerle denendi |
 | K-13 | Kod stili `ruff` (satır 120); mevcut `cekim/` ve `hazirlama/` kodunda uzun satıra izin var | alındı | yeni kodda kural tam geçerli |
+| K-14 | Sonraki modellerde (F2-04…) önceden kayıt zorunlu: tasarım ve başarı ölçütü, eğitimden önce model kartına yazılıp commitlenir. Yapısal kısıtlı varyant (monotonluk, alan bilgisi) her zaman aday listesinde olur | önerildi | F2-02/F2-03: sahte doğrulama aktarılabilirliği ölçemiyor; kısıtsız GBM sahte 0,683 → gerçek 0,580. Ekip onayı bekliyor |
 
 ---
 
