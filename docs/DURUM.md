@@ -30,7 +30,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F2-03 | Tahir | `gorev/F2-03-iade-mlp` | 2026-10-25 | MLP tasarımı ve başarı ölçütü önceden yazıldı ([F2-03.md](modeller/F2-03.md)); model yazılıyor |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
