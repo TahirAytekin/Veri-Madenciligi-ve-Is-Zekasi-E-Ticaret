@@ -28,7 +28,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F2-01, F1-04 | Tahir | `gorev/F2-01-model-altyapisi` | 2026-10-25 | aktarılabilir özellikler ve sahte → gerçek değerlendirme yazılıyor |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
