@@ -20,7 +20,7 @@ from analiz import metrikler as m
 from asistan import araclar
 from hazirlama.ortak import env_degeri
 
-VARSAYILAN_MODEL = "claude-opus-5-5"
+VARSAYILAN_MODEL = "claude-haiku-5-5"   # F4-05 seçim kuralının sonucu (docs/modeller/F4-05.md)
 FIYAT = {  # $/MTok: girdi, çıktı, önbellekten okuma, önbelleğe yazma (5 dk)
     "claude-opus-5-5": (4.0, 20.0, 0.20, 5.0),
     "claude-haiku-5-5": (0.10, 0.50, 0.01, 0.125),
