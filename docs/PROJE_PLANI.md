@@ -218,8 +218,8 @@ Tasarım ayrıntısı bölüm 8'de.
 | F4-01 | Bilgi tabanı: veri ve metrik sözlükleri, durum raporu, ürün sağlık kartı metinleri, kategori ve ay özetleri, tavsiyeler, model kartları → parçalara bölünmüş metinler | P1 | F1-03, F3-03 | `asistan/bilgi_tabani.py` | Tahir | ✅ |
 | F4-02 | Embedding ve arama: yerel çok dilli embedding modeli, vektörler `ciktilar/<veri>/indeks/` içinde, kosinüs benzerliğiyle arama. **Not (F0-02):** `multilingual-e5-small` zıt anlamlı cümleleri karıştırdı ("iade çok" sorusuna "en az iade" belgesi); `multilingual-e5-base` ve anahtar kelime (BM25) ile hibrit arama karşılaştırılmalı | P1 | F4-01 | `asistan/arama.py` | Tahir | ✅ |
 | F4-03 | Araçlar: `metrik_hesapla`, `sql_sorgula` (DuckDB 2.0, salt okunur, yalnızca SELECT, satır sınırı; ilişkilerde `fetchone()` yok, `fetchall()` kullanılır), `tahmin_getir`, `urun_karti`, `tavsiyeleri_getir`, `senaryo_calistir`, `beden_oner`, `bilgi_ara` | P1 | F1-02, F1-05, F3-05 | `asistan/araclar.py` + testler | Tahir | ✅ |
-| F4-04 | Sohbet döngüsü: Claude API + araç kullanımı, sistem talimatı (yalnızca veriye dayan, sayının kaynağını göster, emin değilsen söyle, Türkçe), akışlı cevap, önbellekleme, maliyet sınırı | P1 | F4-02, F4-03 | `asistan/sohbet.py` | Tahir | 🟨 |
-| F4-05 | Değerlendirme seti: 30 soru (sayısal, karşılaştırma, "neden", "ne yapmalıyım"), beklenen cevaplar metrik fonksiyonlarından otomatik; sahte ve gerçek veride doğruluk, kaynak gösterme, maliyet | P1 | F4-04 | `asistan/degerlendirme/` + sonuç | Tahir | 🟨 |
+| F4-04 | Sohbet döngüsü: Claude API + araç kullanımı, sistem talimatı (yalnızca veriye dayan, sayının kaynağını göster, emin değilsen söyle, Türkçe), akışlı cevap, önbellekleme, maliyet sınırı | P1 | F4-02, F4-03 | `asistan/sohbet.py` | Tahir | ✅ |
+| F4-05 | Değerlendirme seti: 30 soru (sayısal, karşılaştırma, "neden", "ne yapmalıyım"), beklenen cevaplar metrik fonksiyonlarından otomatik; sahte ve gerçek veride doğruluk, kaynak gösterme, maliyet | P1 | F4-04 | `asistan/degerlendirme/` + sonuç | Tahir | ✅ |
 | F4-06 | Güvenlik testleri: SQL ile yazma denemesi, yorum metnine gömülü talimat (prompt injection) | P2 | F4-04 | `tests/test_asistan_guvenlik.py` | Tahir | ✅ |
 
 ### F5 — Web uygulaması (Gün 2–12, paralel)
@@ -358,6 +358,7 @@ sequenceDiagram
 | K-12 | Hazır modeller: duygu `savasy/bert-base-turkish-sentiment-cased`, embedding `intfloat/multilingual-e5-small` (F4-02'de büyüğüyle karşılaştırılacak) | alındı | F0-02'de Türkçe örneklerle denendi |
 | K-13 | Kod stili `ruff` (satır 120); mevcut `cekim/` ve `hazirlama/` kodunda uzun satıra izin var | alındı | yeni kodda kural tam geçerli |
 | K-14 | Sonraki modellerde (F2-04…) önceden kayıt zorunlu: tasarım ve başarı ölçütü, eğitimden önce model kartına yazılıp commitlenir. Yapısal kısıtlı varyant (monotonluk, alan bilgisi) her zaman aday listesinde olur | önerildi | F2-02/F2-03: sahte doğrulama aktarılabilirliği ölçemiyor; kısıtsız GBM sahte 0,683 → gerçek 0,580. F1-06: kısıtsız MLP v2'de 0,590'a düştü, ayrıca tek tohum güvenilmez (v1: 0,568–0,671) → sahte → gerçek sonuçları en az 3 tohumla raporlanmalı. Ekip onayı bekliyor |
+| K-15 | Asistanın varsayılan modeli `claude-haiku-5-5` (Opus 5.5 isteğe bağlı) | alındı | F4-05: 32 soruda Haiku %96,9 (elle incelemeyle %100), Opus %100; soru başına 0,0008 $ / 0,022 $. Önceden kayıtlı kural: fark ≤ 5 puan → ucuz model |
 
 ---
 

@@ -73,7 +73,8 @@ trendyoll/
 ├── asistan/                 F4 veriyle konuşan asistan
 │   ├── bilgi_tabani.py      aranacak metin parçaları (metrik, belge, içgörü, tavsiye, ürün, kategori, ay)
 │   ├── arama.py             yerel embedding (multilingual-e5-base) ile arama; test seti degerlendirme/
-│   └── araclar.py           9 araç: metrik, salt okunur SQL, model çıktıları, ürün kartı, tavsiye, senaryo, beden, arama (docs/ASISTAN.md)
+│   ├── araclar.py           9 araç: metrik, salt okunur SQL, model çıktıları, ürün kartı, tavsiye, senaryo, beden, arama (docs/ASISTAN.md)
+│   └── sohbet.py            Claude ile araç döngüsü (varsayılan Haiku 5.5); değerlendirme: degerlendirme/sohbet_degerlendir.py
 ├── tavsiye/                 F3 tavsiye motoru (docs/TAVSIYE_KURALLARI.md)
 │   ├── sema.py              tavsiye yapısı: kanıt, aksiyon, aylık TL etkisi, güven
 │   ├── kurallar.py          14 kural (stok, kalıp, iade, zarar, indirim, kampanya, şikâyet, sezon ...)
@@ -125,6 +126,7 @@ python -m modeller.beden_uyumu          # tek bir model (her model kendi ciktila
 python -m tavsiye.motor --veri sahte    # tavsiyeler + haftalık aksiyon planı -> ciktilar/sahte/
 python -m tavsiye.urun_karti --veri sahte   # ürün sağlık kartları -> ciktilar/sahte/urun_kartlari.json
 python -m asistan.bilgi_tabani --veri sahte && python -m asistan.arama --soru "katkı payı ne demek"   # ilk seferde model iner (~1,1 GB)
+python -m asistan.sohbet --veri sahte --soru "Bu hafta ne yapmalıyım?"   # ANTHROPIC_API_KEY gerekir
 ```
 
 Çekimler **artımlıdır**: ilk çalıştırmada geçmiş alınır, sonrakilerde yalnızca son dönem (iade ve finans

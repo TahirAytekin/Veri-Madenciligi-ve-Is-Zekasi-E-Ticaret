@@ -33,7 +33,8 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - **Soru cevap önerici (F3-04 ✅, [kart](modeller/F3-04.md)):** önerilen beden 235 gerçek satıcı cevabında satıcıyla %45–50 tam, %94–96 ±1 beden aynı (en sık beden %19; 3/3 tohumda anlamlı) → gerçekte doğrulanan ikinci sonuç. LLM taslak (Haiku 5.5, cevap başına ≈ 0,02 sent) önerilen bedeni %88 yazdı (ölçüt %90, tutmadı); sonradan eklenen güvenlik kontrolü yanlış bedenli taslağı şablona çeviriyor. **Faz 3 tamamlandı.**
 - **Bilgi tabanı ve arama (F4-01, F4-02 ✅, [kart](modeller/F4-02.md)):** 7 kaynaktan parça (sahte 434, gerçek 352). 5 arama yöntemi önceden kayıtlı 30 soruluk testte karşılaştırıldı: seçilen `multilingual-e5-base` (isabet@5 0,90); küçük model başa baş, BM25 hibriti yardım etmedi. Sıralama ve sayı soruları ("en az iade", "bitmek üzere") aramayla bulunamıyor → araçlar gerekli (F4-03).
 - **Asistan araçları (F4-03, F4-06 ✅, [ASISTAN.md](ASISTAN.md)):** 9 araç (metrik, SQL, şema, model çıktıları, ürün kartı, tavsiye, senaryo, beden, bilgi arama); strict şemalar + kodda girdi doğrulama. SQL salt okunur: tek SELECT, DuckDB dış erişimi kapalı ve kilitli, 200 satır; 15 yazma/yönetim ve 4 dosya/ağ denemesi testte reddediliyor. Müşteri metinleri "veri" olarak işaretleniyor.
-- **Sıradaki adım:** F4-04 sohbet (Claude API araç döngüsü) + F4-05 değerlendirme (30 soru); paralel F5 web. Ekip K-14'ü onaylamalı.
+- **Asistan (F4-04, F4-05 ✅, [kart](modeller/F4-05.md)):** Claude araç döngüsü (`asistan/sohbet.py`), 32 soruluk önceden kayıtlı değerlendirme. Haiku 5.5 %96,9 (gerçek ve sahte), Opus 5.5 %100; kaynak gösterme %100; soru başına 0,0008 $ / 0,022 $ → kural gereği **Haiku seçildi** (K-15). Tek "hata" puanlayıcının kaçırdığı doğru bir ret cevabı (G02). Gömülü talimata (G01) hiçbir koşulda uyulmadı. Turun maliyeti 1,44 $. **Faz 4 tamamlandı.**
+- **Sıradaki adım:** F5 web uygulaması (Streamlit): sayfalar, asistan sohbeti, doğrulama sayfası. Ekip K-14'ü onaylamalı.
 
 ## Aktif görevler
 
@@ -41,7 +42,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| F4-04, F4-05 | Tahir | `gorev/F4-04-sohbet` | 2026-10-26 | Claude araç döngüsü ve 32 soruluk değerlendirme (Opus 5.5 / Haiku 5.5) |
+| — | | | | |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
@@ -51,7 +52,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 5. ~~F1-01 → F1-02: metrik sözlüğü ve `analiz/metrikler.py`~~ ✅
 6. ~~F1-03, F1-04, F1-05~~ ✅ · Faz 1 tamamlandı
 7. **F5-01:** web iskeleti (artık başlayabilir: metrikler hazır)
-8. ~~F2-01 model altyapısı~~ ✅ · ~~F2-02 iade riski (GBM)~~ ✅ · ~~F2-03 iade riski (MLP)~~ ✅ · ~~F1-06 sahte veri v2~~ ✅ · ~~F2-04 beden uyumu~~ ✅ · ~~F2-05 talep~~ ✅ · ~~F2-06 BERT duygu~~ ✅ · ~~F2-12 doğrulama raporu~~ ✅ · ~~F3-01…03 tavsiye motoru~~ ✅ · ~~F3-05 ürün kartı~~ ✅ · ~~F3-04 cevap önerici~~ ✅ · ~~F4-01/02 bilgi tabanı ve arama~~ ✅ · ~~F4-03/06 araçlar ve güvenlik~~ ✅ · **F4-04/05:** sohbet ve değerlendirme
+8. ~~F2-01 model altyapısı~~ ✅ · ~~F2-02 iade riski (GBM)~~ ✅ · ~~F2-03 iade riski (MLP)~~ ✅ · ~~F1-06 sahte veri v2~~ ✅ · ~~F2-04 beden uyumu~~ ✅ · ~~F2-05 talep~~ ✅ · ~~F2-06 BERT duygu~~ ✅ · ~~F2-12 doğrulama raporu~~ ✅ · ~~F3-01…03 tavsiye motoru~~ ✅ · ~~F3-05 ürün kartı~~ ✅ · ~~F3-04 cevap önerici~~ ✅ · ~~F4-01/02 bilgi tabanı ve arama~~ ✅ · ~~F4-03/06 araçlar ve güvenlik~~ ✅ · ~~F4-04/05 sohbet ve değerlendirme~~ ✅ · **F5:** web
 
 ## Ara kontroller
 | kontrol | gün | ölçüt | durum |
