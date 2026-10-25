@@ -38,7 +38,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F3-04 | Tahir | `gorev/F3-04-cevap-onerici` | 2026-10-26 | tasarım ve başarı ölçütü önceden yazıldı ([F3-04.md](modeller/F3-04.md)); boy-kilo ve beden çıkarma hazır |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅

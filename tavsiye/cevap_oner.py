@@ -25,7 +25,8 @@ _BEDEN_KUCUK = re.compile(r"(?<!\w)(3xl|2xl|xxl|xl|xxs|2xs|xs|s|m|l)\s+beden")
 # ====================================================
 
 def boy_kilo(metin):
-    """Sorudaki boy (cm) ve kilo; bulunamayan None. '165 boy 58 kilo', '1.65 boy 58 kg', '165/58', 'boyum 170 kilom 70'."""
+    """Sorudaki boy (cm) ve kilo; bulunamayan None. '165 boy 58 kilo', '1.65 boy 58 kg', '165/58', 'boyum 170 kilom 70'.
+    """
     m = kucult(metin)
     boy = kilo = None
     sayilar = []
