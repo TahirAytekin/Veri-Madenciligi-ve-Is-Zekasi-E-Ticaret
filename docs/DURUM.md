@@ -37,7 +37,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F3-05 | Tahir | `gorev/F3-05-urun-karti` | 2026-10-26 | ürün sağlık kartı: satış, trend, katkı, iade, kalıp, şikâyet, stok, tavsiyeler |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
