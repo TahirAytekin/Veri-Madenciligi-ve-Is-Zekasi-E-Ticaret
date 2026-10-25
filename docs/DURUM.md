@@ -39,7 +39,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F4-01, F4-02 | Tahir | `gorev/F4-01-bilgi-tabani` | 2026-10-26 | bilgi tabanı (parçalar) ve arama (embedding + BM25 hibrit karşılaştırması) |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
