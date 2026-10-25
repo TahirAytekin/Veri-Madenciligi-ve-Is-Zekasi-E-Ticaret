@@ -175,7 +175,7 @@ gantt
 | F1-01 | Metrik sözlüğü: her KPI'ın tanımı, formülü, tablo ve sütunu (ciro, net satış, ort. sepet, iade oranı (birim/tutar), iptal, katkı payı, tekrar alım, cevap süresi ...) | P1 | F0-02 | `docs/METRIKLER.md` | Tahir | ✅ |
 | F1-02 | `analiz/metrikler.py`: metrik fonksiyonları (veri, tarih aralığı, kırılım parametreli) ve testleri | P1 | F1-01 | modül + `tests/test_metrikler.py` | Tahir | ✅ |
 | F1-03 | `analiz/durum.py`: otomatik içgörü üretici. Satış/zaman, ürün ABC, iade/beden, finans, müşteri ve müşteri sesi için "bulgu + kanıt sayısı" listesi ve sağlık skoru | P1 | F1-02 | `ciktilar/<veri>/durum_raporu.json` | Tahir | ✅ |
-| F1-04 | Gerçek–sahte karşılaştırma: dağılımlar ve özellik aralıkları. Sahte → gerçek aktarımının ön koşulu; farklar raporlanır | P1 | F1-02 | `docs/rapor/01_gercek_sahte.md` | Tahir | 🟨 |
+| F1-04 | Gerçek–sahte karşılaştırma: dağılımlar ve özellik aralıkları. Sahte → gerçek aktarımının ön koşulu; farklar raporlanır | P1 | F1-02 | `docs/rapor/01_gercek_sahte.md` | Tahir | ✅ |
 | F1-05 | `analiz/senaryo.py`: ne olur simülatörü ("iade %X düşerse", "desi 1 azalırsa", "indirim %Y olursa", "komisyon değişirse"); isteğe bağlı ürün maliyeti girişi | P1 | F1-02 | modül + testler | Tahir | ✅ |
 
 ### F2 — Tahmin modelleri: sahtede eğit, gerçekte doğrula (Gün 3–7)
@@ -185,7 +185,7 @@ Her model için: aktarılabilir özellikler, gerçek veride baseline karşılaş
 
 | ID | görev | öncelik | bağımlı | çıktı | sorumlu | durum |
 |---|---|---|---|---|---|---|
-| F2-01 | `modeller/ortak/`: iki veride aynı özellik üretimi (`ozellikler.py`), sahte → gerçek değerlendirme (`degerlendir.py`), baseline'lar, model kartı şablonu, çıktı formatı | P1 | F1-02 | modül + şablon | Tahir | 🟨 |
+| F2-01 | `modeller/ortak/`: iki veride aynı özellik üretimi (`ozellikler.py`), sahte → gerçek değerlendirme (`degerlendir.py`), baseline'lar, model kartı şablonu, çıktı formatı | P1 | F1-02 | modül + şablon | Tahir | ✅ |
 | F2-02 | **İade riski (GBM):** satır bazında iade olasılığı. Gerçek test: son 3 aydaki teslim edilmiş satırlar (son 15 gün hariç), etiket = kabul edilen iade | P1 | F2-01 | model + kart | — | ⬜ |
 | F2-03 | **İade riski (derin öğrenme, MLP):** kategorik embedding'li PyTorch MLP vs F2-02 | P1 | F2-02 | model + karşılaştırma | — | ⬜ |
 | F2-04 | **Beden uyumu ve kalıp:** "küçük geldi / büyük geldi" riski (çok sınıflı), model × beden kalıp eğilimi, boy-kilo → beden öneri fonksiyonu. Gerçek test: SMALLSIZE/BIGSIZE iadeleri + boy-kilo bilgili yorumlar | P1 | F2-01 | model + `beden_oner()` + kart | — | ⬜ |
