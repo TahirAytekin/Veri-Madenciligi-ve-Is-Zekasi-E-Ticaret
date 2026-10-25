@@ -197,7 +197,7 @@ Her model için: aktarılabilir özellikler, gerçek veride baseline karşılaş
 | F2-09 | **Müşteri segmentasyonu:** RFM + K-Means sahtede kurulur, gerçeğe uygulanır; segment başına aksiyon | P2 | F1-02 | segmentler + kart | — | ⬜ |
 | F2-10 | **İndirim etkisi:** esneklik sahtede (doğru cevapla) doğrulanır, gerçek kupon dönemlerinde tahmin edilen ve gerçekleşen artış karşılaştırılır | P2 | F2-01 | katsayılar + kart | — | ⬜ |
 | F2-11 | **Birlikte alım ve portföy:** gerçek sepetlerde birliktelik kuralları; ürün portföy kümeleri (yıldız / sorunlu / ölü stok) | P2 | F1-02 | kurallar + skorlar | — | ⬜ |
-| F2-12 | **Doğrulama raporu:** tüm modeller için tek tablo. Sahtede doğru cevap kontrolü, gerçekte model vs baseline, sınırlar. Web'deki "Model Doğrulama" sayfasının içeriği | P1 | F2-02…F2-06 | `docs/rapor/02_dogrulama.md` + `ciktilar/<veri>/dogrulama.json` | — | ⬜ |
+| F2-12 | **Doğrulama raporu:** tüm modeller için tek tablo. Sahtede doğru cevap kontrolü, gerçekte model vs baseline, sınırlar. Web'deki "Model Doğrulama" sayfasının içeriği | P1 | F2-02…F2-06 | `docs/rapor/02_dogrulama.md` + `ciktilar/<veri>/dogrulama.json` | Tahir | ✅ |
 
 ### F3 — Tavsiye ve karar destek motoru (Gün 8–9)
 
