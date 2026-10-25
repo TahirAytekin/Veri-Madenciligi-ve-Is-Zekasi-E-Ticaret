@@ -5,8 +5,8 @@
 veri/ham/
 veri/gercek/
 
-# Gerçek veriden üretilen sonuçlar
-ciktilar/gercek/
+# Üretilen sonuçlar (rapor, tahmin, tavsiye): yeniden üretilebilir; gerçek veriye ait olanlar gizlidir
+ciktilar/
 
 # Yeniden üretilebilir tablolar (python guncelle.py --sahte)
 veri/sahte/analiz/

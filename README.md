@@ -57,6 +57,10 @@ trendyoll/
 │   ├── iadeler.py           günlük   — iade talepleri ve nedenleri
 │   ├── finans.py            günlük   — cari hesap: satış/iade/komisyon, kargo/reklam kesintileri
 │   └── yorumlar.py          haftalık — ürün ve satıcı yorumları (resmi olmayan uç nokta)
+├── analiz/
+│   ├── metrikler.py         tek doğruluk kaynağı: 39 metrik (docs/METRIKLER.md)
+│   └── durum.py             durum raporu: sağlık skoru ve otomatik içgörüler
+├── ciktilar/                üretilen raporlar, tahminler, tavsiyeler (git'e girmez, yeniden üretilir)
 ├── hazirlama/
 │   ├── ortak.py             tablo şemaları, kampanya takvimi, sınıflandırma kuralları
 │   ├── temizle.py           veri/ham → veri/gercek (kişisel veriler atılır)
@@ -89,6 +93,8 @@ python -m cekim.siparisler               # tek bir çekim betiği
 python hazirlama/sahte_veri_uret.py      # sahte veriyi yeniden üret (ayarlar dosyanın başında)
 python hazirlama/ozellik_cikar.py sahte  # sahte veri için analiz tabloları
 python hazirlama/ozellik_cikar.py sahte --kesim 2026-06-30   # sızıntısız: yalnızca kesime kadar bilinenler
+
+python -m analiz.durum --veri sahte     # durum raporu: sağlık skoru + içgörüler -> ciktilar/sahte/
 ```
 
 Çekimler **artımlıdır**: ilk çalıştırmada geçmiş alınır, sonrakilerde yalnızca son dönem (iade ve finans
