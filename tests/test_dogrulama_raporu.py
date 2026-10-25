@@ -16,7 +16,8 @@ def tablo():
 
 def test_depodaki_tablo_semasi(tablo):
     ids = [x["id"] for x in tablo["satirlar"]]
-    assert ids == ["F2-02", "F2-03", "F2-04A", "F2-04B", "F2-04C", "F2-05", "F2-06"]
+    assert ids[:7] == ["F2-02", "F2-03", "F2-04A", "F2-04B", "F2-04C", "F2-05", "F2-06"]
+    assert set(ids[7:]) <= {"F3-04"}
     for x in tablo["satirlar"]:
         assert ALANLAR <= set(x), x["id"]
         assert x["karar"] in {"basarili", "basarisiz"} and x["yon"] in {"yuksek_iyi", "dusuk_iyi"}

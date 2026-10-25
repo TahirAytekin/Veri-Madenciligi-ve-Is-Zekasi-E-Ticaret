@@ -147,9 +147,30 @@ def f206():
                        f"{d['gercek']['kaynaga_gore']['urun']['sozluk_auc']:.3f}")
 
 
+def f304():
+    d = _oku("gercek", "dogrulama", "F3-04.json")
+    if d is None:
+        return []
+    a, s1 = d["A"]["gercek"], d["A"]["seviye1"]
+    g = a["42"]
+    tohumlar = {t: {"model": v["tam_isabet"], "referans": v["en_sik_isabet"], "fark": v["fark_en_sik"]["fark"],
+                    "alt": v["fark_en_sik"]["alt"], "ust": v["fark_en_sik"]["ust"]} for t, v in a.items()}
+    b = d.get("B", {}).get("gercek", {})
+    return [_satir("F3-04", "Soru cevabında beden önerisi", "Boyunu ve kilosunu yazan müşteriye satıcı hangi bedeni "
+                   "önerir?", "beden_oner() + kalıp düzeltmesi; LLM (Haiku 5.5) yalnızca metni yazar", "tam isabet",
+                   "yuksek_iyi", g["tam_isabet"], f"en sık beden ({g['en_sik_beden']})", g["en_sik_isabet"],
+                   g["fark_en_sik"], d["A"]["karar_A"], "Soru cevap önerici (taslak; beden kodla belirlenir)",
+                   "docs/modeller/F3-04.md", seviye1={"model": s1["42"]["tam_isabet"],
+                                                      "referans": s1["42"]["en_sik_isabet"]}, tohumlar=tohumlar,
+                   not_=f"{g['n']} gerçek satıcı cevabı; ±1 beden isabeti {g['bir_beden_isabet']:.3f}. LLM taslak "
+                        f"kontrolü (B): önerilen bedeni yazma oranı "
+                        f"{b.get('gecme_orani', {}).get('onerilen_beden', float('nan')):.3f} (ölçüt ≥ 0,90, tutmadı); "
+                        "sonradan eklenen güvenlik kontrolü yanlış bedenli taslağı şablona çevirir.")]
+
+
 def tablo():
     satirlar = []
-    for f in (f202, f203, f204, f205, f206):
+    for f in (f202, f203, f204, f205, f206, f304):
         sonuc = f()
         satirlar.extend(sonuc if isinstance(sonuc, list) else [sonuc])
     surum = _oku("modeller", "F1-06_surum_karsilastirma.json")
