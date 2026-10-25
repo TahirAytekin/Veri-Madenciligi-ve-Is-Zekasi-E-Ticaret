@@ -32,7 +32,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F2-04 | Tahir | `gorev/F2-04-beden-uyumu` | 2026-10-25 | tasarım ve başarı ölçütü önceden yazıldı ([F2-04.md](modeller/F2-04.md)); kalıp skoru, yön modeli, beden önerisi |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅

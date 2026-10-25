@@ -189,7 +189,7 @@ Her model için: aktarılabilir özellikler, gerçek veride baseline karşılaş
 | F2-01 | `modeller/ortak/`: iki veride aynı özellik üretimi (`ozellikler.py`), sahte → gerçek değerlendirme (`degerlendir.py`), baseline'lar, model kartı şablonu, çıktı formatı | P1 | F1-02 | modül + şablon | Tahir | ✅ |
 | F2-02 | **İade riski (GBM):** satır bazında iade olasılığı. Gerçek test: son 3 aydaki teslim edilmiş satırlar (son 21 gün hariç), etiket = kabul edilen iade | P1 | F2-01 | model + kart | Tahir | ✅ |
 | F2-03 | **İade riski (derin öğrenme, MLP):** kategorik embedding'li PyTorch MLP vs F2-02 | P1 | F2-02 | model + karşılaştırma | Tahir | ✅ |
-| F2-04 | **Beden uyumu ve kalıp:** "küçük geldi / büyük geldi" riski (çok sınıflı), model × beden kalıp eğilimi, boy-kilo → beden öneri fonksiyonu. Gerçek test: SMALLSIZE/BIGSIZE iadeleri + boy-kilo bilgili yorumlar | P1 | F2-01 | model + `beden_oner()` + kart | — | ⬜ |
+| F2-04 | **Beden uyumu ve kalıp:** "küçük geldi / büyük geldi" riski (çok sınıflı), model × beden kalıp eğilimi, boy-kilo → beden öneri fonksiyonu. Gerçek test: SMALLSIZE/BIGSIZE iadeleri + boy-kilo bilgili yorumlar | P1 | F2-01 | model + `beden_oner()` + kart | Tahir | 🟨 |
 | F2-05 | **Talep tahmini:** ürün × hafta global GBM (gecikmeler, hareketli ortalamalar, takvim, fiyat, indirim) + mağaza toplamı + stok tükenme tarihi. Gerçek test: son 6 hafta | P1 | F2-01 | model + kart | — | ⬜ |
 | F2-06 | **Duygu analizi (derin öğrenme):** hazır eğitilmiş Türkçe BERT modeli ile ürün ve satıcı yorumları. Gerçek test etiketi = puan (1–2 olumsuz, 4–5 olumlu); baseline: kelime listesi | P1 | F0-02 | model + kart | — | ⬜ |
 | F2-07 | **Talep tahmini (derin öğrenme, LSTM/GRU)** vs F2-05 | P2 | F2-05 | model + karşılaştırma | — | ⬜ |
