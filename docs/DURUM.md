@@ -18,7 +18,8 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - Ortam doğrulandı (F0-02 ✅): Python 3.14'te tüm paketler kurulu; hazır modeller indirildi ve Türkçe örneklerle denendi; `python -m pytest` ile 19 kontrol.
 - Metrikler hazır (F1-01, F1-02 ✅): 39 metrik, `analiz/metrikler.py`, tanımlar `docs/METRIKLER.md`. İade oranı 21 gün olgunlaşma ve az örnek kuralıyla hesaplanıyor.
 - Gerçek veride iki düzeltme: bölünmüş (`UnPacked`) paketler çift sayılmıyor; iadeler pakete satır üzerinden bağlanıyor.
-- **Sıradaki adım:** API anahtarı (F0-03), herkesin kurulumu (F0-04), durum analizi (F1-03), web iskeleti (F5-01), model altyapısı (F2-01).
+- Durum analizi hazır (F1-03 ✅): `python -m analiz.durum --veri sahte` → sağlık skoru + 11 kuraldan içgörüler (gerçek veride 81/100, 18 içgörü).
+- **Sıradaki adım:** API anahtarı (F0-03), herkesin kurulumu (F0-04), gerçek–sahte karşılaştırma (F1-04), senaryo (F1-05), web iskeleti (F5-01), model altyapısı (F2-01).
 
 ## Aktif görevler
 
@@ -26,7 +27,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| F1-03 | Tahir | `gorev/F1-03-durum-analizi` | 2026-10-25 | içgörü kuralları ve sağlık skoru yazılıyor |
+| — | | | | |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
@@ -34,7 +35,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 3. **F0-03:** Anthropic API anahtarı (Tahir)
 4. **F0-04:** herkes kurulumu yapar, "Ekip" tablosuna kendini ekler
 5. ~~F1-01 → F1-02: metrik sözlüğü ve `analiz/metrikler.py`~~ ✅
-6. **F1-03 → F1-05:** durum analizi, gerçek–sahte karşılaştırma, senaryo simülatörü
+6. ~~F1-03 durum analizi~~ ✅ · **F1-04, F1-05:** gerçek–sahte karşılaştırma, senaryo simülatörü
 7. **F5-01:** web iskeleti (artık başlayabilir: metrikler hazır)
 8. **F2-01:** model altyapısı: aktarılabilir özellikler, sahte → gerçek değerlendirme
 
