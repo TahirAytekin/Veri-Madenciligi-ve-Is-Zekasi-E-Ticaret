@@ -59,7 +59,8 @@ trendyoll/
 │   └── yorumlar.py          haftalık — ürün ve satıcı yorumları (resmi olmayan uç nokta)
 ├── analiz/
 │   ├── metrikler.py         tek doğruluk kaynağı: 39 metrik (docs/METRIKLER.md)
-│   └── durum.py             durum raporu: sağlık skoru ve otomatik içgörüler
+│   ├── durum.py             durum raporu: sağlık skoru ve otomatik içgörüler
+│   └── senaryo.py           ne olur simülatörü: iade, indirim, komisyon, desi, ürün maliyeti
 ├── ciktilar/                üretilen raporlar, tahminler, tavsiyeler (git'e girmez, yeniden üretilir)
 ├── hazirlama/
 │   ├── ortak.py             tablo şemaları, kampanya takvimi, sınıflandırma kuralları
@@ -95,6 +96,7 @@ python hazirlama/ozellik_cikar.py sahte  # sahte veri için analiz tabloları
 python hazirlama/ozellik_cikar.py sahte --kesim 2026-06-30   # sızıntısız: yalnızca kesime kadar bilinenler
 
 python -m analiz.durum --veri sahte     # durum raporu: sağlık skoru + içgörüler -> ciktilar/sahte/
+python -m analiz.senaryo --veri sahte --beden-iade-azalis 0.5   # ne olur: katkı payı bugün vs senaryo
 ```
 
 Çekimler **artımlıdır**: ilk çalıştırmada geçmiş alınır, sonrakilerde yalnızca son dönem (iade ve finans

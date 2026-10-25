@@ -176,7 +176,7 @@ gantt
 | F1-02 | `analiz/metrikler.py`: metrik fonksiyonları (veri, tarih aralığı, kırılım parametreli) ve testleri | P1 | F1-01 | modül + `tests/test_metrikler.py` | Tahir | ✅ |
 | F1-03 | `analiz/durum.py`: otomatik içgörü üretici. Satış/zaman, ürün ABC, iade/beden, finans, müşteri ve müşteri sesi için "bulgu + kanıt sayısı" listesi ve sağlık skoru | P1 | F1-02 | `ciktilar/<veri>/durum_raporu.json` | Tahir | ✅ |
 | F1-04 | Gerçek–sahte karşılaştırma: dağılımlar ve özellik aralıkları. Sahte → gerçek aktarımının ön koşulu; farklar raporlanır | P1 | F1-02 | `docs/rapor/01_gercek_sahte.md` | — | ⬜ |
-| F1-05 | `analiz/senaryo.py`: ne olur simülatörü ("iade %X düşerse", "desi 1 azalırsa", "indirim %Y olursa", "komisyon değişirse"); isteğe bağlı ürün maliyeti girişi | P1 | F1-02 | modül + testler | Tahir | 🟨 |
+| F1-05 | `analiz/senaryo.py`: ne olur simülatörü ("iade %X düşerse", "desi 1 azalırsa", "indirim %Y olursa", "komisyon değişirse"); isteğe bağlı ürün maliyeti girişi | P1 | F1-02 | modül + testler | Tahir | ✅ |
 
 ### F2 — Tahmin modelleri: sahtede eğit, gerçekte doğrula (Gün 3–7)
 
