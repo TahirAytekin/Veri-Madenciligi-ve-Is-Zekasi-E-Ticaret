@@ -2,6 +2,10 @@
 
 Çıktı: veri/sahte/*.csv  (kişisel veri içermez; paylaşılabilir)
 
+    python hazirlama/sahte_veri_uret.py                       # ana sahte veri (tohum 42) -> veri/sahte/
+    python hazirlama/sahte_veri_uret.py --tohum 1             # sağlamlık kontrolü için  -> veri/sahte_t1/ (git'e girmez)
+    python hazirlama/sahte_veri_uret.py --v1 [--tohum 1]      # F1-06 öncesi üretici     -> veri/sahte_v1[_t1]/ (git'e girmez)
+
 Dağılımlar gerçek verinin özetlerinden ayarlandı (kategori karışımı, fiyat aralıkları, saat/gün
 deseni, il dağılımı, indirim türleri, kargo süreleri, puan dağılımı, soru konuları). Hiçbir gerçek
 müşteri, ürün adı, yorum veya soru metni kopyalanmadı.
@@ -29,12 +33,32 @@ sys.stdout.reconfigure(encoding="utf-8")
 # 1) AYARLAR
 # ====================================================
 
-TOHUM = 42
+TOHUM = int(sys.argv[sys.argv.index("--tohum") + 1]) if "--tohum" in sys.argv else 42
 BASLANGIC = date(2024, 10, 17)
 BITIS = datetime(2026, 10, 16, 18, 0)   # veri çekim anı
 HEDEF_GUNLUK_SATIR = 36                 # son 90 günde günlük ortalama satış satırı (gerçekte ~36)
+
+# Sahte veri v2 (F1-06): iade yapısı test öncesi gerçek veriye (23.10.2025–15.07.2026) kalibre edildi. Kaynak:
+# python -m hazirlama.kalibrasyon (yalnızca toplu oranlar). Ayrıntı: docs/rapor/sahte_v2_kalibrasyon.md
+KATEGORI_IADE = {   # K2: finans İade / Satış, ≥200 satışlı kategoriler; diğerleri GENEL_IADE
+    "Alt - Üst Takım": 0.050, "Bluz": 0.057, "Body": 0.093, "Ceket": 0.055, "Eşofman Altı": 0.104, "Jeans": 0.104,
+    "Oxford Ayakkabı": 0.139, "Pantolon": 0.085, "Spor T-Shirt": 0.070, "Sweatshirt": 0.082, "T-Shirt": 0.065,
+    "Şort & Bermuda": 0.187,
+}
+GENEL_IADE = 0.082          # K1
+UYUM_SINIR = 1              # K4: seti dışında kalan müşteri en fazla bir beden uyumsuz alır (uç bedenlerde sıçrama yok)
+KALIP_OLASILIK = [0.25, 0.70, 0.05]  # K6: dar, normal, bol (v1: 0,20 / 0,65 / 0,15)
+BEDEN_SECIMI = [0.62, 0.18, 0.20]    # K5/K6: ideal, bir büyük, bir küçük beden seçme olasılığı (v1: 0,75 / 0,15 / 0,10)
+DAR_KATSAYI, BOL_KATSAYI = 0.60, 0.60   # K5: beden uyumsuzluğunun iade olasılığına etkisi (v1: 0,30 / 0,32)
+NEDEN_BEDEN_AGIRLIGI = 6.0             # K5: uyumsuz bedende iadenin beden nedeniyle açılma ağırlığı (v1: 3,0)
+SORUNLU_ORANI = 0.025                  # K5: kusurlu/yanlış ürün (kaliteyle artar; v1: 0,035)
+URUN_SAPMA = 0.85                      # K3: ürüne özgü kalıcı iade eğilimi, lognormal std (v1: yok)
 MAGAZA = "DEMOSTORE"
-CIKTI = VERI / "sahte"
+SURUM = "v1" if "--v1" in sys.argv else "v2"
+if SURUM == "v1":   # karşılaştırma için F1-06 öncesi üretici: aynı tohumla eski veriyi birebir üretir
+    KATEGORI_IADE, UYUM_SINIR, KALIP_OLASILIK, BEDEN_SECIMI = {}, 99, [0.20, 0.65, 0.15], [0.75, 0.15, 0.10]
+    DAR_KATSAYI, BOL_KATSAYI, NEDEN_BEDEN_AGIRLIGI, SORUNLU_ORANI, URUN_SAPMA = 0.30, 0.32, 3.0, 0.035, 0
+CIKTI = VERI / ("sahte" + ("_v1" if SURUM == "v1" else "") + ("" if TOHUM == 42 else f"_t{TOHUM}"))
 
 rng = np.random.default_rng(TOHUM)
 
@@ -291,7 +315,7 @@ for k in KAT.values():
             "lansman": lansman,
             "populerlik": rng.lognormal(0, 0.8),
             "kalite": rng.beta(6, 2.2),
-            "kalip": rng.choice([-1, 0, 1], p=[0.2, 0.65, 0.15]) if k["beden_seti"] not in ("kemer", "corap") else 0,
+            "kalip": rng.choice([-1, 0, 1], p=KALIP_OLASILIK) if k["beden_seti"] not in ("kemer", "corap") else 0,
             "kumas": rng.choice(KUMASLAR.get(k["ad"], VARSAYILAN_KUMAS)),
             "fiyat": guzel_fiyat(rng.uniform(lo, hi)),
             "elastisite": rng.uniform(1.2, 2.2),
@@ -442,10 +466,10 @@ def beden_sec(mu, c):
     seti = KAT[m["kategori"]]["beden_seti"]
     tam = BEDEN_SETLERI[seti]
     ideal = ideal_konum(mu, seti)
-    secim = ideal + (rng.choice([0, 1, -1], p=[0.75, 0.15, 0.10]) if len(tam) > 1 else 0)
+    secim = ideal + (rng.choice([0, 1, -1], p=BEDEN_SECIMI) if len(tam) > 1 else 0)
     mevcut = [tam.index(b) for b in c["bedenler"]]
     secim = min(mevcut, key=lambda x: abs(x - secim))
-    return tam[secim], (secim - ideal + m["kalip"]) if len(tam) > 1 else 0
+    return tam[secim], (int(np.clip(secim - ideal, -UYUM_SINIR, UYUM_SINIR)) + m["kalip"]) if len(tam) > 1 else 0
 
 
 def tamamlayici_sec(c, gun):
@@ -637,7 +661,7 @@ for t, c, gun in birincil:
             # yorum üretimi için gizli alanlar (kaydedilmez)
             "g_icerik": k["ic"]["c"], "g_model": k["m"]["m"], "g_uyum": k["uyum"], "g_musteri": mu["i"],
             # defolu / yanlış ürün: kalitesi düşük üründe daha sık
-            "g_sorun": rng.random() < 0.035 * (1.6 - k["m"]["kalite"]),
+            "g_sorun": rng.random() < SORUNLU_ORANI * (1.6 - k["m"]["kalite"]),
             "g_kupon": birim_kupon, "g_kalemler": kalem_ids, "g_desi": DESI.get(k["m"]["kategori"], 1),
         })
 
@@ -921,7 +945,8 @@ sorular["cevap_suresi_dk"] = (sorular.cevap_tarihi - sorular.soru_tarihi).dt.tot
 # İade olasılığı birim başına: kalıp/beden uyumsuzluğu, kusurlu ürün ve düşük kalite artırır.
 # Ortalama, gerçek veriye göre ayarlanır (HEDEF_IADE_ORANI: teslim edilen birimlere göre iade talebi).
 
-HEDEF_IADE_ORANI = 0.163   # gerçekte: talep %16,3, kabul edilen %12,2
+# K1 (v2): finans İade / Satış test öncesi gerçekteki %8,2'ye uysun diye (v1: talep %16,3 hedefi)
+HEDEF_IADE_ORANI = 0.117 if SURUM == "v2" else 0.163
 IADE_NEDENI = {
     "SMALLSIZE": "Bedeni/Ebatı Küçük Geldi", "BIGSIZE": "Bedeni/Ebatı Büyük Geldi", "DISLIKE": "Beğenmedim",
     "DAMAGEDITEM": "Kusurlu ürün gönderildi", "WRONGITEM": "Yanlış ürün gönderildi",
@@ -959,9 +984,19 @@ def uuid_sec():
 teslim_edilen = satirlar[siparisler.set_index("paket_id").loc[satirlar.paket_id, "teslim_tarihi"].notna().values]
 kalite_dizi = np.array([modeller[m]["kalite"] for m in teslim_edilen.g_model])
 uyum_dizi = teslim_edilen.g_uyum.values
-ham_olasilik = (0.04 + 0.08 * (1 - kalite_dizi) + 0.30 * np.maximum(-uyum_dizi, 0)
-                + 0.32 * np.maximum(uyum_dizi, 0))
+ham_olasilik = (0.04 + 0.08 * (1 - kalite_dizi) + DAR_KATSAYI * np.maximum(-uyum_dizi, 0)
+                + BOL_KATSAYI * np.maximum(uyum_dizi, 0))
+# Ürüne özgü kalıcı eğilim (K3); ayrı üreteçle çekilir, ana rastgele akışı değiştirmez
+urun_egilimi = np.random.default_rng(TOHUM + 1).lognormal(0, URUN_SAPMA, M) if URUN_SAPMA else np.ones(M)
+ham_olasilik = ham_olasilik * urun_egilimi[teslim_edilen.g_model.values]
 ham_olasilik = np.where(teslim_edilen.g_sorun.values, 0.40, ham_olasilik)
+# Kategori düzeyi gerçeğe göre (K2): her kategorinin ortalama olasılığı hedef oranıyla orantılı; kategori içindeki
+# farklar (kalite, kalıp, beden uyumu) korunur
+kategori_dizi = np.array([modeller[m]["kategori"] for m in teslim_edilen.g_model])
+for kat in (np.unique(kategori_dizi) if KATEGORI_IADE else []):
+    secili = kategori_dizi == kat
+    ort = np.average(ham_olasilik[secili], weights=teslim_edilen.adet.values[secili])
+    ham_olasilik[secili] *= KATEGORI_IADE.get(kat, GENEL_IADE) / ort
 olcek = HEDEF_IADE_ORANI / np.average(ham_olasilik, weights=teslim_edilen.adet)
 iade_olasiligi = np.clip(ham_olasilik * olcek, 0, 0.9)
 
@@ -969,7 +1004,7 @@ iade_olasiligi = np.clip(ham_olasilik * olcek, 0, 0.9)
 def iade_nedeni_sec(uyum, kalite, sorun):
     if sorun:
         return str(rng.choice(["DAMAGEDITEM", "WRONGITEM", "MISSINGPART"], p=[0.48, 0.47, 0.05]))
-    agirlik = {"SMALLSIZE": 3.0 * max(-uyum, 0), "BIGSIZE": 3.0 * max(uyum, 0),
+    agirlik = {"SMALLSIZE": NEDEN_BEDEN_AGIRLIGI * max(-uyum, 0), "BIGSIZE": NEDEN_BEDEN_AGIRLIGI * max(uyum, 0),
                "DISLIKE": 0.6 + 2.0 * (1 - kalite), "WRONGORDER": 0.13, "ABANDON": 0.10}
     return sec(agirlik)
 
@@ -1261,6 +1296,8 @@ dogru_kaydet(pd.DataFrame([{
 
 dogru_kaydet(pd.DataFrame({
     "satir_id": satirlar.satir_id, "beden_uyumu": satirlar.g_uyum, "sorunlu_urun": satirlar.g_sorun,
+    # Teslim edilen birimin gerçek iade talebi olasılığı (kâhin: modelin ulaşabileceği tavan); teslim edilmeyende boş
+    "iade_olasiligi": pd.Series(iade_olasiligi, index=teslim_edilen.index).reindex(satirlar.index).round(5),
 }), "satirlar")
 
 dogru_kaydet(pd.DataFrame({

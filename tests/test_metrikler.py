@@ -66,8 +66,8 @@ def test_az_ornekte_oran_hesaplanmaz():
 
 
 def test_sahte_iade_orani_uretici_ayariyla_tutarli():
-    # Üretici talep oranını %16,3'e ayarlıyor; ~%72'si kabul ediliyor -> kabul edilen iade oranı ~%11-12
-    assert 0.09 < m.hesapla("iade_orani", "sahte") < 0.15
+    # Sahte v2 (F1-06): kabul edilen iade oranı test öncesi gerçekteki ~%8,2'ye kalibre edildi
+    assert 0.06 < m.hesapla("iade_orani", "sahte") < 0.11
 
 
 def test_donem_karsilastir_onceki_donem():

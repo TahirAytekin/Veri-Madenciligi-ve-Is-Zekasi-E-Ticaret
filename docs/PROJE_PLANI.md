@@ -177,7 +177,7 @@ gantt
 | F1-03 | `analiz/durum.py`: otomatik içgörü üretici. Satış/zaman, ürün ABC, iade/beden, finans, müşteri ve müşteri sesi için "bulgu + kanıt sayısı" listesi ve sağlık skoru | P1 | F1-02 | `ciktilar/<veri>/durum_raporu.json` | Tahir | ✅ |
 | F1-04 | Gerçek–sahte karşılaştırma: dağılımlar ve özellik aralıkları. Sahte → gerçek aktarımının ön koşulu; farklar raporlanır | P1 | F1-02 | `docs/rapor/01_gercek_sahte.md` | Tahir | ✅ |
 | F1-05 | `analiz/senaryo.py`: ne olur simülatörü ("iade %X düşerse", "desi 1 azalırsa", "indirim %Y olursa", "komisyon değişirse"); isteğe bağlı ürün maliyeti girişi | P1 | F1-02 | modül + testler | Tahir | ✅ |
-| F1-06 | **Sahte veri v2:** sahte üreticiyi test öncesi gerçek veriye (23.10.2025–15.07.2026, toplu istatistikler) kalibre et; F2-02/F2-03'ü v2 ile yeniden çalıştır, v1 ile karşılaştır | P1 | F1-04, F2-03 | `docs/rapor/sahte_v2_kalibrasyon.md` + `hazirlama/kalibrasyon.py` | Tahir | 🟨 |
+| F1-06 | **Sahte veri v2:** sahte üreticiyi test öncesi gerçek veriye (23.10.2025–15.07.2026, toplu istatistikler) kalibre et; F2-02/F2-03'ü v2 ile yeniden çalıştır, v1 ile karşılaştır | P1 | F1-04, F2-03 | `docs/rapor/sahte_v2_kalibrasyon.md` + `hazirlama/kalibrasyon.py` | Tahir | ✅ |
 
 ### F2 — Tahmin modelleri: sahtede eğit, gerçekte doğrula (Gün 3–7)
 
@@ -357,7 +357,7 @@ sequenceDiagram
 | K-11 | Python 3.14 kalır; tüm paketler (torch 2.11 CPU, lightgbm, transformers, sentence-transformers, streamlit, anthropic, duckdb) kurulu ve test edildi | alındı | F0-02: hepsinin 3.14 sürümü var; GPU yok, 6 çekirdek CPU yeterli |
 | K-12 | Hazır modeller: duygu `savasy/bert-base-turkish-sentiment-cased`, embedding `intfloat/multilingual-e5-small` (F4-02'de büyüğüyle karşılaştırılacak) | alındı | F0-02'de Türkçe örneklerle denendi |
 | K-13 | Kod stili `ruff` (satır 120); mevcut `cekim/` ve `hazirlama/` kodunda uzun satıra izin var | alındı | yeni kodda kural tam geçerli |
-| K-14 | Sonraki modellerde (F2-04…) önceden kayıt zorunlu: tasarım ve başarı ölçütü, eğitimden önce model kartına yazılıp commitlenir. Yapısal kısıtlı varyant (monotonluk, alan bilgisi) her zaman aday listesinde olur | önerildi | F2-02/F2-03: sahte doğrulama aktarılabilirliği ölçemiyor; kısıtsız GBM sahte 0,683 → gerçek 0,580. Ekip onayı bekliyor |
+| K-14 | Sonraki modellerde (F2-04…) önceden kayıt zorunlu: tasarım ve başarı ölçütü, eğitimden önce model kartına yazılıp commitlenir. Yapısal kısıtlı varyant (monotonluk, alan bilgisi) her zaman aday listesinde olur | önerildi | F2-02/F2-03: sahte doğrulama aktarılabilirliği ölçemiyor; kısıtsız GBM sahte 0,683 → gerçek 0,580. F1-06: kısıtsız MLP v2'de 0,590'a düştü, ayrıca tek tohum güvenilmez (v1: 0,568–0,671) → sahte → gerçek sonuçları en az 3 tohumla raporlanmalı. Ekip onayı bekliyor |
 
 ---
 

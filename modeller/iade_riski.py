@@ -111,10 +111,15 @@ def yeniden_egit(sahte, secilen, en_iyi_tur):
 # 3) SEVİYE 1: SAHTE VERİDE DOĞRU CEVAP
 # ====================================================
 
-def kahin_skoru(df):
-    """Sahte veriyi üreten gizli iade olasılığı (dogru_cevaplar/README.md formülü). Sahtede ulaşılabilecek tavan."""
-    dc = VERI / "sahte" / "dogru_cevaplar"
+def kahin_skoru(df, veri="sahte"):
+    """Sahte veriyi üreten gizli iade olasılığı. Sahtede ulaşılabilecek tavan.
+
+    Üretici olasılığı kaydettiyse (sahte v2, F1-06) doğrudan o kullanılır; yoksa v1 formülü (dogru_cevaplar/README.md).
+    """
+    dc = VERI / veri / "dogru_cevaplar"
     satir = pd.read_csv(dc / "satirlar.csv", encoding="utf-8-sig").set_index("satir_id")
+    if "iade_olasiligi" in satir:
+        return df.satir_id.map(satir.iade_olasiligi).to_numpy(dtype=float)
     kalite = pd.read_csv(dc / "modeller.csv", encoding="utf-8-sig").set_index("model_kodu").kalite
     uyum = df.satir_id.map(satir.beden_uyumu).to_numpy(dtype=float)
     sorunlu = df.satir_id.map(satir.sorunlu_urun).fillna(False).to_numpy(dtype=bool)
@@ -127,12 +132,8 @@ def kahin_skoru(df):
 # 4) ÇALIŞTIR
 # ====================================================
 
-def calistir():
-    sahte = goreli_ekle(iade_veri_seti("sahte"))
-    gercek = goreli_ekle(iade_veri_seti("gercek")) if (VERI / "gercek" / "siparisler.csv").exists() else None
-    egitim, dogrulama = sahte_bol(sahte)
-
-    # Varyantlar yalnızca sahte doğrulamada karşılaştırılır
+def varyant_sec(egitim, dogrulama, gercek=None):
+    """Varyantlar yalnızca sahte doğrulamada karşılaştırılır; gerçek AUC (verilirse) yalnızca şeffaflık içindir."""
     sonuclar, paketler = [], {}
     for ad, v in varyantlar().items():
         paket = egit(egitim, dogrulama, v["ozellikler"], v["monoton"])
@@ -144,6 +145,14 @@ def calistir():
         sonuclar.append(satir)
     karsilastirma = pd.DataFrame(sonuclar)
     secilen_ad = karsilastirma.sort_values("sahte_dogrulama_auc", ascending=False).varyant.iloc[0]
+    return karsilastirma, secilen_ad, paketler
+
+
+def calistir():
+    sahte = goreli_ekle(iade_veri_seti("sahte"))
+    gercek = goreli_ekle(iade_veri_seti("gercek")) if (VERI / "gercek" / "siparisler.csv").exists() else None
+    egitim, dogrulama = sahte_bol(sahte)
+    karsilastirma, secilen_ad, paketler = varyant_sec(egitim, dogrulama, gercek)
     secilen = varyantlar()[secilen_ad]
     en_iyi_tur = int(paketler[secilen_ad]["model"].best_iteration_)
 
