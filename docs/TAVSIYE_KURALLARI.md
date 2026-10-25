@@ -77,6 +77,30 @@ Güven puanı: yüksek 0,9 · orta 0,6 · düşük 0,3.
 - **Ölçülemeyenler:** önem, sonra güven sırasıyla. İlk 3 tanesi plana girer.
 - **Toplam kazanç üst sınırdır:** bazı etkiler örtüşür; örneğin kalıp notu ve beden önerici aynı beden iadelerini azaltır.
 
+## Ürün sağlık kartı (F3-05)
+`python -m tavsiye.urun_karti --veri gercek` → `ciktilar/<veri>/urun_kartlari.json`. Tek ürün için: `--model <model_kodu>`.
+
+Her kartta şu bölümler var:
+- satış: 30 / 90 gün, son 30 günün önceki 30 güne göre değişimi, son 12 haftanın adetleri,
+- katkı payı ve birim katkı,
+- iade oranı ve beden payı,
+- kalıp (F2-04),
+- müşteri sesi (F2-06),
+- stok (F2-05),
+- o ürüne ait tavsiyeler.
+
+Birim ekonomisi tavsiye motoruyla aynıdır.
+
+**Etiketler ve genel durum:**
+
+| durum | etiketler |
+|---|---|
+| sorunlu | `zarar` · `yuksek_iade` (mağazanın 1,5 katı) · `sikayetli` · `stok_kritik` (1 haftadan kısa, haftada ≥ 1 satış) |
+| dikkat | `kalip_dar` / `kalip_bol` · `satis_dusuyor` (≥ %30) · `olu_stok` (stok var, 4 haftadır satış yok) · `stok_az` (3 haftadan kısa) · `iade_artisi` |
+| bilgi | `satis_artiyor` (genel durumu etkilemez) |
+
+**Temsili stok:** Gerçek varyantların çoğunun stoğu sembolik (1000, 999 …). Varyant stoğu ≥ 900 olan bir üründe stok süresi hesaplanmaz; stok etiketi ve stok tavsiyesi üretilmez.
+
 ## Yeni kural eklemek
 1. `tavsiye/kurallar.py` içine `def kural(b): -> list[Tavsiye]` yaz ve `KURALLAR` listesine ekle.
 2. Eşikleri `ESIK`'e, varsayımları `VARSAYIM`'a koy. Sayıyı koda gömme.

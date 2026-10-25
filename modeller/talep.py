@@ -29,6 +29,7 @@ SAHTE_TOHUMLAR = {42: "sahte", 1: "sahte_t1", 2: "sahte_t2"}
 DOGRULAMA_HAFTA = 13
 TEST_HAFTA = 6
 AKTIF_HAFTA = 12
+TEMSILI_STOK = 900          # varyant stoğu bu ve üstüyse sembolik kabul edilir (bkz. stok_tablosu)
 GECMIS = ["gecen_hafta", "iki_hafta_once", "uc_hafta_once", "dort_hafta_once", "ort4", "ort8", "ort12"]
 OZELLIKLER = GECMIS + ["hafta_sayisi", "fiyat_endeksi", "magaza_payi", "ozel_gun"]
 PARAMETRELER = dict(gbm.PARAMETRELER, objective="poisson", metric="poisson")
@@ -190,12 +191,16 @@ def stok_tablosu(veri, model):
     # Stok hızı: gerçek testte en iyi çıkan referans (geçen haftanın satışı; o hafta satış yoksa son 4 hafta
     # ortalaması). Model gerçekte bu referanstan kötü olduğu için stok kararında kullanılmaz (bkz. model kartı).
     d["haftalik_hiz"] = np.where(d.gecen_hafta > 0, d.gecen_hafta, d.ort4)
-    u = m.tablolar(veri)["urunler"].groupby("model_kodu").agg(stok=("stok", "sum"), kategori=("kategori", "first"))
+    # Temsili stok: satıcıların tedarik ettikçe gönderdiği ürünlere yazdığı sembolik stok (gerçekte varyantların
+    # çoğu 1000, 999, 998 ...). Böyle bir varyantı olan üründe stok süresi hesaplanmaz.
+    u = m.tablolar(veri)["urunler"].assign(temsili=lambda x: x.stok >= TEMSILI_STOK)
+    u = u.groupby("model_kodu").agg(stok=("stok", "sum"), temsili_stok=("temsili", "any"),
+                                    kategori=("kategori", "first"))
     d = d.join(u, on="model_kodu")
-    d["stok_hafta"] = d.stok / np.maximum(d.haftalik_hiz, 0.01)
+    d["stok_hafta"] = (d.stok / np.maximum(d.haftalik_hiz, 0.01)).where(~d.temsili_stok.fillna(False))
     d["tukenme_tarihi"] = (d.hafta + pd.to_timedelta(d.stok_hafta.clip(upper=520) * 7, unit="D")).dt.date
     return d[["model_kodu", "kategori", "hafta", "haftalik_hiz", "gecen_hafta", "ort4", "tahmin_model", "stok",
-              "stok_hafta", "tukenme_tarihi"]].sort_values("stok_hafta").round(3)
+              "temsili_stok", "stok_hafta", "tukenme_tarihi"]].sort_values("stok_hafta").round(3)
 
 
 def calistir():
