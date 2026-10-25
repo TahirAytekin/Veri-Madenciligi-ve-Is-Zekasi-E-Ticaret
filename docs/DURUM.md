@@ -42,7 +42,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F5-01…04, F5-10 | Tahir | `gorev/F5-01-web-iskelet` | 2026-10-26 | Streamlit iskeleti + Genel Bakış, Aksiyon Planı, Ürünler, Model Doğrulama |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
