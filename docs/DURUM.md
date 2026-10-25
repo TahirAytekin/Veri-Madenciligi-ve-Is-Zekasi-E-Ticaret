@@ -24,7 +24,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F1-01, F1-02 | Tahir | `gorev/F1-02-metrikler` | 2026-10-25 | metrik tanımları ve modül yazılıyor |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
