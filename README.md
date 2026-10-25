@@ -61,6 +61,8 @@ trendyoll/
 │   ├── metrikler.py         tek doğruluk kaynağı: 39 metrik (docs/METRIKLER.md)
 │   ├── durum.py             durum raporu: sağlık skoru ve otomatik içgörüler
 │   └── senaryo.py           ne olur simülatörü: iade, indirim, komisyon, desi, ürün maliyeti
+├── modeller/
+│   └── ortak/               aktarılabilir özellikler, sahte → gerçek değerlendirme, kayıt, gerçek–sahte karşılaştırma
 ├── ciktilar/                üretilen raporlar, tahminler, tavsiyeler (git'e girmez, yeniden üretilir)
 ├── hazirlama/
 │   ├── ortak.py             tablo şemaları, kampanya takvimi, sınıflandırma kuralları
@@ -76,6 +78,8 @@ trendyoll/
 │   ├── DURUM.md             kaldığımız yer: aktif görevler, son devir notları
 │   ├── PROJE_PLANI.md       amaç, mimari, fazlar ve görevler, takvim, kararlar, riskler
 │   ├── devir/               devir notları (her devir ayrı dosya)
+│   ├── rapor/               analiz ve doğrulama raporları (ör. 01_gercek_sahte.md)
+│   ├── modeller/            model kartları (_SABLON.md)
 │   ├── VERI_SOZLUGU.md      tüm tablolar, sütunlar ve aralarındaki bağlantılar
 │   └── MODEL_DOGRULAMA.md   tahminlerin doğruluğu nasıl kontrol edilir (sızıntısız test, baseline, metrikler)
 └── loglar/                  güncelleme logları

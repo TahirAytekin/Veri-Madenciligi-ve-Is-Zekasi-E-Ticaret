@@ -48,6 +48,21 @@ print((x.tahmin == x.kalip_etiketi).mean())
 
 ## Seviye 2: Sahte → gerçek testi
 
+### Altyapı (F2-01)
+
+```python
+from modeller.ortak.ozellikler import iade_veri_seti, MODEL_SAYISAL, MODEL_KATEGORIK
+from modeller.ortak.degerlendir import sahte_bol, baseline_skorlari, degerlendir
+
+egitim, dogrulama = sahte_bol(iade_veri_seti("sahte"))     # dogrulama: hiperparametre seçimi
+test = iade_veri_seti("gercek")                             # yalnızca son ölçüm
+tablo = degerlendir("F2-02", test, {"model": p, **baseline_skorlari(test)})   # -> ciktilar/gercek/dogrulama/F2-02.json
+```
+
+`MODEL_SAYISAL` / `MODEL_KATEGORIK`, gerçek–sahte karşılaştırmasında ([rapor](rapor/01_gercek_sahte.md)) ilişkisi
+gerçekte ters çıkan özellikler (`AKTARILAMAZ`) çıkarılmış varsayılan setlerdir. Eğitimsiz referanslar gerçek veride
+AUC 0,664 (kategori geçmişi) ve 0,680 (model geçmişi). Model kartı şablonu: [modeller/_SABLON.md](modeller/_SABLON.md).
+
 ### Akış
 1. **Eğitim:** sahte veri. Hiperparametre seçimi için sahtenin son dönemi doğrulama kümesi olarak ayrılır.
 2. **Özellikler:** aynı fonksiyonla (`modeller/ortak/ozellikler.py`) hem sahte hem gerçek veriden üretilir.

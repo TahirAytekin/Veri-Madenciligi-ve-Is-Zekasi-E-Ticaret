@@ -20,7 +20,8 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - Gerçek veride iki düzeltme: bölünmüş (`UnPacked`) paketler çift sayılmıyor; iadeler pakete satır üzerinden bağlanıyor.
 - Durum analizi hazır (F1-03 ✅): `python -m analiz.durum --veri sahte` → sağlık skoru + 11 kuraldan içgörüler (gerçek veride 81/100, 18 içgörü).
 - Senaryo simülatörü hazır (F1-05 ✅): değişiklik yokken gerçek katkı payını %1,6 farkla tutturuyor. Gerçek veride beden iadelerini yarıya indirmek aylık +26 bin TL, 1 desi küçültmek yalnızca +0,9 bin TL (Trendyol Express'te 0–2 desi aynı ücret).
-- **Sıradaki adım:** API anahtarı (F0-03), herkesin kurulumu (F0-04), gerçek–sahte karşılaştırma (F1-04) + model altyapısı (F2-01), web iskeleti (F5-01).
+- Model altyapısı hazır (F2-01 ✅, F1-04 ✅): `modeller/ortak/` (aktarılabilir özellikler, sızıntısız geçmiş özellikleri, sahte → gerçek değerlendirme). Gerçek–sahte raporu: 4 özellik (`ay`, `saat`, `indirim_orani`, `model_onceki_puan`) gerçekte ters ilişkili, modellerden çıkarıldı. Beden–iade ilişkisi iki veride aynı. Çıta: eğitimsiz referans AUC 0,680.
+- **Sıradaki adım:** F2-02 iade riski (GBM) → F2-03 (MLP) → F2-04 beden; paralel: web iskeleti (F5-01), API anahtarı (F0-03).
 
 ## Aktif görevler
 
@@ -36,9 +37,9 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 3. **F0-03:** Anthropic API anahtarı (Tahir)
 4. **F0-04:** herkes kurulumu yapar, "Ekip" tablosuna kendini ekler
 5. ~~F1-01 → F1-02: metrik sözlüğü ve `analiz/metrikler.py`~~ ✅
-6. ~~F1-03 durum analizi~~ ✅ · ~~F1-05 senaryo~~ ✅ · **F1-04:** gerçek–sahte karşılaştırma
+6. ~~F1-03, F1-04, F1-05~~ ✅ · Faz 1 tamamlandı
 7. **F5-01:** web iskeleti (artık başlayabilir: metrikler hazır)
-8. **F2-01:** model altyapısı: aktarılabilir özellikler, sahte → gerçek değerlendirme
+8. ~~F2-01 model altyapısı~~ ✅ · **F2-02:** iade riski (GBM), çıta AUC 0,680
 
 ## Ara kontroller
 | kontrol | gün | ölçüt | durum |

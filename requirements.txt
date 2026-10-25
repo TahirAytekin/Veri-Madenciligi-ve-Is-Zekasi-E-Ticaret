@@ -8,6 +8,8 @@ duckdb>=2.0
 
 # Makine öğrenimi ve derin öğrenme
 scikit-learn>=1.8
+scipy>=1.17
+joblib
 lightgbm>=4.6
 torch>=2.11
 transformers>=5.20
