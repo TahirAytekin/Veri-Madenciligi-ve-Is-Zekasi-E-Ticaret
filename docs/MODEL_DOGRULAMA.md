@@ -68,11 +68,11 @@ Sahte ve gerçek verideki ürün, model ve müşteri ID'leri farklıdır. Modeld
 Ürünün geçmiş iade oranı gibi özellikler her veri setinde **o satırın tarihinden öncesine** bakılarak hesaplanmalı; yoksa sızıntı olur.
 
 ### Kural 2: Etiketin "olgunlaşması"
-İade, teslimden sonraki ~15 gün içinde gelir. Gerçek verinin son günlerinde teslim edilen satırların iadesi henüz gelmemiş olabilir.
+İade teslimden sonra açılır ve birkaç gün içinde kabul edilir: gerçek veride kabul edilen iadelerin %93'ü 15, %99'u **21 gün** içinde kabul ediliyor. Gerçek verinin son günlerinde teslim edilen satırların iadesi henüz gelmemiş olabilir.
 
 | model | gerçek test penceresi |
 |---|---|
-| iade riski, beden uyumu | 16 Temmuz – 8 Ekim arası **teslim edilmiş** satırlar (son 15 gün hariç); etiket = `durum == "Accepted"` iade |
+| iade riski, beden uyumu | 16 Temmuz – 2 Ekim arası **teslim edilmiş** satırlar (son 21 gün hariç; `analiz.metrikler.OLGUNLASMA_GUN`); etiket = `durum == "Accepted"` iade |
 | talep tahmini | son 6 hafta (gecikme özellikleri için önceki haftalar yalnızca girdi olarak) |
 | duygu analizi | tüm gerçek yorumlar; etiket puandan (1–2 olumsuz, 4–5 olumlu, 3 hariç) |
 | konu sınıflandırma | elle etiketlenmiş 100 gerçek soru |

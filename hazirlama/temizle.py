@@ -255,6 +255,14 @@ else:
     print("UYARI: trendyol_iadeler.json yok, önce 'python -m cekim.iadeler' çalıştırın.")
 iadeler = pd.DataFrame(iade_satirlari, columns=TABLOLAR["iadeler"] + ["_urun_adi", "_renk", "_beden"])
 
+# İade kaydındaki paket no (orderShipmentPackageId) sipariş tablosundaki paket_id ile aynı kimlik değil.
+# Paket, satır üzerinden bulunur; bölünmüş (UnPacked) ve iptal kopyalar yerine teslim edilen paket seçilir.
+satir_paketi = (satirlar[["satir_id", "paket_id"]]
+                .merge(siparisler[["paket_id", "paket_durumu"]], on="paket_id")
+                .assign(kopya=lambda x: x.paket_durumu.isin(["UnPacked", "Cancelled"]))
+                .sort_values("kopya").drop_duplicates("satir_id").set_index("satir_id").paket_id)
+iadeler["paket_id"] = iadeler.satir_id.map(satir_paketi).astype("Int64")
+
 # İadesi olup katalogda hiç olmayan eski varyantlar da ürün tablosuna eklenir
 eksik = iadeler[~iadeler.barkod.isin(urunler.barkod)].drop_duplicates("barkod", keep="last")
 urunler = pd.concat([urunler, pd.DataFrame({

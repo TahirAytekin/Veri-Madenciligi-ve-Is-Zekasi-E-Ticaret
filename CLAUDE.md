@@ -14,7 +14,7 @@ geliştiren ekip projesi. Yapay zekâ asistanları ve yeni ekip üyeleri için k
 - Geliştirme `veri/sahte/` ile yapılır; kod `sahte` ve `gercek` için aynı şekilde çalışmalı.
 - Modeller **sahte veriyle eğitilir, gerçek verinin son 3 ayıyla test edilir**; gerçek veri eğitimde kullanılmaz. ID yerine aktarılabilir özellikler (kategori, beden konumu, fiyat endeksi, geçmiş iade oranı ...). Ayrıntı: `docs/MODEL_DOGRULAMA.md`.
 - `veri/sahte/dogru_cevaplar/` yalnızca doğrulama içindir; modele özellik olarak verilmez.
-- Metrikler tek yerde hesaplanır (`analiz/metrikler.py`, görev F1-02).
+- Metrikler tek yerde hesaplanır: `analiz/metrikler.py` (`hesapla`, `donem_karsilastir`, `ozet`); tanımlar `docs/METRIKLER.md`. Yeni metrik ikisine birden eklenir.
 - Sistem Trendyol'a yazmaz; yalnızca okur ve önerir.
 - İş bitince planı, DURUM.md'yi güncelle; yarım kalan iş için `docs/devir/` altına not yaz.
 

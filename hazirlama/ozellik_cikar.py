@@ -84,6 +84,8 @@ detay = (satirlar
                             "kargo_firmasi", "hizli_teslimat", "paket_durumu", "kargoya_verilis_tarihi",
                             "teslim_tarihi", "iptal"]], on="paket_id")
          .merge(urunler[["barkod", "icerik_id", "model_kodu", "urun_adi", "kategori"]], on="barkod", how="left"))
+# Bölünmüş paketin ("UnPacked") satırları yeni paketlerde tekrar yer alır; çift sayılmasın
+detay = detay[detay.paket_durumu != "UnPacked"]
 detay["tarih"] = detay.siparis_tarihi.dt.normalize()
 detay["saat"] = detay.siparis_tarihi.dt.hour
 detay["indirim_orani"] = (1 - detay.birim_net_fiyat / detay.birim_brut_fiyat).round(4)

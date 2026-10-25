@@ -63,7 +63,7 @@ Bir sipariş satırı birden çok **birim (kalem)** içerebilir (`adet` > 1). İ
 | sehir, ilce | teslimat il/ilçe |
 | odeme_yontemi | **~8 haftadan eski siparişlerde boş** (Trendyol gizliyor) |
 | kargo_firmasi, hizli_teslimat | FastDelivery / SameDayShipping / Yok |
-| paket_durumu | Delivered, Cancelled, Shipped, ReadyToShip, UnDeliveredAndReturned |
+| paket_durumu | Delivered, Cancelled, Shipped, ReadyToShip, UnDeliveredAndReturned, UnPacked. **UnPacked** = Trendyol'un böldüğü paket; satırları yeni paketlerde tekrar yer alır, satış sayılmaz (gerçek veride 2 paket) |
 | brut_tutar, satici_indirimi, trendyol_indirimi, net_tutar | net = brüt − indirimler |
 | tahmini_teslim_bas/bit, kargoya_verilis_tarihi, teslim_tarihi | |
 | iptal, teslim_edilemedi, iade_dondu | durum geçmişinden türetilen bayraklar |
@@ -89,7 +89,7 @@ Satıcı yorumu: satıcı ve kargo puanı ayrı, Trendyol'un neden kodları (`PR
 | sütun | açıklama |
 |---|---|
 | iade_id | talep; aynı paketten birlikte iade edilen birimler aynı talepte |
-| siparis_no, paket_id, satir_id, kalem_id, barkod | bağlantılar |
+| siparis_no, paket_id, satir_id, kalem_id, barkod | bağlantılar. `paket_id` temizlemede satır üzerinden sipariş tablosundaki pakete çevrilir (Trendyol'un iade kaydındaki paket kimliği farklıdır); satırı bilinmeyen eski ve yurt dışı iadelerde boştur |
 | siparis_tarihi, iade_tarihi, son_guncelleme | |
 | neden_kodu, neden | Trendyol kodu (SMALLSIZE, BIGSIZE, DISLIKE, DAMAGEDITEM ...) ve metni |
 | neden_grubu | beden_kucuk, beden_buyuk, begenmedim, kusurlu, yanlis_eksik_urun, vazgecti, teslim_edilemedi, diger |
