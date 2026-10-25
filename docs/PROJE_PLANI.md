@@ -217,10 +217,10 @@ Tasarım ayrıntısı bölüm 8'de.
 |---|---|---|---|---|---|---|
 | F4-01 | Bilgi tabanı: veri ve metrik sözlükleri, durum raporu, ürün sağlık kartı metinleri, kategori ve ay özetleri, tavsiyeler, model kartları → parçalara bölünmüş metinler | P1 | F1-03, F3-03 | `asistan/bilgi_tabani.py` | Tahir | ✅ |
 | F4-02 | Embedding ve arama: yerel çok dilli embedding modeli, vektörler `ciktilar/<veri>/indeks/` içinde, kosinüs benzerliğiyle arama. **Not (F0-02):** `multilingual-e5-small` zıt anlamlı cümleleri karıştırdı ("iade çok" sorusuna "en az iade" belgesi); `multilingual-e5-base` ve anahtar kelime (BM25) ile hibrit arama karşılaştırılmalı | P1 | F4-01 | `asistan/arama.py` | Tahir | ✅ |
-| F4-03 | Araçlar: `metrik_hesapla`, `sql_sorgula` (DuckDB 2.0, salt okunur, yalnızca SELECT, satır sınırı; ilişkilerde `fetchone()` yok, `fetchall()` kullanılır), `tahmin_getir`, `urun_karti`, `tavsiyeleri_getir`, `senaryo_calistir`, `beden_oner`, `bilgi_ara` | P1 | F1-02, F1-05, F3-05 | `asistan/araclar.py` + testler | — | ⬜ |
+| F4-03 | Araçlar: `metrik_hesapla`, `sql_sorgula` (DuckDB 2.0, salt okunur, yalnızca SELECT, satır sınırı; ilişkilerde `fetchone()` yok, `fetchall()` kullanılır), `tahmin_getir`, `urun_karti`, `tavsiyeleri_getir`, `senaryo_calistir`, `beden_oner`, `bilgi_ara` | P1 | F1-02, F1-05, F3-05 | `asistan/araclar.py` + testler | Tahir | 🟨 |
 | F4-04 | Sohbet döngüsü: Claude API + araç kullanımı, sistem talimatı (yalnızca veriye dayan, sayının kaynağını göster, emin değilsen söyle, Türkçe), akışlı cevap, önbellekleme, maliyet sınırı | P1 | F4-02, F4-03 | `asistan/sohbet.py` | — | ⬜ |
 | F4-05 | Değerlendirme seti: 30 soru (sayısal, karşılaştırma, "neden", "ne yapmalıyım"), beklenen cevaplar metrik fonksiyonlarından otomatik; sahte ve gerçek veride doğruluk, kaynak gösterme, maliyet | P1 | F4-04 | `asistan/degerlendirme/` + sonuç | — | ⬜ |
-| F4-06 | Güvenlik testleri: SQL ile yazma denemesi, yorum metnine gömülü talimat (prompt injection) | P2 | F4-04 | `tests/test_asistan_guvenlik.py` | — | ⬜ |
+| F4-06 | Güvenlik testleri: SQL ile yazma denemesi, yorum metnine gömülü talimat (prompt injection) | P2 | F4-04 | `tests/test_asistan_guvenlik.py` | Tahir | 🟨 |
 
 ### F5 — Web uygulaması (Gün 2–12, paralel)
 

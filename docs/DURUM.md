@@ -40,7 +40,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F4-03, F4-06 | Tahir | `gorev/F4-03-araclar` | 2026-10-26 | asistan araçları (metrik, SQL, tahmin, ürün kartı, tavsiye, senaryo, beden, arama) ve güvenlik testleri |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
