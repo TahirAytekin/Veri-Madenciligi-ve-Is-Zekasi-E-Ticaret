@@ -31,7 +31,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F1-06 | Tahir | `gorev/F1-06-sahte-v2` | 2026-10-25 | kalibrasyon hedefleri ve başarı ölçütü önceden yazıldı ([rapor](rapor/sahte_v2_kalibrasyon.md)) |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
