@@ -29,7 +29,8 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - **Duygu analizi (F2-06 ✅, [model kartı](modeller/F2-06.md)):** hazır Türkçe BERT gerçek yorumlarda AUC 0,910 (ürün yorumlarında 0,924), ama önceden sabitlenen kelime listesinden (0,833) anlamlı biçimde iyi değil (+0,020 [−0,036, +0,076]). Bulgu: BERT genel puandan çok metindeki şikâyeti yakalıyor (4★ yorumların %79'u şikâyetli). Web'de genel duygu puandan, şikâyet işareti ve konu BERT'ten; gerçekte en sık şikâyet beden/kalıp (56) ve kumaş/kalite (47).
 - **Doğrulama raporu (F2-12 ✅, [02_dogrulama.md](rapor/02_dogrulama.md)):** tüm modeller tek tabloda; web için `docs/rapor/02_dogrulama.json`. `python -m modeller.dogrulama_raporu --yeniden` tüm modelleri baştan çalıştırıp (~3 dk) aynı sayıları üretiyor. Gerçekte başarılı: F2-04C beden önerisi; diğerleri basit referansları geçemedi. **Faz 2'nin P1 görevleri tamamlandı (K1 ✅, plandan 6 gün önce).**
 - **Tavsiye motoru (F3-01…03 ✅, [kurallar](TAVSIYE_KURALLARI.md)):** 14 kural; her tavsiyede kanıt, aksiyon, aylık TL etkisi (senaryo simülatörüyle aynı birim modeli) ve doğrulama raporuna bağlı güven. `python -m tavsiye.motor --veri gercek` → gerçekte 36 tavsiye; haftalık planın ilk 10 aksiyonu aylık ~28,7 bin TL (üst sınır). En büyük kalem: beden önerici (~10,4 bin TL/ay), stok tükenmek üzere olan çok satan jean (~6,9 bin TL/ay).
-- **Sıradaki adım:** F3-05 ürün sağlık kartı → F3-04 soru cevap önerici (LLM); paralel: web iskeleti (F5-01), F4 asistan. Ekip K-14'ü onaylamalı.
+- **Ürün sağlık kartı (F3-05 ✅):** `python -m tavsiye.urun_karti --veri gercek` → 76 ürün: 53 iyi, 8 dikkat, 15 sorunlu. Bulgu: gerçek stokların çoğu temsili (1000, 999 …): 72 aktif ürünün 64'ünde stok süresi hesaplanamaz. Stok tablosu ve stok tavsiyeleri buna göre düzeltildi.
+- **Sıradaki adım:** F3-04 soru cevap önerici (LLM); paralel: web iskeleti (F5-01), F4 asistan. Ekip K-14'ü onaylamalı.
 
 ## Aktif görevler
 
@@ -47,7 +48,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 5. ~~F1-01 → F1-02: metrik sözlüğü ve `analiz/metrikler.py`~~ ✅
 6. ~~F1-03, F1-04, F1-05~~ ✅ · Faz 1 tamamlandı
 7. **F5-01:** web iskeleti (artık başlayabilir: metrikler hazır)
-8. ~~F2-01 model altyapısı~~ ✅ · ~~F2-02 iade riski (GBM)~~ ✅ · ~~F2-03 iade riski (MLP)~~ ✅ · ~~F1-06 sahte veri v2~~ ✅ · ~~F2-04 beden uyumu~~ ✅ · ~~F2-05 talep~~ ✅ · ~~F2-06 BERT duygu~~ ✅ · ~~F2-12 doğrulama raporu~~ ✅ · ~~F3-01…03 tavsiye motoru~~ ✅ · **F3-05, F3-04**
+8. ~~F2-01 model altyapısı~~ ✅ · ~~F2-02 iade riski (GBM)~~ ✅ · ~~F2-03 iade riski (MLP)~~ ✅ · ~~F1-06 sahte veri v2~~ ✅ · ~~F2-04 beden uyumu~~ ✅ · ~~F2-05 talep~~ ✅ · ~~F2-06 BERT duygu~~ ✅ · ~~F2-12 doğrulama raporu~~ ✅ · ~~F3-01…03 tavsiye motoru~~ ✅ · ~~F3-05 ürün kartı~~ ✅ · **F3-04:** cevap önerici
 
 ## Ara kontroller
 | kontrol | gün | ölçüt | durum |

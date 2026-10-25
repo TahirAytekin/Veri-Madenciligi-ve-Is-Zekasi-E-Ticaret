@@ -61,5 +61,7 @@ def test_stok_tablosu_gelecek_hafta(seri):
     model = lgb.LGBMRegressor(**dict(t.PARAMETRELER, n_estimators=20)).fit(d[t.OZELLIKLER], d.adet)
     s = t.stok_tablosu("sahte", model)
     assert (s.hafta == seri.hafta.max() + pd.Timedelta(weeks=1)).all()
-    assert (s.haftalik_hiz >= 0).all() and (s.stok_hafta >= 0).all()
-    assert np.allclose(s.stok_hafta, s.stok / np.maximum(s.haftalik_hiz, 0.01), atol=1e-3)
+    gercek = s[~s.temsili_stok.astype(bool)]
+    assert (s.haftalik_hiz >= 0).all() and (gercek.stok_hafta >= 0).all()
+    assert np.allclose(gercek.stok_hafta, gercek.stok / np.maximum(gercek.haftalik_hiz, 0.01), atol=1e-3)
+    assert s[s.temsili_stok.astype(bool)].stok_hafta.isna().all()        # sembolik stokta süre hesaplanmaz

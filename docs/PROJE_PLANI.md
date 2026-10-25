@@ -207,7 +207,7 @@ Her model için: aktarılabilir özellikler, gerçek veride baseline karşılaş
 | F3-02 | Tavsiye kuralları (en az 12): stok tükenme riski · kalıbı dar/bol ürün · yüksek iade riskli ürün · zarar ettiren ürün · iade artışı alarmı · düşük puanlı ürün · marjı yiyen indirim · kampanya fırsatı · geç cevaplanan sorular · kargo desisi · çapraz satış paketi · sezon hazırlığı · kayıp riskli müşteri segmenti | P1 | F3-01, F2-02…F2-06 | `tavsiye/kurallar.py` | Tahir | ✅ |
 | F3-03 | Önceliklendirme (beklenen etki × güven) ve **haftalık aksiyon planı**: ilk 10 aksiyon, toplam beklenen kazanç | P1 | F3-02 | `ciktilar/<veri>/tavsiyeler.json`, `aksiyon_plani.json` | Tahir | ✅ |
 | F3-04 | **Müşteri sorusu cevap önerici:** soru metni → konu, boy/kilo çıkarımı → `beden_oner()` + kalıp eğilimi + ürün bilgisi → satıcının mağaza üslubunda cevap taslağı (LLM ile) | P1 | F2-04, F0-03 | `tavsiye/cevap_oner.py` | — | ⬜ |
-| F3-05 | **Ürün sağlık kartı:** ürün başına satış, trend, iade riski, kalıp, duygu, katkı payı, ilgili tavsiyeler | P1 | F2-02, F2-04, F2-06 | `tavsiye/urun_karti.py` | — | ⬜ |
+| F3-05 | **Ürün sağlık kartı:** ürün başına satış, trend, iade riski, kalıp, duygu, katkı payı, ilgili tavsiyeler | P1 | F2-02, F2-04, F2-06 | `tavsiye/urun_karti.py` | Tahir | ✅ |
 
 ### F4 — RAG asistanı (Gün 8–12)
 

@@ -73,7 +73,8 @@ trendyoll/
 ├── tavsiye/                 F3 tavsiye motoru (docs/TAVSIYE_KURALLARI.md)
 │   ├── sema.py              tavsiye yapısı: kanıt, aksiyon, aylık TL etkisi, güven
 │   ├── kurallar.py          14 kural (stok, kalıp, iade, zarar, indirim, kampanya, şikâyet, sezon ...)
-│   └── motor.py             önceliklendirme ve haftalık aksiyon planı
+│   ├── motor.py             önceliklendirme ve haftalık aksiyon planı
+│   └── urun_karti.py        ürün sağlık kartı: satış, katkı, iade, kalıp, şikâyet, stok, tavsiyeler
 ├── ciktilar/                üretilen raporlar, tahminler, tavsiyeler (git'e girmez, yeniden üretilir)
 ├── hazirlama/
 │   ├── ortak.py             tablo şemaları, kampanya takvimi, sınıflandırma kuralları
@@ -117,6 +118,7 @@ python -m analiz.senaryo --veri sahte --beden-iade-azalis 0.5   # ne olur: katk�
 python -m modeller.dogrulama_raporu --yeniden   # (gerçek veriyle) tüm modeller + doğrulama raporu, ~3 dk
 python -m modeller.beden_uyumu          # tek bir model (her model kendi ciktilar/ dosyalarını yazar)
 python -m tavsiye.motor --veri sahte    # tavsiyeler + haftalık aksiyon planı -> ciktilar/sahte/
+python -m tavsiye.urun_karti --veri sahte   # ürün sağlık kartları -> ciktilar/sahte/urun_kartlari.json
 ```
 
 Çekimler **artımlıdır**: ilk çalıştırmada geçmiş alınır, sonrakilerde yalnızca son dönem (iade ve finans

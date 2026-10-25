@@ -134,7 +134,8 @@ def stok_tukenme(b):
     if s is None:
         return []
     th, hedef = VARSAYIM["tedarik_hafta"], VARSAYIM["stok_hedef_hafta"]
-    s = s[(s.stok_hafta < th) & (s.haftalik_hiz >= 1)].join(b.ekonomi, on="model_kodu", rsuffix="_e")
+    s = s[(s.stok_hafta < th) & (s.haftalik_hiz >= 1)]          # temsili stoklu ürünlerde stok_hafta boş
+    s = s.join(b.ekonomi, on="model_kodu", rsuffix="_e")
     sonuc = []
     for r in s.itertuples():
         u = birim_katki(r.P, r.r, r.k, r.c, b.ik) if not math.isnan(getattr(r, "P", np.nan)) else \
@@ -437,7 +438,7 @@ def sezon_hazirligi(b):
     for kat, k in secili.sort_values(ascending=False).items():
         kapsama = None
         if stok is not None:
-            ks = stok[stok.kategori == kat]
+            ks = stok[(stok.kategori == kat) & ~stok.temsili_stok.fillna(False).astype(bool)]
             kapsama = float(ks.stok.sum() / max(ks.haftalik_hiz.sum() * k, 0.01)) if len(ks) else None
         yetersiz = kapsama is not None and kapsama < 6
         sonuc.append(Tavsiye(
