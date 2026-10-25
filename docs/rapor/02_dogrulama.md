@@ -19,8 +19,9 @@
 | [F2-04C](../../docs/modeller/F2-04.md) | Boyu ve kilosu bilinen müşteriye hangi beden? | tam isabet | 0,419 | en sık beden: 0,284 | +0,135 [+0,013, +0,257] | 3/3 | ✓ | Beden önerici (müşteri boy-kilo girer) |
 | [F2-05](../../docs/modeller/F2-05.md) | Bu ürün gelecek hafta kaç adet satar? | WAPE | 0,651 | geçen haftanın satışı: 0,469 | +0,183 [+0,007, +0,299] | 0/3 | ✗ | Kullanılmaz; stok tükenme tablosu geçen haftanın satış hızıyla |
 | [F2-06](../../docs/modeller/F2-06.md) | Bu yorum olumlu mu olumsuz mu? | ROC-AUC | 0,910 | kelime listesi: 0,833 | +0,020 [-0,036, +0,076] | — | ✗ | Şikâyet işareti ve şikâyet konusu (genel duygu puandan) |
+| [F3-04](../../docs/modeller/F3-04.md) | Boyunu ve kilosunu yazan müşteriye satıcı hangi bedeni önerir? | tam isabet | 0,498 | en sık beden (L): 0,191 | +0,306 [+0,226, +0,383] | 3/3 | ✓ | Soru cevap önerici (taslak; beden kodla belirlenir) |
 
-**Başarılı:** F2-04C · **Başarısız:** F2-02, F2-03, F2-04A, F2-04B, F2-05, F2-06
+**Başarılı:** F2-04C, F3-04 · **Başarısız:** F2-02, F2-03, F2-04A, F2-04B, F2-05, F2-06
 
 WAPE'de düşük değer iyidir (fark < 0 model lehine); diğer ölçütlerde yüksek değer iyidir.
 
@@ -35,6 +36,7 @@ WAPE'de düşük değer iyidir (fark < 0 model lehine); diğer ölçütlerde yü
 | F2-04C | 0,561 | 0,226 | — |
 | F2-05 | 0,510 | 0,517 | 0,433 |
 | F2-06 | 0,947 | 0,748 | — |
+| F3-04 | 0,486 | 0,197 | — |
 
 ## Tohumlara göre (sahte v2: 42, 1, 2)
 
@@ -52,6 +54,9 @@ WAPE'de düşük değer iyidir (fark < 0 model lehine); diğer ölçütlerde yü
 | F2-05 | 42 | 0,651 | +0,183 [+0,007, +0,299] |
 | F2-05 | 1 | 0,574 | +0,105 [+0,014, +0,173] |
 | F2-05 | 2 | 0,559 | +0,090 [+0,003, +0,244] |
+| F3-04 | 42 | 0,498 | +0,306 [+0,226, +0,383] |
+| F3-04 | 1 | 0,489 | +0,298 [+0,217, +0,379] |
+| F3-04 | 2 | 0,451 | +0,260 [+0,179, +0,340] |
 
 ## Sahte veri v1 → v2 (F2-02, gerçek AUC)
 
@@ -72,6 +77,7 @@ WAPE'de düşük değer iyidir (fark < 0 model lehine); diğer ölçütlerde yü
 - **F2-04C:** ±1 beden isabeti 0.743; 74 gerçek yorum
 - **F2-05:** mağaza toplamı WAPE: model 0.270, naif 0.140
 - **F2-06:** 221 gerçek yorum (52 olumsuz); ürün yorumlarında BERT 0.924, sözlük 0.822
+- **F3-04:** 235 gerçek satıcı cevabı; ±1 beden isabeti 0.957. LLM taslak kontrolü (B): önerilen bedeni yazma oranı 0.882 (ölçüt ≥ 0,90, tutmadı); sonradan eklenen güvenlik kontrolü yanlış bedenli taslağı şablona çevirir.
 
 ## Yorum
 
@@ -83,7 +89,7 @@ Sahteden gerçeğe ancak sahte veri o konuda gerçeğe benziyorsa aktarım oluyo
 
 | ilişki | sahte gerçeğe benziyor mu? | sonuç |
 |---|---|---|
-| vücut ölçüsü → beden (F2-04C) | evet: üreticinin boy-kilo kuralı gerçekçi | **taşındı**: en sık bedenden 14–38 puan iyi |
+| vücut ölçüsü → beden (F2-04C, F3-04) | evet: üreticinin boy-kilo kuralı gerçekçi | **taşındı**: aldığı bedende en sık bedenden 14–38 puan, satıcının önerisinde 26–31 puan iyi (±1 beden %94–96) |
 | ürünün geçmiş iade oranı → iade (F2-02) | evet (v2 kalibrasyonundan sonra) | taşındı, ama ürün geçmişinin kendisini geçmedi |
 | kategori ve beden konumu → iade (F2-02 v1) | hayır: kurgusal | taşınmadı; v2'de düzeltildi |
 | haftalık talep dinamiği (F2-05) | hayır: sahte talep ortalamaya dönüyor, gerçek talep kalıcı sıçrıyor | **taşınmadı**: model naiften kötü |
@@ -108,7 +114,7 @@ Sahteden gerçeğe ancak sahte veri o konuda gerçeğe benziyorsa aktarım oluyo
 |---|---|---|
 | ürün iade riski | ürünün geçmiş iade oranı (F2-02 yedek) | model referansı geçemedi |
 | kalıp uyarısı | kalıp skoru + kanıt sayısı (F2-04A) | sınırda ama yönü doğru; kanıtla gösterilir |
-| beden önerisi | `beden_oner()` (F2-04C) | **tek başarılı model** |
+| beden önerisi | `beden_oner()` (F2-04C, F3-04) | gerçekte iki ayrı testte doğrulandı: müşterinin aldığı beden (74 yorum) ve satıcının önerdiği beden (235 soru) |
 | stok tükenme | geçen haftanın satış hızı (F2-05) | model naiften kötü |
 | şikâyet ve konu | BERT şikâyet işareti + konu kuralları (F2-06) | puanın göstermediği şikâyeti buluyor |
 

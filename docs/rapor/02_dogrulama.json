@@ -247,6 +247,51 @@
       "not": "221 gerçek yorum (52 olumsuz); ürün yorumlarında BERT 0.924, sözlük 0.822",
       "web": "Şikâyet işareti ve şikâyet konusu (genel duygu puandan)",
       "kart": "docs/modeller/F2-06.md"
+    },
+    {
+      "id": "F3-04",
+      "ad": "Soru cevabında beden önerisi",
+      "soru": "Boyunu ve kilosunu yazan müşteriye satıcı hangi bedeni önerir?",
+      "yontem": "beden_oner() + kalıp düzeltmesi; LLM (Haiku 5.5) yalnızca metni yazar",
+      "metrik": "tam isabet",
+      "yon": "yuksek_iyi",
+      "gercek_model": 0.4978723404255319,
+      "referans_adi": "en sık beden (L)",
+      "gercek_referans": 0.19148936170212766,
+      "fark": 0.30638297872340425,
+      "alt": 0.225531914893617,
+      "ust": 0.3829787234042553,
+      "karar": "basarili",
+      "seviye1": {
+        "model": 0.4860557768924303,
+        "referans": 0.19721115537848605
+      },
+      "tohumlar": {
+        "42": {
+          "model": 0.4978723404255319,
+          "referans": 0.19148936170212766,
+          "fark": 0.30638297872340425,
+          "alt": 0.225531914893617,
+          "ust": 0.3829787234042553
+        },
+        "1": {
+          "model": 0.48936170212765956,
+          "referans": 0.19148936170212766,
+          "fark": 0.2978723404255319,
+          "alt": 0.2170212765957447,
+          "ust": 0.3788297872340424
+        },
+        "2": {
+          "model": 0.451063829787234,
+          "referans": 0.19148936170212766,
+          "fark": 0.25957446808510637,
+          "alt": 0.17872340425531916,
+          "ust": 0.3404255319148936
+        }
+      },
+      "not": "235 gerçek satıcı cevabı; ±1 beden isabeti 0.957. LLM taslak kontrolü (B): önerilen bedeni yazma oranı 0.882 (ölçüt ≥ 0,90, tutmadı); sonradan eklenen güvenlik kontrolü yanlış bedenli taslağı şablona çevirir.",
+      "web": "Soru cevap önerici (taslak; beden kodla belirlenir)",
+      "kart": "docs/modeller/F3-04.md"
     }
   ],
   "sahte_v1_v2": [
