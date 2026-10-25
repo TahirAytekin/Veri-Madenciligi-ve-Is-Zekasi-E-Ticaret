@@ -33,7 +33,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F2-05 | Tahir | `gorev/F2-05-talep` | 2026-10-25 | tasarım ve başarı ölçütü önceden yazıldı ([F2-05.md](modeller/F2-05.md)); haftalık talep + stok tükenme |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
