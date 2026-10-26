@@ -84,7 +84,8 @@ def test_senaryo_kaydiricisi(uygulama):
 def test_cevap_onerici_sablon(uygulama):
     uygulama.switch_page("sayfalar/musteri_sesi.py").run()
     uygulama.text_area[0].input("165 boy 58 kilo hangi beden olur").run()
-    uygulama.toggle[0].set_value(False).run()                      # API kullanma
+    if not uygulama.toggle[0].disabled:                           # anahtar yoksa düğme zaten kapalı (CI)
+        uygulama.toggle[0].set_value(False).run()                  # API kullanma
     uygulama.button[0].click().run()
     assert not uygulama.exception
     assert uygulama.code and "beden" in uygulama.code[0].value
