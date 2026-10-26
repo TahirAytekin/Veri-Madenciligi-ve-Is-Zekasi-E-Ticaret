@@ -14,6 +14,7 @@ st.title("Genel Bakış")
 st.caption(f"Son 30 gün: {ortak.donem_metni(rapor['donem'])} · önceki 30 günle karşılaştırma · veri "
            f"{bas.strftime('%d.%m.%Y')} – {bit.strftime('%d.%m.%Y')}")
 ortak.eksik_uyarisi(veri)
+ortak.rapor_dugmesi(veri)
 
 # --- Ana göstergeler
 BICIM = {"TL": tl, "oran": lambda x: yuzde(x), "puan": lambda x: f"{x:.2f}".replace(".", ","),

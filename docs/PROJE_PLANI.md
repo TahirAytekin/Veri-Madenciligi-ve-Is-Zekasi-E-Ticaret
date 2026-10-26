@@ -250,6 +250,7 @@ Her sayfa **bir karar veya aksiyonla biter**. Sayılar kod içine yazılmaz, `an
 | F6-02 | Gerçek veriyle son çalıştırma, doğrulama raporunun son hali, hata düzeltme | P1 | F6-01 | güncel `02_dogrulama.md` | Tahir | ⬜ |
 | F6-03 | Final rapor, sunum ve demo videosu | P1 | F6-02 | `docs/rapor/`, sunum | herkes | ⬜ |
 | F6-04 | README ve kullanım kılavuzu güncellemesi | P2 | F6-01 | `docs/KULLANIM.md` | — | ⬜ |
+| F6-05 | **Haftalık PDF rapor:** son 7 gün göstergeleri, 12 haftalık satış, aksiyon planı, dikkat edilecekler, okuma notu; panelden indirme ve üretim hattı adımı | P2 | F3-03, F6-01 | `tavsiye/haftalik_rapor.py` | Tahir | ✅ |
 
 ---
 

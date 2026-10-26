@@ -201,7 +201,7 @@ def pdf_uret(veri, c=None):
         for k in c["stok"]:
             s = k["stok"]
             pdf.paragraf(f"{k['ad']}: {sayi(s['stok'])} adet, haftada {sayi(s['haftalik_hiz'], 1)} satış → "
-                         f"{sayi(s['stok_hafta'], 1)} hafta (≈ {s['tukenme_tarihi']})", 8.5)
+                         f"{sayi(s['stok_hafta'], 1)} hafta (≈ {pd.Timestamp(s['tukenme_tarihi']):%d.%m.%Y})", 8.5)
     if c["sikayet"]:
         pdf.set_font("DejaVu", "B", 9.5)
         pdf.cell(0, 7, "Şikâyeti en çok olan ürünler", new_x="LMARGIN", new_y="NEXT")

@@ -31,6 +31,7 @@ st.title("Aksiyon Planı")
 st.caption("Öncelik = beklenen aylık katkı payı × güven. Etkiler ürün maliyeti hariç ve kısmen örtüşür; toplamı üst "
            "sınırdır. Kurallar: docs/TAVSIYE_KURALLARI.md")
 ortak.eksik_uyarisi(veri)
+ortak.rapor_dugmesi(veri)
 if hatalar:
     st.warning("Bazı kurallar çalışmadı: " + ", ".join(hatalar))
 
