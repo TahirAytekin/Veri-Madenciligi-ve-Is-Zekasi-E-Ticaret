@@ -11,12 +11,15 @@ def _c(ad, **girdi):
     return json.loads(a.calistir(ad, girdi, "sahte"))
 
 
+STRICT_OLMAYAN = {"grafik_ciz"}      # toplam isteğe bağlı alan sınırı (24) yüzünden; girdi kodda doğrulanır
+
+
 def test_semalar_strict_ve_tam():
     adlar = [s["name"] for s in a.semalar()]
     assert len(adlar) == len(set(adlar)) >= 8
     for s in a.semalar():
         g = s["input_schema"]
-        assert s["strict"] and g["additionalProperties"] is False
+        assert (s["strict"] or s["name"] in STRICT_OLMAYAN) and g["additionalProperties"] is False
         assert set(g["required"]) <= set(g["properties"])
         assert s["description"] and all(p["description"] for p in g["properties"].values())
         for p in g["properties"].values():                     # strict: birleşik tür yok (toplam sınır 16)
@@ -72,3 +75,24 @@ def test_diger_araclar():
 def test_urun_bul():
     assert a.urun_bul("sahte", "esf01") == ["esf01"]
     assert all(k.startswith("esf") for k in a.urun_bul("sahte", "Eşofman Altı"))
+
+
+def test_grafik_ciz():
+    r = _c("grafik_ciz", baslik="Aylık", kaynak="metrik", metrik="ciro_net", kirilim="ay")
+    g = r["grafik"]
+    assert g["tur"] == "cizgi" and len(g["x"]) == len(g["y"]) > 1 and g["x"] == sorted(g["x"])
+    assert r["ozet"]["en_yuksek"]["y"] == max(g["y"])
+    k = _c("grafik_ciz", baslik="Kategori", kaynak="metrik", metrik="iade_orani", kirilim="kategori", ilk_n=5)
+    assert k["grafik"]["tur"] == "cubuk" and k["grafik"]["birim"] == "%" and len(k["grafik"]["x"]) <= 5
+    assert k["grafik"]["y"] == sorted(k["grafik"]["y"], reverse=True)
+    s = _c("grafik_ciz", baslik="Neden", kaynak="sql", sorgu="select neden_grubu, count(*) from iadeler group by 1")
+    assert s["grafik"]["x"] and all(isinstance(v, float) for v in s["grafik"]["y"])
+    assert "hata" in _c("grafik_ciz", baslik="x", kaynak="metrik", metrik="ciro_net")
+    assert "hata" in _c("grafik_ciz", baslik="x", kaynak="sql", sorgu="select neden_grubu from iadeler")
+
+
+def test_api_sema_sinirlari():
+    """Anthropic API: strict şemaların toplamında isteğe bağlı alan ≤ 24 (sahte istemciyle yakalanmaz)."""
+    strict = [x for x in a.semalar() if x["strict"]]
+    istege_bagli = sum(len(set(x["input_schema"]["properties"]) - set(x["input_schema"]["required"])) for x in strict)
+    assert istege_bagli <= a.STRICT_ISTEGE_BAGLI_SINIR, istege_bagli

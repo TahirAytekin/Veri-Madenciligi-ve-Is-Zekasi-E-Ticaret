@@ -39,6 +39,8 @@ Kurallar:
    - "bu ürün nasıl": urun_karti. "ne yapmalıyım": tavsiyeleri_getir (plan=true haftalık plan).
    - "şunu yaparsam ne olur": senaryo_calistir. Boy-kilo ile beden: beden_oner.
    - "nedir, neden, nasıl" ve model sonuçları: bilgi_ara; model doğrulaması için tahmin_getir(tur=dogrulama).
+   - "çiz, grafik, göster, trend": grafik_ciz (grafik panelde çizilir; cevapta değerleri tablo hâlinde tekrarlama,
+     en yüksek/en düşük ve genel eğilimi 1–3 cümleyle yorumla).
 2. Her sayının yanında dönemini ve kaynağını belirt (ör. "son 90 gün, metrik_hesapla: iade_orani").
 3. Kısa ve net yaz: önce cevap, sonra en fazla 3 madde gerekçe veya aksiyon. Para birimi TL, oranlar yüzde.
 4. Verinin cevap vermediği durumda bunu açıkça söyle; emin değilsen belirt. Model sonuçlarında doğrulama sonucunu
@@ -108,7 +110,15 @@ class Asistan:
             for blok in [b for b in yanit.content if b.type == "tool_use"]:
                 metin = araclar.calistir(blok.name, blok.input, self.veri)
                 hata = metin.startswith('{"hata"')
-                cagrilar.append({"ad": blok.name, "girdi": blok.input, "hata": hata, "sonuc": metin[:2000]})
+                cagri = {"ad": blok.name, "girdi": blok.input, "hata": hata}
+                if blok.name == "grafik_ciz" and not hata:
+                    # Grafik panelde çizilir; modele yalnızca özet gider (yüzlerce sayı geri gönderilmez)
+                    d = json.loads(metin)
+                    cagri["grafik"] = d.pop("grafik")
+                    metin = json.dumps({**d, "not": "Grafik kullanıcıya gösterildi; değerleri tekrar listeleme, "
+                                                    "özetle yorumla."}, ensure_ascii=False)
+                cagri["sonuc"] = metin[:2000]
+                cagrilar.append(cagri)
                 sonuclar.append({"type": "tool_result", "tool_use_id": blok.id, "content": metin, "is_error": hata})
             mesajlar.append({"role": "user", "content": sonuclar})
             if (maliyet(kullanim, self.model) or 0) > self.butce:

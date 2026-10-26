@@ -51,12 +51,17 @@ def _alan(tur, aciklama, zorunlu=False, enum=None):
     return sema, {"tur": tur, "zorunlu": zorunlu, "enum": enum}
 
 
-def arac(ad, aciklama, **alanlar):
-    """Araç fonksiyonunu kaydeder. Strict şema; 'required' yalnızca zorunlu alanlar, eksik alan None olur."""
+# Anthropic API sınırları (strict şemaların toplamı): isteğe bağlı alan ≤ 24, birleşik türlü alan ≤ 16.
+STRICT_ISTEGE_BAGLI_SINIR = 24
+
+
+def arac(ad, aciklama, strict=True, **alanlar):
+    """Araç fonksiyonunu kaydeder; 'required' yalnızca zorunlu alanlar, eksik alan None olur. strict=False: API şemayı
+    zorlamaz (toplam isteğe bağlı alan sınırı yüzünden); girdi her durumda kodda dogrula() ile denetlenir."""
     def kaydet(f):
         ozellikler = {k: v[0] for k, v in alanlar.items()}
         ARACLAR[ad] = {"fonksiyon": f, "kurallar": {k: v[1] for k, v in alanlar.items()}, "sema": {
-            "name": ad, "description": aciklama, "strict": True,
+            "name": ad, "description": aciklama, "strict": strict,
             "input_schema": {"type": "object", "properties": ozellikler,
                              "required": [k for k, v in alanlar.items() if v[1]["zorunlu"]],
                              "additionalProperties": False}}}
@@ -379,6 +384,84 @@ def bilgi_ara(veri, sorgu, tur, k):
     return {"parcalar": [{"id": p["id"], "tur": p["tur"], "baslik": p["baslik"], "metin": p["metin"][:1200],
                           "kaynak": p["kaynak"], "skor": p["skor"]} for p in parcalar],
             "uyari": VERI_UYARISI, "kaynak": "asistan/bilgi_tabani.py"}
+
+
+GRAFIK_NOKTA = 200
+ZAMAN_KIRILIMLARI = {"gun", "hafta", "ay", "hafta_gunu", "saat"}
+GUN_ADLARI = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
+
+
+def _sayi_mi(x):
+    return isinstance(x, (int, float, np.integer, np.floating)) and not isinstance(x, bool) and not pd.isna(x)
+
+
+def _grafik_ozeti(x, y):
+    """Modele giden özet: grafiğin kendisi panelde çizilir, yüzlerce sayı modele geri gönderilmez."""
+    ys = pd.Series(y, index=[str(v) for v in x], dtype=float)
+    return {"nokta": len(ys), "en_yuksek": {"x": ys.idxmax(), "y": float(ys.max())},
+            "en_dusuk": {"x": ys.idxmin(), "y": float(ys.min())}, "ilk": {"x": ys.index[0], "y": float(ys.iloc[0])},
+            "son": {"x": ys.index[-1], "y": float(ys.iloc[-1])}, "toplam": float(ys.sum())}
+
+
+@arac("grafik_ciz", strict=False, aciklama=
+      "Kullanıcı grafik, çizim, görselleştirme, trend veya 'göster' isterse kullanılır. Grafik kullanıcıya panelde "
+      "çizilir; sana yalnızca özet (en yüksek, en düşük, ilk, son) döner. Veri kaynağı: metrik (kırılımlı, ör. "
+      "ay/hafta/gün trendi veya kategori karşılaştırması) ya da sql (ilk sütun x, ikinci sütun sayısal y). Zaman "
+      "kırılımlarında çizgi, kategorilerde çubuk uygundur.",
+      baslik=_alan("string", "grafik başlığı (Türkçe, kısa)", True),
+      kaynak=_alan("string", "veri kaynağı", True, enum=["metrik", "sql"]),
+      tur=_alan("string", "grafik türü (varsayılan: zamanda çizgi, kategoride çubuk)",
+                enum=["cizgi", "cubuk", "yatay_cubuk"]),
+      metrik=_alan("string", "kaynak=metrik ise metrik adı, ör. ciro_net, iade_orani, satilan_adet"),
+      kirilim=_alan("string", "kaynak=metrik ise kırılım: gun, hafta, ay, hafta_gunu, saat, kategori, model_kodu ..."),
+      baslangic=_alan("string", "YYYY-AA-GG (varsayılan: son 90 gün)"), bitis=_alan("string", "YYYY-AA-GG"),
+      ilk_n=_alan("integer", "kategori kırılımında en çok kaç çubuk (varsayılan 15, en çok 30)"),
+      sorgu=_alan("string", "kaynak=sql ise SELECT x, y ... (en çok 200 satır)"))
+def grafik_ciz(veri, baslik, kaynak, tur, metrik, kirilim, baslangic, bitis, ilk_n, sorgu):
+    if kaynak == "metrik":
+        if not metrik or not kirilim:
+            raise ValueError("kaynak=metrik için metrik ve kirilim gerekli (ör. metrik=ciro_net, kirilim=ay)")
+        m_sonuc = metrik_hesapla(veri, metrik, kirilim, baslangic, bitis, None, 50, None)   # adı ve kırılımı doğrular
+        bas, bit = _donem(veri, baslangic, bitis)
+        s = m.hesapla(metrik, veri, bas, bit, kirilim=kirilim).dropna()
+        zaman = kirilim in ZAMAN_KIRILIMLARI
+        if zaman:
+            s = s.sort_index().tail(GRAFIK_NOKTA)
+        else:
+            s = s.sort_values(ascending=False).head(min(ilk_n or 15, 30))
+        adlar = _model_adlari(veri) if kirilim == "model_kodu" else {}
+        x = [GUN_ADLARI[int(k)] if kirilim == "hafta_gunu" else adlar.get(k, str(k)) for k in s.index]
+        y = [float(v) for v in s.values]
+        birim, y_ad = m_sonuc["birim"], m_sonuc["baslik"]
+        if birim == "oran":
+            y, birim = [v * 100 for v in y], "%"
+        varsayilan = "cizgi" if zaman and kirilim not in ("hafta_gunu", "saat") else "cubuk"
+        ek = {"donem": m_sonuc["donem"], "kaynak": f"metrik_hesapla: {metrik}, kırılım {kirilim}"}
+        if kirilim in ("hafta", "ay") and len(s):
+            son = pd.Timestamp(s.index[-1])
+            bitis_son = son + (pd.Timedelta(days=6) if kirilim == "hafta" else pd.offsets.MonthEnd(0))
+            if bitis_son.normalize() > bit.normalize():
+                ek["uyari"] = (f"son nokta ({x[-1]}) yarım dönem: veri {bit.date()} tarihinde bitiyor; düşüş gibi "
+                               "görünebilir")
+    elif kaynak == "sql":
+        if not sorgu:
+            raise ValueError("kaynak=sql için sorgu gerekli (SELECT x, y ...)")
+        r = sql_sorgula(veri, sorgu)
+        if len(r["sutunlar"]) < 2 or not r["satirlar"]:
+            raise ValueError("sorgu en az iki sütun ve bir satır döndürmeli: ilk sütun x, ikinci sütun sayısal y")
+        if not all(_sayi_mi(v[1]) for v in r["satirlar"]):
+            raise ValueError("ikinci sütun sayısal olmalı (boş değerleri filtreleyin)")
+        x, y = [str(v[0]) for v in r["satirlar"]], [float(v[1]) for v in r["satirlar"]]
+        birim, y_ad, varsayilan = "", r["sutunlar"][1], "cubuk"
+        ek = {"kaynak": "sql_sorgula (salt okunur)", "kesildi": r["kesildi"]}
+    else:
+        raise ValueError("kaynak metrik veya sql olmalı")
+    if not y:
+        raise ValueError("çizilecek veri yok (dönemi veya kırılımı değiştirin)")
+    x, y = [v[:60] for v in x], [round(v, 4) for v in y]
+    return {"grafik": {"tur": tur or varsayilan, "baslik": baslik, "x": x, "y": y,
+                       "y_ad": y_ad, "birim": birim, "not": ek.get("uyari", "")},
+            "ozet": _grafik_ozeti(x, y), **ek}
 
 
 def semalar():

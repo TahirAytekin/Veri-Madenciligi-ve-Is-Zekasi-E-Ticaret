@@ -51,6 +51,16 @@ def test_arac_hatasi_modele_bildirilir():
     assert y["araclar"][0]["hata"] and ist.istekler[1]["messages"][2]["content"][0]["is_error"]
 
 
+def test_grafik_verisi_modele_gonderilmez():
+    girdi = {"baslik": "Aylık", "kaynak": "metrik", "metrik": "ciro_net", "kirilim": "ay"}
+    ist = _Istemci([_yanit([_arac("grafik_ciz", girdi)], "tool_use"), _yanit([_metin("Arttı.")], "end_turn")])
+    y = sohbet.Asistan("sahte", "claude-haiku-5-5", istemci=ist).sor("Satışı çiz")
+    g = y["araclar"][0]["grafik"]
+    assert g["tur"] == "cizgi" and len(g["x"]) > 1                      # panel çizer
+    giden = ist.istekler[1]["messages"][2]["content"][0]["content"]
+    assert '"grafik"' not in giden and '"ozet"' in giden and "gösterildi" in giden
+
+
 def test_butce_siniri():
     pahali = [_yanit([_arac("tablo_semasi", {}, f"t{i}")], "tool_use", girdi=200_000) for i in range(3)]
     y = sohbet.Asistan("sahte", "claude-opus-5-5", butce_usd=0.5, istemci=_Istemci(pahali)).sor("?")

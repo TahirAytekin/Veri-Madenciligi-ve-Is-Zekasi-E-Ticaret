@@ -2,6 +2,7 @@
 ve girdileri her cevabın altında gösterilir."""
 import json
 
+import plotly.graph_objects as go
 import streamlit as st
 
 from hazirlama.ortak import env_degeri
@@ -12,10 +13,11 @@ MODELLER = {"claude-haiku-5-5": "Haiku 5.5 (varsayılan, ≈ 0,08 sent/soru)",
             "claude-opus-5-5": "Opus 5.5 (≈ 2 sent/soru)"}
 ORNEKLER = ["Bu hafta ilk ne yapmalıyım?", "İade oranı en yüksek kategori hangisi?",
             "Son 30 günde net satışım önceki 30 güne göre nasıl?", "Kalıbı dar olan ürünlerim hangileri?",
-            "Beden iadelerini %30 azaltırsam ayda ne kazanırım?", "Talep tahmin modeli neden başarısız oldu?"]
+            "Beden iadelerini %30 azaltırsam ayda ne kazanırım?", "Son 6 ayın net satışını aylık grafikte göster"]
 ARAC_ADI = {"metrik_hesapla": "metrik", "sql_sorgula": "SQL", "tablo_semasi": "tablo şeması",
             "tahmin_getir": "model çıktısı", "urun_karti": "ürün kartı", "tavsiyeleri_getir": "tavsiyeler",
-            "senaryo_calistir": "senaryo", "beden_oner": "beden önerisi", "bilgi_ara": "bilgi tabanı"}
+            "senaryo_calistir": "senaryo", "beden_oner": "beden önerisi", "bilgi_ara": "bilgi tabanı",
+            "grafik_ciz": "grafik"}
 
 st.title("Asistan")
 st.caption("Mağazanın kendi verisiyle konuşun. Sayılar her zaman araçlarla hesaplanır (metrik, SQL, senaryo …); "
@@ -49,6 +51,32 @@ def asistan(veri, model, surum):            # surum: veri yenilenince yeni asist
     return Asistan(veri, model)
 
 
+def grafikler(cagrilar):
+    """grafik_ciz aracının ürettiği grafikler (veri panelde; modele yalnızca özet gitti)."""
+    for c in cagrilar:
+        g = c.get("grafik")
+        if not g:
+            continue
+        ek = f" {g['birim']}" if g["birim"] and g["birim"] != "%" else ""
+        hover = f"%{{x}}: %{{y:,.1f}}{'%' if g['birim'] == '%' else ek}<extra></extra>"
+        if g["tur"] == "cizgi":
+            fig = go.Figure(go.Scatter(x=g["x"], y=g["y"], mode="lines+markers", hovertemplate=hover,
+                                       line=dict(width=2, color=ortak.SERI[0]), marker=dict(size=7)))
+            fig.update_layout(title=dict(text=g["baslik"], font=dict(size=14)))
+            fig = ortak.tema(fig, 320)
+        else:
+            fig = ortak.cubuk(g["x"], g["y"], g["baslik"], yatay=g["tur"] == "yatay_cubuk", hover=hover,
+                              yukseklik=max(320, 26 * len(g["x"])) if g["tur"] == "yatay_cubuk" else 320)
+        sonek = "%" if g["birim"] == "%" else ek
+        if g["tur"] == "yatay_cubuk":
+            fig.update_xaxes(ticksuffix=sonek)
+        else:
+            fig.update_yaxes(ticksuffix=sonek)
+        st.plotly_chart(fig, width="stretch")
+        if g.get("not"):
+            st.caption(f"⚠️ {g['not']}")
+
+
 def araclar_ozeti(cagrilar):
     with st.expander(f"Kullanılan araçlar ({len(cagrilar)})" if cagrilar else "Araç kullanılmadı"):
         for c in cagrilar:
@@ -63,6 +91,7 @@ for t in sohbet["turlar"]:
         st.markdown(t["soru"])
     with st.chat_message("assistant"):
         st.markdown(t["cevap"])
+        grafikler(t["araclar"])
         araclar_ozeti(t["araclar"])
         st.caption(f"{t['sure_sn']} sn · ${t['maliyet_usd']:.4f}")
 
@@ -94,6 +123,7 @@ if soru:
                 st.error(f"Asistan cevap veremedi: {type(e).__name__}: {e}")
                 st.stop()
         alan.markdown(y["cevap"])
+        grafikler(y["araclar"])
         araclar_ozeti(y["araclar"])
         st.caption(f"{y['sure_sn']} sn · ${y['maliyet_usd']:.4f}")
     sohbet["turlar"].append({"soru": soru, "cevap": y["cevap"], "araclar": y["araclar"], "sure_sn": y["sure_sn"],

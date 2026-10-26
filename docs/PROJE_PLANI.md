@@ -222,6 +222,7 @@ Tasarım ayrıntısı bölüm 8'de.
 | F4-04 | Sohbet döngüsü: Claude API + araç kullanımı, sistem talimatı (yalnızca veriye dayan, sayının kaynağını göster, emin değilsen söyle, Türkçe), akışlı cevap, önbellekleme, maliyet sınırı | P1 | F4-02, F4-03 | `asistan/sohbet.py` | Tahir | ✅ |
 | F4-05 | Değerlendirme seti: 30 soru (sayısal, karşılaştırma, "neden", "ne yapmalıyım"), beklenen cevaplar metrik fonksiyonlarından otomatik; sahte ve gerçek veride doğruluk, kaynak gösterme, maliyet | P1 | F4-04 | `asistan/degerlendirme/` + sonuç | Tahir | ✅ |
 | F4-06 | Güvenlik testleri: SQL ile yazma denemesi, yorum metnine gömülü talimat (prompt injection) | P2 | F4-04 | `tests/test_asistan_guvenlik.py` | Tahir | ✅ |
+| F4-07 | **Asistanın grafik çizmesi:** `grafik_ciz` aracı (metrik veya SQL → çizgi/çubuk), panelde Plotly; modele yalnızca özet | P2 | F4-04, F5-09 | `asistan/araclar.py`, `web/sayfalar/asistan.py` | Tahir | ✅ |
 
 ### F5 — Web uygulaması (Gün 2–12, paralel)
 

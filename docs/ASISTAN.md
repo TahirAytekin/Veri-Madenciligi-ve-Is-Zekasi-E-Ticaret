@@ -6,7 +6,7 @@ Satıcı Türkçe sorar. Asistan hangi araçla cevaplayacağına kendisi karar v
 |---|---|---|
 | bilgi tabanı | `asistan/bilgi_tabani.py` | aranacak metin parçaları: metrik, belge, içgörü, tavsiye, ürün, kategori, ay (F4-01) |
 | arama | `asistan/arama.py` | yerel embedding (`multilingual-e5-base`), [kart](modeller/F4-02.md) (F4-02) |
-| araçlar | `asistan/araclar.py` | aşağıdaki 9 araç (F4-03) |
+| araçlar | `asistan/araclar.py` | aşağıdaki 10 araç (F4-03, grafik F4-07) |
 | sohbet | `asistan/sohbet.py` | Claude API araç döngüsü (F4-04); varsayılan `claude-haiku-5-5` ([değerlendirme](modeller/F4-05.md)) |
 
 ## Araçlar
@@ -21,6 +21,7 @@ Satıcı Türkçe sorar. Asistan hangi araçla cevaplayacağına kendisi karar v
 | `senaryo_calistir` | "şunu yaparsam ne olur?" | `analiz/senaryo.py` |
 | `beden_oner` | boy + kilo → beden (ürünün kalıbıyla) | `modeller/beden_uyumu.py` |
 | `bilgi_ara` | "nedir, neden, nasıl" | bilgi tabanı |
+| `grafik_ciz` | "çiz, grafik, göster, trend": metrikten (zaman veya kategori kırılımı) ya da SQL'den çizgi/çubuk grafik. Grafik panelde çizilir; modele yalnızca özet (en yüksek, en düşük, ilk, son) gider. Yarım kalan son hafta/ay için uyarı verir | metrikler, salt okunur SQL |
 
 Her araç JSON döner ve sonucunda **kaynak** ve **dönem** yazar; asistan bunları cevapta gösterir. Hatalı girdide araç çalışmaz, `{"hata": ...}` döner. Hata mesajı düzeltme ipucu içerir (ör. "bilinmeyen metrik: iade oranı; yakın olanlar: iade_orani …").
 
@@ -45,3 +46,8 @@ y2 = a.sor("Peki ikinci sıradaki?", gecmis=y["mesajlar"])  # çok turlu sohbet
 - **Haiku 5.5:** soru başına ≈ 0,0008 $, ≈ 6–8 sn. **Opus 5.5:** ≈ 0,022 $, ≈ 8–9 sn.
 - **Sınırlar:** soru başına en fazla 8 araç turu ve 0,50 $.
 - Sistem talimatı ve araç tanımları önbellekte; ikinci istekten itibaren önbellekten okunur.
+
+## Grafik (F4-07)
+- `grafik_ciz` **strict değil:** Anthropic API, strict şemaların toplamında en fazla 24 isteğe bağlı alan kabul ediyor (`tests/test_araclar.py::test_api_sema_sinirlari`). Girdi her durumda kodda `dogrula()` ile denetlenir.
+- **Panel:** asistan sayfası, cevabın altında grafiği Plotly ile çizer; tablo verisi sohbet geçmişine girmez.
+- **Maliyet:** grafik isteyen bir soru Haiku ile ≈ 0,04–0,12 sent.
