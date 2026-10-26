@@ -209,10 +209,11 @@ def basa_bas(b, ek_indirim):
                 "aciklama": "Bu indirimle her satış zarar ettirir; satış ne kadar artarsa zarar o kadar büyür."}
     carpan = once / sonra
     esneklik = math.log(carpan) / -math.log(1 - ek_indirim)
+    esneklik_metni = f"{esneklik:.2f}".replace(".", ",")
     return {"carpan": carpan, "gerekli_artis": carpan - 1, "gerekli_esneklik": esneklik,
             "birim_katki_once": once, "birim_katki_sonra": sonra,
             "aciklama": f"Katkı payının düşmemesi için satış adedi en az %{(carpan - 1) * 100:.0f} artmalı "
-                        f"(fiyat esnekliği en az {esneklik:.2f})."}
+                        f"(fiyat esnekliği en az {esneklik_metni})."}
 
 
 def varsayimlar(ek_indirim, esneklik, desi_azalis, maliyet_orani):

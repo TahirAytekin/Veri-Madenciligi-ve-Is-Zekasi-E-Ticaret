@@ -11,7 +11,8 @@ from streamlit.testing.v1 import AppTest
 from modeller.ortak.degerlendir import CIKTILAR
 from web import ortak
 
-SAYFALAR = ["genel_bakis", "aksiyon_plani", "urunler", "model_dogrulama"]
+SAYFALAR = ["genel_bakis", "aksiyon_plani", "urunler", "iade_beden", "talep_stok", "finans_senaryo", "musteri_sesi",
+            "model_dogrulama"]
 
 
 @pytest.fixture(scope="module")
@@ -59,3 +60,56 @@ def test_filtre_bos_secimde_hepsi():
     import pandas as pd
     s = pd.Series(["a", "b"])
     assert ortak.filtre(s, []).all() and ortak.filtre(s, ["a"]).tolist() == [True, False]
+
+
+def test_beden_onerici(uygulama):
+    uygulama.switch_page("sayfalar/iade_beden.py").run()
+    uygulama.number_input[0].set_value(175).run()
+    uygulama.number_input[1].set_value(80).run()
+    assert not uygulama.exception
+    assert any("Önerilen beden" in x.value for x in uygulama.markdown)
+
+
+def test_senaryo_kaydiricisi(uygulama):
+    uygulama.switch_page("sayfalar/finans_senaryo.py").run()
+    uygulama.slider[0].set_value(30).run()                         # beden iadeleri %30 azalırsa
+    assert not uygulama.exception
+    assert any("artar" in x.value for x in uygulama.success)
+    uygulama.slider[2].set_value(10).run()                         # %10 ek indirim → başa baş
+    assert any("Başa baş" in x.value for x in uygulama.info)
+
+
+def test_cevap_onerici_sablon(uygulama):
+    uygulama.switch_page("sayfalar/musteri_sesi.py").run()
+    uygulama.text_area[0].input("165 boy 58 kilo hangi beden olur").run()
+    uygulama.toggle[0].set_value(False).run()                      # API kullanma
+    uygulama.button[0].click().run()
+    assert not uygulama.exception
+    assert uygulama.code and "beden" in uygulama.code[0].value
+
+
+def test_asistan_sohbeti(monkeypatch):
+    """API'ye istek atmadan: sor() yerine sahte cevap; her tur bir kez sorulmalı, mesajlar çoğalmamalı."""
+    from asistan import sohbet
+    sorulan = []
+
+    def sahte_sor(self, soru, gecmis=None, akis=None):
+        sorulan.append((soru, gecmis))
+        if akis:
+            akis("cevap ")
+        return {"cevap": f"cevap: {soru}", "araclar": [{"ad": "metrik_hesapla", "girdi": {"metrik": "iade_orani"},
+                                                        "hata": False}],
+                "durum": "end_turn", "kullanim": {}, "maliyet_usd": 0.001, "sure_sn": 0.1, "model": self.model,
+                "mesajlar": [{"role": "user", "content": soru}]}
+
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    monkeypatch.setattr(sohbet.Asistan, "sor", sahte_sor)
+    at = AppTest.from_file("web/app.py", default_timeout=300)
+    at.session_state["veri"] = "sahte"
+    at.run()
+    at.switch_page("sayfalar/asistan.py").run()
+    at.chat_input[0].set_value("soru 1").run()
+    assert not at.exception and len(at.chat_message) == 2
+    at.chat_input[0].set_value("soru 2").run()
+    assert len(at.chat_message) == 4 and len(sorulan) == 2
+    assert sorulan[1][1] == [{"role": "user", "content": "soru 1"}]      # çok turlu: önceki mesajlar gider

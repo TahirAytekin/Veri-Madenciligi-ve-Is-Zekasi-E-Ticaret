@@ -19,6 +19,11 @@ SAYFALAR = {
     "Mağaza": [st.Page("sayfalar/genel_bakis.py", title="Genel Bakış", icon="🏠", default=True),
                st.Page("sayfalar/aksiyon_plani.py", title="Aksiyon Planı", icon="✅"),
                st.Page("sayfalar/urunler.py", title="Ürünler", icon="👕")],
+    "Analiz ve araçlar": [st.Page("sayfalar/iade_beden.py", title="İade ve Beden", icon="📏"),
+                          st.Page("sayfalar/talep_stok.py", title="Talep ve Stok", icon="📦"),
+                          st.Page("sayfalar/finans_senaryo.py", title="Finans ve Senaryo", icon="💰"),
+                          st.Page("sayfalar/musteri_sesi.py", title="Müşteri Sesi", icon="💬")],
+    "Asistan": [st.Page("sayfalar/asistan.py", title="Asistan", icon="🤖")],
     "Şeffaflık": [st.Page("sayfalar/model_dogrulama.py", title="Model Doğrulama", icon="🔬")],
 }
 

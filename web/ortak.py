@@ -66,26 +66,27 @@ def eksik_uyarisi(veri):
 # ====================================================
 
 def _surum(veri):
-    """Önbellek anahtarı: model çıktıları yeniden üretilince veriler de yenilensin."""
+    """Önbellek anahtarı: model çıktıları yeniden üretilince veriler de yenilensin. Yükleyicilerde parametre adı alt
+    çizgiyle başlamamalı: Streamlit '_' ile başlayan parametreleri önbellek anahtarına katmaz."""
     klasor = CIKTILAR / veri / "tahminler"
     return max((p.stat().st_mtime for p in klasor.glob("*.csv")), default=0) if klasor.exists() else 0
 
 
 @st.cache_data(show_spinner="Durum raporu hazırlanıyor…")
-def durum_raporu(veri, _s=None):
+def durum_raporu(veri, surum=None):
     from analiz import durum
     return durum.durum_raporu(veri)
 
 
 @st.cache_data(show_spinner="Tavsiyeler hesaplanıyor…")
-def tavsiyeler(veri, _s=None):
+def tavsiyeler(veri, surum=None):
     from tavsiye import motor
     liste, hatalar, _ = motor.tavsiyeler(veri)
     return [t.sozluk() for t in liste], hatalar, motor.aksiyon_plani(liste)
 
 
 @st.cache_data(show_spinner="Ürün kartları hazırlanıyor…")
-def kartlar(veri, _s=None):
+def kartlar(veri, surum=None):
     from tavsiye import motor, urun_karti
     liste, _, _ = motor.tavsiyeler(veri)
     k, bilgi = urun_karti.kartlar(veri, liste)
@@ -111,6 +112,36 @@ def metrik(ad, veri, baslangic=None, bitis=None, kirilim=None):
 @st.cache_data
 def veri_araligi(veri):
     return m.veri_araligi(veri)
+
+
+@st.cache_data
+def cikti(veri, ad, surum=None):
+    """ciktilar/<veri>/tahminler/<ad>.csv (yoksa None)."""
+    yol = CIKTILAR / veri / "tahminler" / f"{ad}.csv"
+    return pd.read_csv(yol, encoding="utf-8-sig") if yol.exists() else None
+
+
+def tahmin(veri, ad):
+    return cikti(veri, ad, _surum(veri))
+
+
+@st.cache_data
+def urun_adlari(veri):
+    u = m.tablolar(veri)["urunler"].dropna(subset=["model_kodu"])
+    return u.groupby("model_kodu").urun_adi.first().to_dict()
+
+
+@st.cache_data(show_spinner="Senaryo hesaplanıyor…")
+def senaryo(veri, **parametreler):
+    from analiz.senaryo import simule
+    return simule(veri, **parametreler)
+
+
+def urun_secimi(etiket, kodlar, adlar, key=None):
+    """Ürün seçimi: görünen ad → model kodu (format_func kullanılmaz; testte de aynı çalışır)."""
+    secenekler = {f"{adlar.get(k, k)} ({k})": k for k in kodlar}
+    secim = st.selectbox(etiket, list(secenekler), key=key)
+    return secenekler.get(secim)
 
 
 def yukle(veri):

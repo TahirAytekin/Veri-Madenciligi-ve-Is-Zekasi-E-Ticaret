@@ -85,5 +85,5 @@ ortak.karar_kutusu("Bu hafta", [
     f"**{tl(plan['toplam_aylik_etki_tl'])}** katkı payı getirebilir (etkiler kısmen örtüşür).",
     f"İlk iş: **{plan['aksiyonlar'][0]['baslik']}** → {plan['aksiyonlar'][0]['aksiyon']}"
     if plan["aksiyonlar"] else "Plan boş.",
-    "Bir uyarının nedenini sormak için Asistan sayfasını kullanın (F5-09).",
+    "Bir uyarının nedenini sormak için Asistan sayfasını kullanın.",
 ])
