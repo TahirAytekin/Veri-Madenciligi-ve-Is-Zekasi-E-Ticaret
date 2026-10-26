@@ -70,6 +70,7 @@ trendyoll/
 │   ├── duygu.py             F2-06 yorum duygusu ve şikâyet konuları (hazır Türkçe BERT)
 │   ├── surum_karsilastirma.py  sahte veri v1/v2 etkisi (F1-06)
 │   └── dogrulama_raporu.py  F2-12 tüm modellerin doğrulama tablosu (--yeniden: hepsini baştan çalıştırır)
+├── web/                     F5 satıcı paneli (Streamlit): app.py, ortak.py, sayfalar/; hazırlık: python -m web.hazirla
 ├── asistan/                 F4 veriyle konuşan asistan
 │   ├── bilgi_tabani.py      aranacak metin parçaları (metrik, belge, içgörü, tavsiye, ürün, kategori, ay)
 │   ├── arama.py             yerel embedding (multilingual-e5-base) ile arama; test seti degerlendirme/
@@ -127,6 +128,9 @@ python -m tavsiye.motor --veri sahte    # tavsiyeler + haftalık aksiyon planı 
 python -m tavsiye.urun_karti --veri sahte   # ürün sağlık kartları -> ciktilar/sahte/urun_kartlari.json
 python -m asistan.bilgi_tabani --veri sahte && python -m asistan.arama --soru "katkı payı ne demek"   # ilk seferde model iner (~1,1 GB)
 python -m asistan.sohbet --veri sahte --soru "Bu hafta ne yapmalıyım?"   # ANTHROPIC_API_KEY gerekir
+
+python -m web.hazirla                    # model çıktıları + bilgi tabanı (ilk kez, ~1 dk)
+streamlit run web/app.py                 # satıcı paneli: http://localhost:8501 (yalnızca bu bilgisayar)
 ```
 
 Çekimler **artımlıdır**: ilk çalıştırmada geçmiş alınır, sonrakilerde yalnızca son dönem (iade ve finans

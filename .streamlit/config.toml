@@ -1,0 +1,12 @@
+# Satıcı paneli (F5) Streamlit ayarları.
+[server]
+# Yalnızca bu bilgisayardan erişilir: gerçek mağaza verisi yerel ağa açılmaz.
+# Bilerek paylaşmak için (yalnızca sahte veriyle): streamlit run web/app.py --server.address 0.0.0.0
+address = "localhost"
+port = 8501
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+primaryColor = "#2a78d6"

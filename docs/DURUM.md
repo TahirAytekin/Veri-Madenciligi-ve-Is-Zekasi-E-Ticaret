@@ -34,7 +34,8 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - **Bilgi tabanı ve arama (F4-01, F4-02 ✅, [kart](modeller/F4-02.md)):** 7 kaynaktan parça (sahte 434, gerçek 352). 5 arama yöntemi önceden kayıtlı 30 soruluk testte karşılaştırıldı: seçilen `multilingual-e5-base` (isabet@5 0,90); küçük model başa baş, BM25 hibriti yardım etmedi. Sıralama ve sayı soruları ("en az iade", "bitmek üzere") aramayla bulunamıyor → araçlar gerekli (F4-03).
 - **Asistan araçları (F4-03, F4-06 ✅, [ASISTAN.md](ASISTAN.md)):** 9 araç (metrik, SQL, şema, model çıktıları, ürün kartı, tavsiye, senaryo, beden, bilgi arama); strict şemalar + kodda girdi doğrulama. SQL salt okunur: tek SELECT, DuckDB dış erişimi kapalı ve kilitli, 200 satır; 15 yazma/yönetim ve 4 dosya/ağ denemesi testte reddediliyor. Müşteri metinleri "veri" olarak işaretleniyor.
 - **Asistan (F4-04, F4-05 ✅, [kart](modeller/F4-05.md)):** Claude araç döngüsü (`asistan/sohbet.py`), 32 soruluk önceden kayıtlı değerlendirme. Haiku 5.5 %96,9 (gerçek ve sahte), Opus 5.5 %100; kaynak gösterme %100; soru başına 0,0008 $ / 0,022 $ → kural gereği **Haiku seçildi** (K-15). Tek "hata" puanlayıcının kaçırdığı doğru bir ret cevabı (G02). Gömülü talimata (G01) hiçbir koşulda uyulmadı. Turun maliyeti 1,44 $. **Faz 4 tamamlandı.**
-- **Sıradaki adım:** F5 web uygulaması (Streamlit): sayfalar, asistan sohbeti, doğrulama sayfası. Ekip K-14'ü onaylamalı.
+- **Web paneli, 1. kısım (F5-01…04, F5-10 ✅):** `streamlit run web/app.py` → Genel Bakış, Aksiyon Planı ("yapıldı" işareti, indirme), Ürünler (portföy matrisi, sağlık kartı), Model Doğrulama. Sayfalar hesap yapmaz; analiz/, tavsiye/, ciktilar/ okur. Uygulama yalnızca `localhost`'ta açılır (`.streamlit/config.toml`; gerçek veri ağa açılmaz). Testler: `tests/test_web.py` (AppTest, sahte veri).
+- **Sıradaki adım:** F5-05…09: İade ve Beden (beden önerici), Talep ve Stok, Finans ve Senaryo (kaydırıcılar), Müşteri Sesi (cevap önerici), Asistan sohbeti. Ekip K-14'ü onaylamalı.
 
 ## Aktif görevler
 
@@ -42,7 +43,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| F5-01…04, F5-10 | Tahir | `gorev/F5-01-web-iskelet` | 2026-10-26 | Streamlit iskeleti + Genel Bakış, Aksiyon Planı, Ürünler, Model Doğrulama |
+| — | | | | |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
