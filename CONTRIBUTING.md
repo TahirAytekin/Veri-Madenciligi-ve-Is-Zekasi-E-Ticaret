@@ -21,8 +21,9 @@ cd trendyoll
 python -m venv .venv
 .venv\Scripts\activate            # Windows   (Mac/Linux: source .venv/bin/activate)
 pip install -r requirements.txt -r requirements-dev.txt
-python guncelle.py --sahte        # sahte veri için analiz tablolarını üretir (~10 sn)
+python guncelle.py --sahte        # sahte veri: analiz tabloları + panel çıktıları (ilk seferde ~2 dk, modeller iner)
 python -m pytest                  # ortam ve veri kontrolleri; hepsi geçmeli
+python -m streamlit run web/app.py   # panel: http://localhost:8501
 ```
 
 Python 3.14 ile doğrulandı. Hazır modeller ilk kullanımda indirilir (~900 MB): `AGIR_TESTLER=1 python -m pytest -m agir`.
@@ -104,7 +105,7 @@ Devir notları birikerek **projenin günlüğü** olur. Her not ayrı bir dosya 
 - **Rastgelelik** sabit tohumla (`random_state=42`); sonuçlar tekrarlanabilir olmalı.
 - **Modeller sahte veriyle eğitilir, gerçek verinin son 3 ayıyla test edilir.** Gerçek veri eğitimde kullanılmaz; modelde ID değil aktarılabilir özellikler kullanılır (bkz. [MODEL_DOGRULAMA.md](docs/MODEL_DOGRULAMA.md)).
 - Yeni paket eklersen `requirements.txt` dosyasına ekle ve PR'da belirt.
-- PR açmadan önce `python -m ruff check .` ve `python -m pytest` temiz olmalı.
+- PR açmadan önce `python -m ruff check .`, `python -m pytest` ve `python .github/kontrol.py` temiz olmalı; GitHub Actions aynısını PR'da tekrarlar.
 
 ---
 
@@ -130,6 +131,7 @@ Aşağıdakiler **asla** commitlenmez (`.gitignore` engeller; yine de `git statu
 | gerçek veri çıktısı içeren notebook | veri sızıntısı |
 
 Ayrıca:
+- **Otomatik kontrol:** her PR'da GitHub Actions önce `.github/kontrol.py` (yasaklı yol, anahtar kalıbı, büyük dosya), sonra `ruff` ve testleri sahte veriyle çalıştırır. Kırmızı (✗) bir PR birleştirilmez. Push etmeden önce yerelde: `python .github/kontrol.py`. Proje sahibinin bilgisayarında bu komut `.env`'deki gizli değerlerin hiçbir dosyada geçmediğini de kontrol eder.
 - Gerçek veri buluta yüklenmez: Colab, ChatGPT veya başka bir site yok.
 - Bir anahtar veya gerçek veri yanlışlıkla push edildiyse: **hemen proje sahibine haber ver.** Anahtar panelden yenilenir. Dosyayı sonradan silmek yetmez, git geçmişinde kalır.
 
