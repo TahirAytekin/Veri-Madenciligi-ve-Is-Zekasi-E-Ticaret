@@ -232,11 +232,11 @@ Her sayfa **bir karar veya aksiyonla biter**. Sayılar kod içine yazılmaz, `an
 | F5-02 | **Genel Bakış** | sağlık skoru, en önemli 5 uyarı, bu haftanın aksiyonları | P1 | F1-03, F3-03 | Tahir | ✅ |
 | F5-03 | **Aksiyon Planı** | önceliklendirilmiş tavsiyeler, beklenen kazanç, "yapıldı" işareti, planı indir | P1 | F3-03 | Tahir | ✅ |
 | F5-04 | **Ürünler** | portföy matrisi, ürün sağlık kartı, ürüne özel tavsiyeler | P1 | F3-05 | Tahir | ✅ |
-| F5-05 | **İade ve Beden** | iade nedenleri, kalıp tablosu, **beden öneri aracı** (boy-kilo gir → beden) | P1 | F2-04 | — | ⬜ |
-| F5-06 | **Talep ve Stok** | ürün tahminleri, stok tükenme uyarıları, "şu ürüne şu kadar stok" önerisi | P1 | F2-05 | — | ⬜ |
-| F5-07 | **Finans ve Senaryo** | kâr-zarar şelalesi, **senaryo simülatörü** (kaydırıcılarla ne olur) | P1 | F1-05 | — | ⬜ |
-| F5-08 | **Müşteri Sesi** | duygu ve konu analizi, **soru cevap önerici** (soruyu yapıştır → cevap taslağı) | P1 | F2-06, F3-04 | — | ⬜ |
-| F5-09 | **Asistan** | RAG sohbet, kullanılan veri ve araçların gösterimi, örnek sorular | P1 | F4-04 | — | ⬜ |
+| F5-05 | **İade ve Beden** | iade nedenleri, kalıp tablosu, **beden öneri aracı** (boy-kilo gir → beden) | P1 | F2-04 | Tahir | 🟨 |
+| F5-06 | **Talep ve Stok** | ürün tahminleri, stok tükenme uyarıları, "şu ürüne şu kadar stok" önerisi | P1 | F2-05 | Tahir | 🟨 |
+| F5-07 | **Finans ve Senaryo** | kâr-zarar şelalesi, **senaryo simülatörü** (kaydırıcılarla ne olur) | P1 | F1-05 | Tahir | 🟨 |
+| F5-08 | **Müşteri Sesi** | duygu ve konu analizi, **soru cevap önerici** (soruyu yapıştır → cevap taslağı) | P1 | F2-06, F3-04 | Tahir | 🟨 |
+| F5-09 | **Asistan** | RAG sohbet, kullanılan veri ve araçların gösterimi, örnek sorular | P1 | F4-04 | Tahir | 🟨 |
 | F5-10 | **Model Doğrulama** | sahte → gerçek sonuç tablosu, modellerin sınırları (şeffaflık) | P1 | F2-12 | Tahir | ✅ |
 | F5-11 | **Müşteriler** | segmentler, coğrafya, segment başına aksiyon | P2 | F2-09 | — | ⬜ |
 | F5-12 | Demo yayını (yalnızca sahte veriyle, Streamlit Community Cloud) | — | P2 | F5-02…F5-10 | — | ⬜ |

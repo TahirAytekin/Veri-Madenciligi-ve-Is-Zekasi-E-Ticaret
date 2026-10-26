@@ -43,7 +43,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F5-05…09 | Tahir | `gorev/F5-05-web-araclar` | 2026-10-26 | web 2. kısım: İade ve Beden, Talep ve Stok, Finans ve Senaryo, Müşteri Sesi, Asistan |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
