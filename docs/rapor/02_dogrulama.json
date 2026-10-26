@@ -292,6 +292,29 @@
       "not": "235 gerçek satıcı cevabı; ±1 beden isabeti 0.957. LLM taslak kontrolü (B): önerilen bedeni yazma oranı 0.882 (ölçüt ≥ 0,90, tutmadı); sonradan eklenen güvenlik kontrolü yanlış bedenli taslağı şablona çevirir.",
       "web": "Soru cevap önerici (taslak; beden kodla belirlenir)",
       "kart": "docs/modeller/F3-04.md"
+    },
+    {
+      "id": "F2-10",
+      "ad": "İndirim esnekliği",
+      "soru": "%10 ek indirim satışı ne kadar artırır?",
+      "yontem": "İki yönlü sabit etkili Poisson (ürün × hafta, kupon payı); yöntem sahtede doğrulanır, gerçekte test öncesi pencerede ölçülür (açık istisna)",
+      "metrik": "test sapması",
+      "yon": "dusuk_iyi",
+      "gercek_model": 1868.6420831826354,
+      "referans_adi": "indirim etkisiz (e = 0)",
+      "gercek_referans": 1847.254288945738,
+      "fark": 21.387794236897435,
+      "alt": -17.564529151166244,
+      "ust": 58.24027386505607,
+      "karar": "basarisiz",
+      "seviye1": {
+        "model": 0.18055239700187276,
+        "kahin": 1.7161753138075315
+      },
+      "tohumlar": {},
+      "not": "ölçülen kupon esnekliği -7,54 [-12,42, -1,90] (ters nedensellik); Seviye 1'de doğru cevap bulunamadı (0/3 tohum); Seviye 1 sütunlarında model = ölçülen esneklik, kâhin = gizli doğru esneklik",
+      "web": "Kullanılmaz; tavsiye ve senaryoda 1,5 varsayımı (düşük güven), kontrollü kupon denemesi önerilir",
+      "kart": "docs/modeller/F2-10.md"
     }
   ],
   "sahte_v1_v2": [

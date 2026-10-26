@@ -22,8 +22,9 @@
 | [F2-05](../../docs/modeller/F2-05.md) | Bu ürün gelecek hafta kaç adet satar? | WAPE | 0,651 | geçen haftanın satışı: 0,469 | +0,183 [+0,007, +0,299] | 0/3 | ✗ | Kullanılmaz; stok tükenme tablosu geçen haftanın satış hızıyla |
 | [F2-06](../../docs/modeller/F2-06.md) | Bu yorum olumlu mu olumsuz mu? | ROC-AUC | 0,910 | kelime listesi: 0,833 | +0,020 [-0,036, +0,076] | — | ✗ | Şikâyet işareti ve şikâyet konusu (genel duygu puandan) |
 | [F3-04](../../docs/modeller/F3-04.md) | Boyunu ve kilosunu yazan müşteriye satıcı hangi bedeni önerir? | tam isabet | 0,498 | en sık beden (L): 0,191 | +0,306 [+0,226, +0,383] | 3/3 | ✓ | Soru cevap önerici (taslak; beden kodla belirlenir) |
+| [F2-10](../../docs/modeller/F2-10.md) | %10 ek indirim satışı ne kadar artırır? | test sapması | 1868,642 | indirim etkisiz (e = 0): 1847,254 | +21,388 [-17,565, +58,240] | — | ✗ | Kullanılmaz; tavsiye ve senaryoda 1,5 varsayımı (düşük güven), kontrollü kupon denemesi önerilir |
 
-**Başarılı:** F2-04C, F3-04 · **Başarısız:** F2-02, F2-03, F2-04A, F2-04B, F2-05, F2-06
+**Başarılı:** F2-04C, F3-04 · **Başarısız:** F2-02, F2-03, F2-04A, F2-04B, F2-05, F2-06, F2-10
 
 WAPE'de düşük değer iyidir (fark < 0 model lehine); diğer ölçütlerde yüksek değer iyidir.
 
@@ -39,6 +40,7 @@ WAPE'de düşük değer iyidir (fark < 0 model lehine); diğer ölçütlerde yü
 | F2-05 | 0,510 | 0,517 | 0,433 |
 | F2-06 | 0,947 | 0,748 | — |
 | F3-04 | 0,486 | 0,197 | — |
+| F2-10 | 0,181 | — | 1,716 |
 
 ## Tohumlara göre (sahte v2: 42, 1, 2)
 
@@ -80,6 +82,7 @@ WAPE'de düşük değer iyidir (fark < 0 model lehine); diğer ölçütlerde yü
 - **F2-05:** mağaza toplamı WAPE: model 0.270, naif 0.140
 - **F2-06:** 221 gerçek yorum (52 olumsuz); ürün yorumlarında BERT 0.924, sözlük 0.822
 - **F3-04:** 235 gerçek satıcı cevabı; ±1 beden isabeti 0.957. LLM taslak kontrolü (B): önerilen bedeni yazma oranı 0.882 (ölçüt ≥ 0,90, tutmadı); sonradan eklenen güvenlik kontrolü yanlış bedenli taslağı şablona çevirir.
+- **F2-10:** ölçülen kupon esnekliği -7,54 [-12,42, -1,90] (ters nedensellik); Seviye 1'de doğru cevap bulunamadı (0/3 tohum); Seviye 1 sütunlarında model = ölçülen esneklik, kâhin = gizli doğru esneklik
 
 ## Yorum
 

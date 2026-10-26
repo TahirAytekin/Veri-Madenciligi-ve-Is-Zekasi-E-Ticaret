@@ -168,9 +168,30 @@ def f304():
                         "sonradan eklenen güvenlik kontrolü yanlış bedenli taslağı şablona çevirir.")]
 
 
+def _v(x):
+    return f"{x:.2f}".replace(".", ",")
+
+
+def f210():
+    d = _oku("gercek", "dogrulama", "F2-10.json")
+    if d is None or "gercek" not in d:
+        return []
+    t, s1, k = d["gercek"]["test"], d["seviye1"].get("42", {}), d["gercek"]["pencere"]["kupon_payi"]
+    return [_satir("F2-10", "İndirim esnekliği", "%10 ek indirim satışı ne kadar artırır?",
+                   "İki yönlü sabit etkili Poisson (ürün × hafta, kupon payı); yöntem sahtede doğrulanır, gerçekte "
+                   "test öncesi pencerede ölçülür (açık istisna)", "test sapması", "dusuk_iyi", t["sapma"]["olculen"],
+                   "indirim etkisiz (e = 0)", t["sapma"]["sifir"], t["olculen_eksi_sifir"], d.get("karar", False),
+                   "Kullanılmaz; tavsiye ve senaryoda 1,5 varsayımı (düşük güven), kontrollü kupon denemesi önerilir",
+                   "docs/modeller/F2-10.md",
+                   seviye1={"model": s1.get("kupon_payi", {}).get("esneklik"), "kahin": s1.get("dogru_cevap")},
+                   not_=f"ölçülen kupon esnekliği {_v(k['esneklik'])} [{_v(k['alt'])}, {_v(k['ust'])}] (ters "
+                        "nedensellik); Seviye 1'de doğru cevap bulunamadı (0/3 tohum); Seviye 1 sütunlarında model = "
+                        "ölçülen esneklik, kâhin = gizli doğru esneklik")]
+
+
 def tablo():
     satirlar = []
-    for f in (f202, f203, f204, f205, f206, f304):
+    for f in (f202, f203, f204, f205, f206, f304, f210):
         sonuc = f()
         satirlar.extend(sonuc if isinstance(sonuc, list) else [sonuc])
     surum = _oku("modeller", "F1-06_surum_karsilastirma.json")
