@@ -19,3 +19,7 @@ sentence-transformers>=6.2
 streamlit>=1.55
 plotly>=7.1
 anthropic>=2.3
+
+# Rapor (haftalık PDF)
+fpdf2>=2.8
+matplotlib>=3.10

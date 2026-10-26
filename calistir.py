@@ -4,7 +4,7 @@
     python calistir.py --veri sahte --sadece stok,tavsiye
 
 Sırayla: kalıp tablosu (F2-04) → stok tablosu (F2-05) → yorum analizi (F2-06) → durum raporu (F1-03) → tavsiyeler
-ve aksiyon planı (F3) → ürün kartları (F3-05) → asistan bilgi tabanı ve arama indeksi (F4).
+ve aksiyon planı (F3) → ürün kartları (F3-05) → asistan bilgi tabanı ve arama indeksi (F4) → haftalık PDF rapor.
 
 Modeller burada YENİDEN EĞİTİLMEZ ve doğrulama sonuçları YAZILMAZ: model doğrulaması (docs/rapor/02_dogrulama.md)
 önceden kayıtlı ve 25.10.2026 verisiyle dondurulmuş bir sonuçtur; yeni veriyle sessizce değişmemeli. Eğitilmiş model
@@ -87,8 +87,14 @@ def bilgi(veri):
     return f"{len(p)} parça, indeks {arama.SECILEN}"
 
 
+def rapor(veri):
+    from tavsiye import haftalik_rapor
+    yol = haftalik_rapor.kaydet(veri)
+    return f"{yol.name} ({yol.stat().st_size // 1024} KB)"
+
+
 ADIMLAR = {"kalip": kalip, "stok": stok, "yorum": yorum, "durum": durum, "tavsiye": tavsiye, "kart": kart,
-           "bilgi": bilgi}
+           "bilgi": bilgi, "rapor": rapor}
 
 
 # ====================================================
