@@ -37,8 +37,9 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - **Web paneli, 1. kısım (F5-01…04, F5-10 ✅):** `streamlit run web/app.py` → Genel Bakış, Aksiyon Planı ("yapıldı" işareti, indirme), Ürünler (portföy matrisi, sağlık kartı), Model Doğrulama. Sayfalar hesap yapmaz; analiz/, tavsiye/, ciktilar/ okur. Uygulama yalnızca `localhost`'ta açılır (`.streamlit/config.toml`; gerçek veri ağa açılmaz). Testler: `tests/test_web.py` (AppTest, sahte veri).
 - **Web paneli, 2. kısım (F5-05…09 ✅):** İade ve Beden (kalıp tablosu, beden önerici), Talep ve Stok (tükenme tablosu, tedarik süresine göre sipariş), Finans ve Senaryo (katkı şelalesi, 7 kaydırıcılı simülatör, başa baş), Müşteri Sesi (şikâyet konuları, cevap önerici), Asistan (sohbet, kullanılan araçlar, maliyet). Panel 9 sayfa; hepsi iki veride test edildi. Düzeltme: önbellek yenileme anahtarı Streamlit'te yok sayılıyordu (`_s` → `surum`). **Faz 5'in P1 görevleri tamamlandı** (K3: 9/10 sayfa; Müşteriler P2).
 - **Üretim hattı (F6-01 ✅):** `python calistir.py` temiz veriden panelin okuduğu tüm çıktıları üretir (~2 dk); `guncelle.py`'nin son adımı oldu, yani günlük güncelleme paneli de günceller. Modeller yeniden eğitilmez, doğrulama raporu dondurulmuş kalır (testle kanıtlı). Panel veri değişince bellekteki önbellekleri temizler ve "son güncelleme" zamanını gösterir.
-- **Geliştirme turu (26.10'da başladı, sırayla):** ~~1. üretim hattı~~ ✅ · 2. sahte veri v3 (talep dinamiği, iade eğilimi) + F2-05 yeniden test · 3. fiyat esnekliği ölçümü (F2-10) · 4. GitHub Actions · 5. haftalık PDF rapor · 6. asistanın grafik çizmesi · 7. sahte veriyle demo yayını · 8. sepet analizi · 9. belgeler, kılavuz, sunum. Müşteriler sayfası (F2-09, F5-11) kapsam dışı: gerçek müşterilerin %97'si tek seferlik.
-- **Sıradaki adım:** 2. sahte veri v3. Ekip K-14'ü onaylamalı.
+- **Geliştirme turu (26.10'da başladı, sırayla):** ~~1. üretim hattı~~ ✅ · ~~2. sahte veri v3~~ ✅ (A ✗, talep modeli başa baş) · 3. fiyat esnekliği ölçümü (F2-10) · 4. GitHub Actions · 5. haftalık PDF rapor · 6. asistanın grafik çizmesi · 7. sahte veriyle demo yayını · 8. sepet analizi · 9. belgeler, kılavuz, sunum. Müşteriler sayfası (F2-09, F5-11) kapsam dışı: gerçek müşterilerin %97'si tek seferlik.
+- **Sahte veri v3 deneyi (F1-07 ✅, [rapor](rapor/sahte_v3_talep.md)):** talep dinamiği hedefleri 7/7 (v2: 1/7), ama F1-06 iade hedefleri 10/16'ya düştü (eşik 14) → önceden kayda göre **v3 ana veri olmadı**, ana sahte veri v2. Talep modeli v3 ile gerçekte WAPE 0,595 → 0,476: naif tahminden 12 puan geride olmaktan başa başa geldi (ölçüt: anlamlı geçmek, tutmadı); mağaza toplamında naiften iyi. Öneri: v3.1 (talep sabit, iade parametreleri yeniden; ayrı önceden kayıt).
+- **Sıradaki adım:** 3. fiyat esnekliği ölçümü (F2-10). İsteğe bağlı: v3.1. Ekip K-14'ü onaylamalı.
 
 ## Aktif görevler
 
@@ -46,7 +47,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| F1-07 | Tahir | `gorev/F1-07-sahte-v3` | 2026-10-26 | hedefler ve başarı ölçütü önceden yazıldı ([rapor](rapor/sahte_v3_talep.md)); v2 7 talep hedefinin 1'ini tutuyor |
+| — | | | | |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅

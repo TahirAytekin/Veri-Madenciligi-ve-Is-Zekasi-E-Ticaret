@@ -15,6 +15,7 @@ veri/*/analiz_kesim_*/
 # Sağlamlık kontrolü için başka tohumlarla üretilen sahte veriler (hazirlama/sahte_veri_uret.py --tohum N)
 veri/sahte_t*/
 veri/sahte_v1*/
+veri/sahte_v3*/
 
 # Çalışma çıktıları ve ortam
 .venv/

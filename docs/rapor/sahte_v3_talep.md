@@ -51,4 +51,77 @@ Test öncesi pencerede (23.10.2025–15.07.2026) ölçülen değerler bu tanıla
 - Dondurulmuş doğrulama raporu (`02_dogrulama.md`) değişmez; v3 sonuçları bu raporda ve model kartlarında ayrı bölüm olarak yer alır.
 
 ## Sonuçlar
-_(Kalibrasyon ve model sonuçları sonraki commit'te.)_
+
+### Özet
+| ölçüt | sonuç | karar |
+|---|---|---|
+| **A1.** Talep hedefleri D1–D5 | **7/7** (v2: 1/7) | ✓ |
+| **A2.** F1-06 iade hedefleri K1–K6 | **10/16** (v2: 15/16; eşik 14) | ✗ |
+| **B.** F2-05 model − naif (gerçek) | 3 tohumun hiçbirinde anlamlı iyi değil (eşik 2/3) | ✗ |
+| **C.** F2-02 (ikincil) | AUC aynı (0,667 / 0,665); ortalama tahmin gerçeğe yaklaştı (0,132 / 0,089; gerçek 0,117) | raporlandı |
+
+**Karar (önceden kayda göre):** Ölçüt A sağlanmadı → **v3 ana sahte veri olmadı.** Ana veri v2 kalıyor (`veri/sahte/`, testler, panel ve dondurulmuş doğrulama raporu değişmedi). v3, `python hazirlama/sahte_veri_uret.py --v3 [--tohum N]` ile `veri/sahte_v3*/` altına üretilebilir (git'e girmez).
+
+### A. Kalibrasyon (6 tur, 3 tohum ortalaması)
+| tur | değişiklik | D tutan |
+|---|---|---|
+| 1 | AR(1) φ 0,85 / σ 0,25, sıçrama %2, popülerlik σ 1,2, pencere ölçeği, iade eğilimi 2,4 | 2/7 |
+| 2 | φ 0,93 / σ 0,22, popülerlik 1,6, iade eğilimi 4,5, teslim dönüşümü 0,9 | 5/7 |
+| 3 | φ 0,97 / σ 0,16, sıçrama %1,5, popülerlik 1,5 | 5/7 |
+| 4 | φ 0,95 / σ 0,30, popülerlik 1,3 | 5/7 |
+| 5 | σ 0,34, popülerlik 1,4 | **7/7** (K: 11/16) |
+| 6 | iade düzeyi pencere içindeki teslimatlara göre ölçeklendi | 7/7 (K: 10/16) |
+
+| hedef | gerçek | v2 | v3 | tolerans |
+|---|---|---|---|---|
+| D1 geçen hafta / 4 hafta ort. WAPE | 0,90 | 1,20 | **0,89** | ±0,05 |
+| D2 haftalık otokorelasyon | 0,53 | 0,16 | **0,46** | ±0,10 |
+| D3 en çok satan %10 ürünün payı | 0,67 | 0,44 | **0,69** | ±0,08 |
+| D3 ürün-hafta 99. yüzdelik | 150 | 23 | **116** | ±%30 |
+| D3 mağaza haftalık medyan | 387 | 150 | **394** | ±%25 |
+| D4 iade: son 3 ay / ilk 3 ay | 2,42 | 1,10 | **2,13** | ±%25 |
+| D5 mağaza haftalık değişkenlik | 0,34 | 0,29 | **0,43** | ±0,10 |
+
+**K hedeflerinde bozulanlar (v3):**
+- K1 iade oranı **+3,0 puan**;
+- K2 kategori farkı 0,025 (sınır 0,02);
+- K3 ürünler arası yayılım **+%53** ve yarı dönem korelasyonu +0,24;
+- K4 iki beden dilimi (+0,03, +0,04).
+
+**Neden:** Talep çok satanlarda yoğunlaştı ve iade zamanla artıyor. Ürün başına satış büyüdüğü için ürünler arası iade farkları daha keskin ölçülüyor (K3). Ayrıca iade düzeyi pencerede yukarı kaydı (K1, K4). Bunları düzeltmek için F1-06'nın iade parametrelerini (ürün eğilimi, genel iade hedefi) v3 için yeniden ayarlamak gerekirdi. Bu, önceden kayıtlı izinli değişiklikler arasında değildi ve tur sınırına (6) ulaşılmıştı. Sonuca bakarak kuralı esnetmedim.
+
+### B. Talep modeli (F2-05; kod ve seçim kuralı aynı, test haftaları 07.09–12.10.2026)
+| sürüm | tohum | model WAPE | naif | model − naif [%95 GA] | mağaza toplamı WAPE (naif 0,140) | toplam tahmin / gerçek |
+|---|---|---|---|---|---|---|
+| v2 | 42 | 0,651 | 0,469 | +0,183 [+0,007, +0,299] | 0,270 | 1418 / 1944 |
+| v2 | 1 | 0,574 | 0,469 | +0,105 [+0,014, +0,173] | 0,198 | 1558 / 1944 |
+| v2 | 2 | 0,559 | 0,469 | +0,090 [+0,003, +0,244] | 0,060 | 2017 / 1944 |
+| **v3** | 42 | **0,503** | 0,469 | +0,034 [−0,001, +0,078] | **0,113** | 1813 / 1944 |
+| **v3** | 1 | **0,464** | 0,469 | −0,005 [−0,038, +0,025] | **0,101** | 1849 / 1944 |
+| **v3** | 2 | **0,461** | 0,469 | −0,008 [−0,040, +0,034] | **0,134** | 1737 / 1944 |
+
+- **v3 talep modelini belirgin biçimde iyileştirdi:** ürün düzeyinde WAPE ortalaması 0,595 → 0,476. Model artık naif tahminden **ayırt edilemiyor**; v2'de 3/3 tohumda anlamlı biçimde kötüydü. Önceden kayıtlı başarı ölçütü (naifi anlamlı geçmek) yine de tutmadı.
+- **Mağaza toplamında** v3 modeli 3/3 tohumda naiften düşük hata veriyor (0,10–0,13 / 0,14). Bu fark için güven aralığı önceden tanımlanmamıştı, bu yüzden bulgu olarak raporlanıyor, başarı olarak değil.
+- **Ölçek sorunu çözüldü:** toplam tahmin gerçeğin %89–95'i; v2'de %73–104 arasında dağınıktı.
+- **Seviye 1:** v3'te kâhin (gizli beklenen talep) WAPE 0,15–0,24, model 0,46–0,53. Kalıcı bileşeni kâhin doğrudan biliyor; modelin onu geçmiş satışlardan çıkarması gerekiyor. Aradaki fark, daha iyi özelliklerle (ör. üstel düzeltme, daha uzun gecikmeler) kapatılabilecek bir alan olduğunu gösteriyor.
+
+### C. İade riski (F2-02; kod ve seçim kuralı aynı)
+| sürüm | gerçek AUC (3 tohum ort.) | − ürün geçmişi | ortalama tahmin (gerçek 0,117) |
+|---|---|---|---|
+| v2 | 0,665 | −0,015 | 0,089 |
+| v3 | 0,667 | −0,013 | 0,132 |
+
+Sıralama gücü değişmedi; ürün geçmişi tavanı (0,680) sürüyor. Zaman eğilimi tahmin düzeyini gerçeğe yaklaştırdı (fark −0,028 → +0,015). K1'deki +3 puanlık kayma yüzünden biraz fazla tahmin ediyor.
+
+### Ne öğrendik
+1. **F2-05'in tanısı doğruydu.** Talep dinamiği gerçeğe benzeyince model, gerçekte naif tahminden 12 puan geride olmaktan çıkıp başa baş hâle geldi. Bu, F1-06'daki dersin ikinci kanıtı: sahteden gerçeğe ancak sahte veri o yapıda gerçeğe benziyorsa aktarım olur.
+2. **Kalibrasyon hedefleri birbirini etkiliyor.** Talebi gerçekçileştirmek iade istatistiklerini bozdu. Bir sonraki sürüm, tüm hedefleri (D ve K) birlikte ayarlamalı.
+3. **Önerilen sonraki adım (v3.1, ayrı önceden kayıtla):** v3'ün talep parametreleri sabit tutulur, F1-06'nın iade parametreleri (genel iade hedefi, ürün eğilimi) yeniden ayarlanır. Hedef: D 7/7 ve K ≥ 14/16. Sağlanırsa v3.1 ana sahte veri olur ve tüm modeller onunla yeniden raporlanır.
+
+## Nasıl yeniden üretilir
+```bash
+python hazirlama/sahte_veri_uret.py --v3                 # + --tohum 1, --tohum 2 → veri/sahte_v3[_tN]/
+python -m hazirlama.kalibrasyon_talep --sahte sahte_v3 --tohumlar
+python -m modeller.sahte_v3_deney                       # B ve C (~1,5 dk); hiçbir dosyanın üzerine yazmaz
+```
+v2 değişmedi: v3 kodu eklendikten sonra `python hazirlama/sahte_veri_uret.py` ile üretilen `veri/sahte/` git'e göre bayt bayt aynı.
