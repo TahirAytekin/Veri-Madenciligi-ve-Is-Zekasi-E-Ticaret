@@ -35,7 +35,7 @@ Projeye dönen ya da yeni katılan herkesin ilk okuyacağı sayfa. **Her devirde
 - **Asistan araçları (F4-03, F4-06 ✅, [ASISTAN.md](ASISTAN.md)):** 9 araç (metrik, SQL, şema, model çıktıları, ürün kartı, tavsiye, senaryo, beden, bilgi arama); strict şemalar + kodda girdi doğrulama. SQL salt okunur: tek SELECT, DuckDB dış erişimi kapalı ve kilitli, 200 satır; 15 yazma/yönetim ve 4 dosya/ağ denemesi testte reddediliyor. Müşteri metinleri "veri" olarak işaretleniyor.
 - **Asistan (F4-04, F4-05 ✅, [kart](modeller/F4-05.md)):** Claude araç döngüsü (`asistan/sohbet.py`), 32 soruluk önceden kayıtlı değerlendirme. Haiku 5.5 %96,9 (gerçek ve sahte), Opus 5.5 %100; kaynak gösterme %100; soru başına 0,0008 $ / 0,022 $ → kural gereği **Haiku seçildi** (K-15). Tek "hata" puanlayıcının kaçırdığı doğru bir ret cevabı (G02). Gömülü talimata (G01) hiçbir koşulda uyulmadı. Turun maliyeti 1,44 $. **Faz 4 tamamlandı.**
 - **Web paneli, 1. kısım (F5-01…04, F5-10 ✅):** `streamlit run web/app.py` → Genel Bakış, Aksiyon Planı ("yapıldı" işareti, indirme), Ürünler (portföy matrisi, sağlık kartı), Model Doğrulama. Sayfalar hesap yapmaz; analiz/, tavsiye/, ciktilar/ okur. Uygulama yalnızca `localhost`'ta açılır (`.streamlit/config.toml`; gerçek veri ağa açılmaz). Testler: `tests/test_web.py` (AppTest, sahte veri).
-- **Web paneli, 2. kısım (F5-05…09 ✅):** İade ve Beden (kalıp tablosu, beden önerici), Talep ve Stok (tükenme tablosu, tedarik süresine göre sipariş), Finans ve Senaryo (katkı şelalesi, 7 kaydırıcılı simülatör, başa baş), Müşteri Sesi (şikâyet konuları, cevap önerici), Asistan (sohbet, kullanılan araçlar, maliyet). Panel 9 sayfa; hepsi iki veride test edildi. Düzeltme: önbellek yenileme anahtarı Streamlit'te yok sayılıyordu (`_s` → `surum`). **Faz 5'in P1 görevleri tamamlandı (K3 ✅).**
+- **Web paneli, 2. kısım (F5-05…09 ✅):** İade ve Beden (kalıp tablosu, beden önerici), Talep ve Stok (tükenme tablosu, tedarik süresine göre sipariş), Finans ve Senaryo (katkı şelalesi, 7 kaydırıcılı simülatör, başa baş), Müşteri Sesi (şikâyet konuları, cevap önerici), Asistan (sohbet, kullanılan araçlar, maliyet). Panel 9 sayfa; hepsi iki veride test edildi. Düzeltme: önbellek yenileme anahtarı Streamlit'te yok sayılıyordu (`_s` → `surum`). **Faz 5'in P1 görevleri tamamlandı** (K3: 9/10 sayfa; Müşteriler P2).
 - **Sıradaki adım:** F6 bütünleştirme ve teslim: final rapor, sunum, demo senaryosu; isteğe bağlı F2-09 müşteri segmentleri + F5-11, F5-12 sahte veriyle demo yayını. Ekip K-14'ü onaylamalı.
 
 ## Aktif görevler
@@ -61,7 +61,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 |---|---|---|---|
 | K1 | Gün 7 (01.11) | P1 modelleri gerçek veride test edildi, doğrulama tablosu hazır | ✅ 26.10 |
 | K2 | Gün 10 (04.11) | tavsiyeler, aksiyon planı ve asistan çalışıyor | ⬜ |
-| K3 | Gün 12 (06.11) | 10 web sayfası çalışıyor | ✅ 26.10 |
+| K3 | Gün 12 (06.11) | 10 web sayfası çalışıyor | 🟨 26.10: 9 P1 sayfası çalışıyor; 10. sayfa (Müşteriler, F5-11, P2) yok |
 | K4 | Gün 14 (08.11) | teslim: rapor, sunum, demo | ⬜ |
 
 ## Devredilebilir görevler
