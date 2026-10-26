@@ -16,7 +16,12 @@ from ortak import HAM, TABLOLAR, VERI, env_degeri, iade_neden_grubu, indirim_tur
 sys.stdout.reconfigure(encoding="utf-8")
 
 CIKTI = VERI / "gercek"
-TUZ = env_degeri("MUSTERI_ID_TUZ", "trendyol-analiz")  # müşteri ID özetine eklenen tuz (.env)
+def _tuz():
+    """Müşteri ID özetine eklenen tuz: yalnızca .env'den (kodda varsayılan değer yok; bkz. .github/kontrol.py)."""
+    tuz = env_degeri("MUSTERI_ID_TUZ")
+    if not tuz:
+        raise SystemExit("MUSTERI_ID_TUZ .env dosyasında tanımlı olmalı (bkz. .env.example)")
+    return tuz
 
 
 def musteri_id(ham_id):
@@ -24,7 +29,7 @@ def musteri_id(ham_id):
     ham_id = str(ham_id)
     if ham_id.startswith("M") and len(ham_id) == 11:
         return ham_id
-    return "M" + hashlib.sha256(f"{TUZ}{ham_id}".encode()).hexdigest()[:10]
+    return "M" + hashlib.sha256(f"{_tuz()}{ham_id}".encode()).hexdigest()[:10]
 
 
 # Trendyol sipariş API'si orderDate'i Türkiye saatinde, diğer zamanları UTC olarak veriyor.
