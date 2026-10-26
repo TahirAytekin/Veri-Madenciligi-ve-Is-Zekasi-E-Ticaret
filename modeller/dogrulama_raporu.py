@@ -194,6 +194,9 @@ def markdown(t, yorum):
     satir = ["# Model doğrulama raporu (F2-12)", "",
              "> Bu dosya `python -m modeller.dogrulama_raporu` ile üretilir; elle değiştirmeyin. Yalnızca "
              "\"Yorum\" bölümü elle yazılır ve yeniden üretimde korunur. Web için tablo: `02_dogrulama.json`.", "",
+             "> **Dondurulmuş sonuç:** sayılar 25.10.2026'ya kadarki gerçek veriyle ölçüldü. Günlük güncelleme "
+             "(`guncelle.py`, `calistir.py`) modelleri yeniden test etmez ve bu raporu değiştirmez. `--yeniden` tüm "
+             "modelleri o günkü veriyle baştan çalıştırır: yeni bir test olur, önceden kayıtlı sonuç değil.", "",
              "## Yöntem (tüm modellerde aynı)",
              "- **Eğitim yalnızca sahte veriyle** (sahte v2, [F1-06](sahte_v2_kalibrasyon.md)); gerçek veri yalnızca "
              f"test. Gerçek test dönemi: {t['test_donemi']['baslangic']} – {t['test_donemi']['bitis']} siparişleri "

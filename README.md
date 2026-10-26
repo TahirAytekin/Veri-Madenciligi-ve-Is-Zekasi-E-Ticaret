@@ -70,7 +70,8 @@ trendyoll/
 │   ├── duygu.py             F2-06 yorum duygusu ve şikâyet konuları (hazır Türkçe BERT)
 │   ├── surum_karsilastirma.py  sahte veri v1/v2 etkisi (F1-06)
 │   └── dogrulama_raporu.py  F2-12 tüm modellerin doğrulama tablosu (--yeniden: hepsini baştan çalıştırır)
-├── web/                     F5 satıcı paneli (Streamlit): app.py, ortak.py, sayfalar/; hazırlık: python -m web.hazirla
+├── calistir.py              uçtan uca üretim hattı: temiz veri → panelin okuduğu tüm çıktılar (guncelle.py son adımı)
+├── web/                     F5 satıcı paneli (Streamlit): app.py, ortak.py, sayfalar/
 ├── asistan/                 F4 veriyle konuşan asistan
 │   ├── bilgi_tabani.py      aranacak metin parçaları (metrik, belge, içgörü, tavsiye, ürün, kategori, ay)
 │   ├── arama.py             yerel embedding (multilingual-e5-base) ile arama; test seti degerlendirme/
@@ -112,7 +113,8 @@ python guncelle.py                       # günlük güncelleme (pazartesileri y
 python guncelle.py --haftalik            # yorumlar dahil
 python guncelle.py --sadece finans       # tek kaynak
 python guncelle.py --cekmeden            # API'ye istek atmadan yalnızca temizleme + analiz
-python guncelle.py --sahte               # yalnızca sahte veri analiz tabloları (ekip üyeleri)
+python guncelle.py --sahte               # sahte veri: analiz tabloları + panel çıktıları (ekip üyeleri)
+python guncelle.py --uretmeden           # panel çıktılarını üretmeden
 
 python -m cekim.siparisler               # tek bir çekim betiği
 python hazirlama/sahte_veri_uret.py      # sahte veriyi yeniden üret (ayarlar dosyanın başında)
@@ -129,8 +131,8 @@ python -m tavsiye.urun_karti --veri sahte   # ürün sağlık kartları -> cikti
 python -m asistan.bilgi_tabani --veri sahte && python -m asistan.arama --soru "katkı payı ne demek"   # ilk seferde model iner (~1,1 GB)
 python -m asistan.sohbet --veri sahte --soru "Bu hafta ne yapmalıyım?"   # ANTHROPIC_API_KEY gerekir
 
-python -m web.hazirla                    # model çıktıları + bilgi tabanı (ilk kez, ~1 dk)
-streamlit run web/app.py                 # satıcı paneli: http://localhost:8501 (yalnızca bu bilgisayar)
+python calistir.py                       # panel çıktıları: kalıp, stok, yorum, durum, tavsiye, kart, bilgi tabanı (~2 dk)
+python -m streamlit run web/app.py       # satıcı paneli: http://localhost:8501 (yalnızca bu bilgisayar)
 ```
 
 Çekimler **artımlıdır**: ilk çalıştırmada geçmiş alınır, sonrakilerde yalnızca son dönem (iade ve finans

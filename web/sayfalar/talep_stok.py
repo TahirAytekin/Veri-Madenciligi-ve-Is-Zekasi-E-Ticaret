@@ -28,7 +28,7 @@ ortak.eksik_uyarisi(veri)
 
 stok = ortak.tahmin(veri, "F2-05_stok")
 if stok is None:
-    st.info("Stok tablosu yok: `python -m modeller.talep`")
+    st.info("Stok tablosu yok: `python calistir.py --sadece stok`")
     st.stop()
 stok = stok.assign(ürün=stok.model_kodu.map(adlar), temsili_stok=stok.temsili_stok.astype(bool))
 gercek = stok[~stok.temsili_stok]
