@@ -139,3 +139,17 @@ def test_asistan_grafigi_cizer(monkeypatch):
     assert not at.exception
     assert len(at.get("plotly_chart")) == 1
     assert any("yarım dönem" in c.value for c in at.caption)
+
+
+def test_internet_demosunda_asistan_ve_claude_kapali(monkeypatch):
+    """DEMO=1: anahtar olsa bile asistan sohbeti ve Claude ile cevap kapalı (herkes anahtarı kullanmasın)."""
+    monkeypatch.setenv("DEMO", "1")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    at = AppTest.from_file(str(UYGULAMA), default_timeout=300)
+    at.session_state["veri"] = "sahte"
+    at.run()
+    assert any("Demo" in x.value for x in at.sidebar.info)
+    at.switch_page("sayfalar/asistan.py").run()
+    assert not at.exception and not at.chat_input and any("kapalı" in x.value for x in at.info)
+    at.switch_page("sayfalar/musteri_sesi.py").run()
+    assert not at.exception and at.toggle[0].disabled

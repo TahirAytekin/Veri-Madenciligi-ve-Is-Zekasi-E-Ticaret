@@ -241,7 +241,7 @@ Her sayfa **bir karar veya aksiyonla biter**. Sayılar kod içine yazılmaz, `an
 | F5-09 | **Asistan** | RAG sohbet, kullanılan veri ve araçların gösterimi, örnek sorular | P1 | F4-04 | Tahir | ✅ |
 | F5-10 | **Model Doğrulama** | sahte → gerçek sonuç tablosu, modellerin sınırları (şeffaflık) | P1 | F2-12 | Tahir | ✅ |
 | F5-11 | **Müşteriler** | segmentler, coğrafya, segment başına aksiyon | P2 | F2-09 | — | ⛔ kapsam dışı (26.10: gerçek müşterilerin %97'si tek seferlik, geçmiş 99 gün; bkz. DURUM) |
-| F5-12 | Demo yayını (yalnızca sahte veriyle, Streamlit Community Cloud) | — | P2 | F5-02…F5-10 | — | ⬜ |
+| F5-12 | Demo yayını (yalnızca sahte veriyle, Streamlit Community Cloud) | — | P2 | F5-02…F5-10 | Tahir | 🟨 (kod hazır; yayın depo sahibinde, [DEMO.md](DEMO.md)) |
 
 ### F6 — Bütünleştirme ve teslim (Gün 13–14)
 
