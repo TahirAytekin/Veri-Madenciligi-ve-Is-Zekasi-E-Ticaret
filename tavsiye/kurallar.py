@@ -37,6 +37,8 @@ ESIK = {"iade_kat": 1.5, "min_teslim": 30, "min_adet": 10, "zarar_adet": 10, "ia
         "marj_dusuk": 0.10, "marj_yuksek": 0.30, "indirim_dusuk": 0.05, "kampanya_stok_hafta": 8,
         "cevap_dk": 360, "cevapsiz": 0.10, "desi_tl": 1000, "capraz_destek": 5, "capraz_lift": 2.0,
         "sezon_kat": 1.3, "sezon_min_adet": 20, "kayip_gun": 45, "kayip_min": 10, "beden_payi": 0.40}
+ESNEKLIK_GEREKCESI = ("Fiyat esnekliği varsayım: mağaza verisinden ölçülemedi (F2-10; kuponlar yavaş satan ürünlere "
+                      "veriliyor).")
 SIKAYET_AKSIYONU = {
     "beden_kalip": "beden tablosunu ve kalıp bilgisini ürün sayfasında öne çıkarın",
     "kumas_kalite": "tedarikçiyle kumaş/dikiş kalitesini görüşün; açıklamaya kumaş içeriğini ve kalınlığını yazın",
@@ -326,7 +328,7 @@ def marji_yiyen_indirim(b):
             f"İndirimi yarıya indirin (net fiyat %{(f - 1) * 100:.0f} artar); satış düşüşünü 2 hafta izleyin.",
             {"kaynak": ["metrikler.indirim_orani", "metrikler.katki_marji"], "indirim_orani": r.indirim_orani,
              "katki_marji": r.katki_marji, "adet": r.adet},
-            "dusuk", "Fiyat esnekliği bu mağaza için ölçülmedi (varsayım).", "orta", etki,
+            "dusuk", ESNEKLIK_GEREKCESI, "orta", etki,
             f"Fiyat esnekliği {es} ile satış adedi ve birim katkı yeniden hesaplandı.", {"fiyat_esnekligi": es},
             {"model_kodu": [k]}))
     return sonuc
@@ -355,7 +357,7 @@ def kampanya_firsati(b):
             f"%{kupon * 100:.0f} ürün kuponu tanımlayın; 2 hafta sonra satış artışını ölçün.",
             {"kaynak": ["metrikler.katki_marji", "metrikler.indirim_orani", "F2-05_stok"],
              "katki_marji": r.katki_marji, "indirim_orani": r.indirim_orani, "adet": r.adet},
-            "dusuk", "Fiyat esnekliği bu mağaza için ölçülmedi (varsayım).", "dusuk", etki,
+            "dusuk", ESNEKLIK_GEREKCESI, "dusuk", etki,
             f"Fiyat esnekliği {es} ile %{kupon * 100:.0f} kuponun satış ve katkıya etkisi.",
             {"fiyat_esnekligi": es, "kampanya_kuponu": kupon}, {"model_kodu": [k]}))
     return sonuc

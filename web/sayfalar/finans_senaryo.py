@@ -47,9 +47,18 @@ with sol:
     iade = st.slider("Tüm iadeler azalırsa (%)", 0, 100, 0, 5)
     indirim = st.slider("Ek indirim (%)", 0, 50, 0, 1)
     esneklik = st.slider("Fiyat esnekliği (indirimde satış artışı)", 0.0, 4.0, 0.0, 0.25,
-                         help="0: satış adedi değişmez. 1,5: %10 indirimde satış ≈ %17 artar. Bu mağaza için "
-                              "ölçülmedi.",
+                         help="0: satış adedi değişmez. 1,5: %10 indirimde satış ≈ %17 artar (tavsiyelerdeki "
+                              "varsayım). Mağaza verisinden ölçülemedi; aşağıya bakın.",
                          disabled=indirim == 0)
+    with st.expander("Esneklik neden ölçülemedi?"):
+        st.markdown(
+            "Mağazanın bir yıllık kupon kayıtlarından ölçüm denendi (F2-10). Sonuç güvenilir değil:\n"
+            "- Kupon alan haftalarda satış **daha düşük** görünüyor (esneklik −7,5): kuponlar zaten yavaş satan "
+            "ürünlere veriliyor. Bu kuponun etkisi değil, kuponun nereye verildiği.\n"
+            "- Kupon oranları dar bir aralıkta (%4–12) ve ürün başına haftalık satış az; aynı yöntem, cevabı bilinen "
+            "sahte veride bile doğru değeri bulamadı.\n\n"
+            "**Ölçmenin doğru yolu kontrollü deneme:** benzer ürünleri ikiye ayırın, yalnızca yarısına 2 hafta %10 "
+            "kupon tanımlayın, satış farkını karşılaştırın. Bulduğunuz değeri bu kaydırıcıya girin.")
 with sag:
     komisyon = st.slider("Komisyon değişimi (puan)", -10.0, 10.0, 0.0, 0.5)
     desi = st.slider("Paket başına desi azalışı", 0, 5, 0)
