@@ -116,3 +116,26 @@ def test_asistan_sohbeti(monkeypatch):
     at.chat_input[0].set_value("soru 2").run()
     assert len(at.chat_message) == 4 and len(sorulan) == 2
     assert sorulan[1][1] == [{"role": "user", "content": "soru 1"}]      # çok turlu: önceki mesajlar gider
+
+
+def test_asistan_grafigi_cizer(monkeypatch):
+    """grafik_ciz sonucu panelde grafik olarak çizilir (API'siz)."""
+    from asistan import sohbet
+
+    def sahte_sor(self, soru, gecmis=None, akis=None):
+        g = {"tur": "cizgi", "baslik": "Aylık satış", "x": ["2026-08", "2026-09"], "y": [100.0, 120.0],
+             "y_ad": "Net satış", "birim": "TL", "not": "son nokta yarım dönem"}
+        return {"cevap": "Satış arttı.", "araclar": [{"ad": "grafik_ciz", "girdi": {}, "hata": False, "grafik": g}],
+                "durum": "end_turn", "kullanim": {}, "maliyet_usd": 0.0, "sure_sn": 0.1, "model": self.model,
+                "mesajlar": []}
+
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    monkeypatch.setattr(sohbet.Asistan, "sor", sahte_sor)
+    at = AppTest.from_file(str(UYGULAMA), default_timeout=300)
+    at.session_state["veri"] = "sahte"
+    at.run()
+    at.switch_page("sayfalar/asistan.py").run()
+    at.chat_input[0].set_value("satışı çiz").run()
+    assert not at.exception
+    assert len(at.get("plotly_chart")) == 1
+    assert any("yarım dönem" in c.value for c in at.caption)
