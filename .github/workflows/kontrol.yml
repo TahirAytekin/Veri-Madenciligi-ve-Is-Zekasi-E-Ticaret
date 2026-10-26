@@ -6,7 +6,7 @@ name: kontrol
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, "gorev/**"]     # görev dalına her push'ta da: PR açmadan önce sonuç görülür
   workflow_dispatch:
 
 permissions:
@@ -50,5 +50,21 @@ jobs:
         run: |
           python hazirlama/ozellik_cikar.py sahte
           python calistir.py --veri sahte --sadece kalip,stok,durum,tavsiye,kart
+      - name: Paket sürümleri
+        run: python -c "import importlib.metadata as m; print('::notice title=Sürümler::' + ', '.join(f'{p} {m.version(p)}' for p in ['numpy','pandas','scikit-learn','lightgbm','torch','streamlit','duckdb','anthropic']))"
       - name: Testler
-        run: python -m pytest -q
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m pytest -q -rfE --tb=line 2>&1 | tee pytest.log
+      - name: Düşen testleri uyarı olarak yaz
+        if: failure()
+        shell: bash
+        run: |
+          # Uyarılar (annotations) giriş yapmadan da okunabilir; günlüğün tamamı giriş ister
+          grep -E "^(FAILED|ERROR) " pytest.log | head -10 | while IFS= read -r satir; do
+            echo "::error title=Test::${satir:0:900}"
+          done
+          grep -E "^(E  |/.*:[0-9]+: )" pytest.log | head -10 | while IFS= read -r satir; do
+            echo "::warning title=Ayrıntı::${satir:0:900}"
+          done
