@@ -47,7 +47,7 @@ Görev üstlenen kişi bir satır ekler, bırakınca siler.
 
 | görev | kim | dal | başladı | son durum (tek cümle) |
 |---|---|---|---|---|
-| — | | | | |
+| F2-10 | Tahir | `gorev/F2-10-esneklik` | 2026-10-26 | tasarım ve ölçüt önceden yazıldı ([kart](modeller/F2-10.md)); gerçekte ölçüm (açık istisna) + sahtede doğrulama |
 
 ## Gün 1–3 için sıradaki görevler
 1. ~~F0-01: GitHub'a push, collaborator'lar~~ ✅
