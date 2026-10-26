@@ -28,7 +28,7 @@ def uygulama():
 def test_sayfa_acilir(uygulama, sayfa):
     uygulama.switch_page(f"sayfalar/{sayfa}.py").run()
     assert not uygulama.exception, [str(e.value) for e in uygulama.exception]
-    assert uygulama.title and uygulama.metric
+    assert uygulama.title and (uygulama.metric or uygulama.info)      # çıktı yoksa gösterge yerine bilgi notu
 
 
 def test_yapildi_isareti_kaydedilir(uygulama):
