@@ -194,7 +194,7 @@ Her model için: aktarılabilir özellikler, gerçek veride baseline karşılaş
 | F2-06 | **Duygu analizi (derin öğrenme):** hazır eğitilmiş Türkçe BERT modeli ile ürün ve satıcı yorumları. Gerçek test etiketi = puan (1–2 olumsuz, 4–5 olumlu); baseline: kelime listesi | P1 | F0-02 | model + kart | Tahir | ✅ |
 | F2-07 | **Talep tahmini (derin öğrenme, LSTM/GRU)** vs F2-05 | P2 | F2-05 | model + karşılaştırma | — | ⬜ |
 | F2-08 | **Konu sınıflandırma:** cümle embedding'i + sınıflandırıcı (sahte şablonlarla eğitilir) vs mevcut kural tabanlı sistem. Gerçek test: elle etiketlenmiş 100 soru | P2 | F2-01 | model + kart | — | ⬜ |
-| F2-09 | **Müşteri segmentasyonu:** RFM + K-Means sahtede kurulur, gerçeğe uygulanır; segment başına aksiyon | P2 | F1-02 | segmentler + kart | — | ⬜ |
+| F2-09 | **Müşteri segmentasyonu:** RFM + K-Means sahtede kurulur, gerçeğe uygulanır; segment başına aksiyon | P2 | F1-02 | segmentler + kart | — | ⛔ kapsam dışı (26.10: gerçek müşterilerin %97'si tek seferlik, geçmiş 99 gün; bkz. DURUM) |
 | F2-10 | **İndirim etkisi:** esneklik sahtede (doğru cevapla) doğrulanır, gerçek kupon dönemlerinde tahmin edilen ve gerçekleşen artış karşılaştırılır | P2 | F2-01 | katsayılar + kart | — | ⬜ |
 | F2-11 | **Birlikte alım ve portföy:** gerçek sepetlerde birliktelik kuralları; ürün portföy kümeleri (yıldız / sorunlu / ölü stok) | P2 | F1-02 | kurallar + skorlar | — | ⬜ |
 | F2-12 | **Doğrulama raporu:** tüm modeller için tek tablo. Sahtede doğru cevap kontrolü, gerçekte model vs baseline, sınırlar. Web'deki "Model Doğrulama" sayfasının içeriği | P1 | F2-02…F2-06 | `docs/rapor/02_dogrulama.md` + `ciktilar/<veri>/dogrulama.json` | Tahir | ✅ |
@@ -238,14 +238,14 @@ Her sayfa **bir karar veya aksiyonla biter**. Sayılar kod içine yazılmaz, `an
 | F5-08 | **Müşteri Sesi** | duygu ve konu analizi, **soru cevap önerici** (soruyu yapıştır → cevap taslağı) | P1 | F2-06, F3-04 | Tahir | ✅ |
 | F5-09 | **Asistan** | RAG sohbet, kullanılan veri ve araçların gösterimi, örnek sorular | P1 | F4-04 | Tahir | ✅ |
 | F5-10 | **Model Doğrulama** | sahte → gerçek sonuç tablosu, modellerin sınırları (şeffaflık) | P1 | F2-12 | Tahir | ✅ |
-| F5-11 | **Müşteriler** | segmentler, coğrafya, segment başına aksiyon | P2 | F2-09 | — | ⬜ |
+| F5-11 | **Müşteriler** | segmentler, coğrafya, segment başına aksiyon | P2 | F2-09 | — | ⛔ kapsam dışı (26.10: gerçek müşterilerin %97'si tek seferlik, geçmiş 99 gün; bkz. DURUM) |
 | F5-12 | Demo yayını (yalnızca sahte veriyle, Streamlit Community Cloud) | — | P2 | F5-02…F5-10 | — | ⬜ |
 
 ### F6 — Bütünleştirme ve teslim (Gün 13–14)
 
 | ID | görev | öncelik | bağımlı | çıktı | sorumlu | durum |
 |---|---|---|---|---|---|---|
-| F6-01 | Uçtan uca komut: analiz → modeller → tavsiyeler → asistan indeksi (`python calistir.py --veri sahte\|gercek`) | P1 | F1–F4 | `calistir.py` | — | ⬜ |
+| F6-01 | Uçtan uca komut: analiz → modeller → tavsiyeler → asistan indeksi (`python calistir.py --veri sahte\|gercek`) | P1 | F1–F4 | `calistir.py` | Tahir | ✅ |
 | F6-02 | Gerçek veriyle son çalıştırma, doğrulama raporunun son hali, hata düzeltme | P1 | F6-01 | güncel `02_dogrulama.md` | Tahir | ⬜ |
 | F6-03 | Final rapor, sunum ve demo videosu | P1 | F6-02 | `docs/rapor/`, sunum | herkes | ⬜ |
 | F6-04 | README ve kullanım kılavuzu güncellemesi | P2 | F6-01 | `docs/KULLANIM.md` | — | ⬜ |

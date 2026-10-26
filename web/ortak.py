@@ -25,8 +25,9 @@ ETIKET_ADI = {"zarar": "zarar ediyor", "yuksek_iade": "yüksek iade", "iade_arti
               "kalip_dar": "kalıbı dar", "kalip_bol": "kalıbı bol", "sikayetli": "şikâyetli",
               "satis_dusuyor": "satış düşüyor", "satis_artiyor": "satış artıyor", "olu_stok": "ölü stok",
               "stok_kritik": "stok kritik", "stok_az": "stok az"}
-GEREKLI_CIKTILAR = {"F2-04_kalip": "python -m modeller.beden_uyumu", "F2-05_stok": "python -m modeller.talep",
-                    "F2-06_urun": "python -m modeller.duygu"}
+GEREKLI_CIKTILAR = {"F2-04_kalip": "python calistir.py --sadece kalip",
+                    "F2-05_stok": "python calistir.py --sadece stok",
+                    "F2-06_urun": "python calistir.py --sadece yorum"}
 
 
 # ====================================================
@@ -46,6 +47,14 @@ def veri_secici():
     st.sidebar.radio("Veri", secenekler, key="veri", format_func=adlar.get)
     if st.session_state.veri == "gercek":
         st.sidebar.caption("Gerçek mağaza verisi. Bu ekranı paylaşmayın.")
+    u = uretim_bilgisi(st.session_state.veri)
+    if u:
+        zaman = pd.Timestamp(u["zaman"]).strftime("%d.%m.%Y %H:%M")
+        bit = pd.Timestamp(u["veri_araligi"]["bitis"]).strftime("%d.%m.%Y")
+        st.sidebar.caption(f"Son güncelleme: {zaman} · veri {bit} tarihine kadar"
+                           + ("" if u["basarili"] else " · ⚠️ bazı adımlar hata verdi"))
+    else:
+        st.sidebar.caption("Çıktılar henüz üretilmedi: `python calistir.py`")
     return st.session_state.veri
 
 
@@ -58,7 +67,7 @@ def eksik_uyarisi(veri):
     eksik = eksik_ciktilar(veri)
     if eksik:
         st.warning("Bazı model çıktıları yok; ilgili bölümler boş kalır. Hepsini hazırlamak için: "
-                   "`python -m web.hazirla`  \n" + "\n".join(f"- `{k}` → `{v}`" for k, v in eksik.items()))
+                   "`python calistir.py`  \n" + "\n".join(f"- `{k}` → `{v}`" for k, v in eksik.items()))
 
 
 # ====================================================
@@ -66,10 +75,36 @@ def eksik_uyarisi(veri):
 # ====================================================
 
 def _surum(veri):
-    """Önbellek anahtarı: model çıktıları yeniden üretilince veriler de yenilensin. Yükleyicilerde parametre adı alt
-    çizgiyle başlamamalı: Streamlit '_' ile başlayan parametreleri önbellek anahtarına katmaz."""
-    klasor = CIKTILAR / veri / "tahminler"
-    return max((p.stat().st_mtime for p in klasor.glob("*.csv")), default=0) if klasor.exists() else 0
+    """Önbellek anahtarı: temiz veri (veri/<veri>/*.csv) veya üretilen çıktılar değişince her şey yenilensin.
+    Yükleyicilerde parametre adı alt çizgiyle başlamamalı: Streamlit '_' ile başlayan parametreleri anahtara katmaz."""
+    dosyalar = list((VERI / veri).glob("*.csv")) + list((CIKTILAR / veri / "tahminler").glob("*.csv"))
+    surum = max((p.stat().st_mtime for p in dosyalar), default=0)
+    if _SON_SURUM.get(veri) not in (None, surum):
+        sureci_tazele()
+    _SON_SURUM[veri] = surum
+    return surum
+
+
+_SON_SURUM = {}
+
+
+def sureci_tazele():
+    """Uzun süre açık kalan panel süreci yeni veriyi görsün: modüllerin bellekteki önbellekleri temizlenir."""
+    from asistan import araclar, arama
+    from modeller.ortak import ozellikler
+    m.yenile()
+    ozellikler.iade_veri_seti.cache_clear()
+    for f in (araclar._model_adlari, araclar._baglanti, araclar._tavsiye_ve_kart, arama.dizin):
+        f.cache_clear()
+
+
+def uretim_bilgisi(veri):
+    """calistir.py'nin son çalışması (ciktilar/<veri>/uretim.json) veya None."""
+    yol = CIKTILAR / veri / "uretim.json"
+    try:
+        return json.loads(yol.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
 
 
 @st.cache_data(show_spinner="Durum raporu hazırlanıyor…")

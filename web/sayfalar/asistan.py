@@ -44,7 +44,7 @@ if sag.button("Yeni sohbet"):
 
 
 @st.cache_resource
-def asistan(veri, model):
+def asistan(veri, model, surum):            # surum: veri yenilenince yeni asistan (araç önbellekleri de temizlenir)
     from asistan.sohbet import Asistan
     return Asistan(veri, model)
 
@@ -88,7 +88,7 @@ if soru:
 
         with st.spinner("Veriye bakılıyor…"):
             try:
-                y = asistan(veri, model).sor(soru, gecmis=sohbet["mesajlar"], akis=akis)
+                y = asistan(veri, model, ortak._surum(veri)).sor(soru, gecmis=sohbet["mesajlar"], akis=akis)
             except Exception as e:                                       # noqa: BLE001 — kullanıcıya göster
                 alan.empty()
                 st.error(f"Asistan cevap veremedi: {type(e).__name__}: {e}")

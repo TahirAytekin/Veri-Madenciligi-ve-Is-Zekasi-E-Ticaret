@@ -1,4 +1,4 @@
-"""Verileri tek komutla günceller: Trendyol'dan çekim -> temizleme -> analiz tabloları.
+"""Verileri tek komutla günceller: Trendyol'dan çekim -> temizleme -> analiz tabloları -> panel çıktıları.
 
 Kullanım (proje klasöründe):
   python guncelle.py                      günlük güncelleme (pazartesileri yorumlar da çekilir)
@@ -6,6 +6,10 @@ Kullanım (proje klasöründe):
   python guncelle.py --sadece finans,iadeler
   python guncelle.py --cekmeden           yalnızca temizleme + analiz (API'ye istek atmaz)
   python guncelle.py --sahte              yalnızca sahte veri analiz tabloları (API ve gerçek veri gerekmez)
+  python guncelle.py --uretmeden          panel çıktılarını (calistir.py) üretme
+
+Son adım calistir.py: kalıp, stok, yorum analizi, durum raporu, tavsiyeler, ürün kartları, asistan bilgi tabanı.
+Model doğrulaması yeniden yapılmaz (docs/rapor/02_dogrulama.md dondurulmuş sonuçtur).
 
 Her adım ayrı süreçte çalışır; biri hata verirse diğerleri devam eder, sonunda özet verilir.
 Çıktı loglar/guncelle_YYYY-MM-DD.log dosyasına da yazılır.
@@ -54,6 +58,7 @@ def main():
     p.add_argument("--cekmeden", action="store_true", help="API'ye istek atmadan yalnızca temizleme ve analiz")
     p.add_argument("--sahte", action="store_true",
                    help="yalnızca sahte veri için analiz tabloları (ekip üyeleri için; .env ve gerçek veri gerekmez)")
+    p.add_argument("--uretmeden", action="store_true", help="panel çıktılarını (calistir.py) üretme")
     args = p.parse_args()
 
     if args.sahte:
@@ -72,6 +77,8 @@ def main():
         adimlar = [("sahte_analiz", ["hazirlama/ozellik_cikar.py", "sahte"])]
     else:
         adimlar = [(c, ["-m", f"cekim.{c}"]) for c in cekimler] + HAZIRLAMA
+    if not args.uretmeden:
+        adimlar.append(("uretim", ["calistir.py", "--veri", "sahte" if args.sahte else "gercek"]))
     LOGLAR.mkdir(exist_ok=True)
     log_yolu = LOGLAR / f"guncelle_{datetime.now():%Y-%m-%d}.log"
     with open(log_yolu, "a", encoding="utf-8") as log:

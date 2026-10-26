@@ -42,7 +42,7 @@ with sag:
 st.subheader("Kalıp tablosu")
 kalip = ortak.tahmin(veri, "F2-04_kalip")
 if kalip is None:
-    st.info("Kalıp tablosu yok: `python -m modeller.beden_uyumu`")
+    st.info("Kalıp tablosu yok: `python calistir.py --sadece kalip`")
 else:
     kalip = kalip.assign(ürün=kalip.model_kodu.map(adlar))
     goster = st.radio("Göster", ["dar ve bol", "hepsi"], horizontal=True)

@@ -2,7 +2,7 @@
 
     streamlit run web/app.py
 
-Model çıktıları yoksa önce: python -m web.hazirla
+Panel çıktıları yoksa önce: python calistir.py (günlük: python guncelle.py)
 """
 import sys
 from pathlib import Path

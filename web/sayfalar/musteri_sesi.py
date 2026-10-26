@@ -18,7 +18,7 @@ ortak.eksik_uyarisi(veri)
 
 y = ortak.tahmin(veri, "F2-06")
 if y is None:
-    st.info("Yorum analizi yok: `python -m modeller.duygu`")
+    st.info("Yorum analizi yok: `python calistir.py --sadece yorum`")
 else:
     k = st.columns(4)
     k[0].metric("Yorum", sayi(len(y)))
