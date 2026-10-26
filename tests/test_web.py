@@ -8,16 +8,18 @@ import json
 import pytest
 from streamlit.testing.v1 import AppTest
 
+from hazirlama.ortak import PROJE
 from modeller.ortak.degerlendir import CIKTILAR
 from web import ortak
 
+UYGULAMA = PROJE / "web" / "app.py"          # mutlak yol: Streamlit ≥ 1.6x göreli yolu test dosyasına göre çözer
 SAYFALAR = ["genel_bakis", "aksiyon_plani", "urunler", "iade_beden", "talep_stok", "finans_senaryo", "musteri_sesi",
             "model_dogrulama"]
 
 
 @pytest.fixture(scope="module")
 def uygulama():
-    at = AppTest.from_file("web/app.py", default_timeout=300)
+    at = AppTest.from_file(str(UYGULAMA), default_timeout=300)
     at.session_state["veri"] = "sahte"
     at.run()
     assert not at.exception
@@ -82,7 +84,8 @@ def test_senaryo_kaydiricisi(uygulama):
 def test_cevap_onerici_sablon(uygulama):
     uygulama.switch_page("sayfalar/musteri_sesi.py").run()
     uygulama.text_area[0].input("165 boy 58 kilo hangi beden olur").run()
-    uygulama.toggle[0].set_value(False).run()                      # API kullanma
+    if not uygulama.toggle[0].disabled:                           # anahtar yoksa düğme zaten kapalı (CI)
+        uygulama.toggle[0].set_value(False).run()                  # API kullanma
     uygulama.button[0].click().run()
     assert not uygulama.exception
     assert uygulama.code and "beden" in uygulama.code[0].value
@@ -104,7 +107,7 @@ def test_asistan_sohbeti(monkeypatch):
 
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
     monkeypatch.setattr(sohbet.Asistan, "sor", sahte_sor)
-    at = AppTest.from_file("web/app.py", default_timeout=300)
+    at = AppTest.from_file(str(UYGULAMA), default_timeout=300)
     at.session_state["veri"] = "sahte"
     at.run()
     at.switch_page("sayfalar/asistan.py").run()
