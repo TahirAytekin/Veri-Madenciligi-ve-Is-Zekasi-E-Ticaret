@@ -1,0 +1,15 @@
+# İnternet demosu (Streamlit Community Cloud, F5-12): yalnızca panelin ihtiyacı olan hafif paketler.
+# Streamlit Cloud uygulama dosyasının (web/app.py) klasöründeki bu dosyayı kök requirements.txt'ye tercih eder.
+# PyTorch, transformers ve sentence-transformers yok: yorum analizi web/demo_ciktilar/'dan gelir, asistan kapalıdır.
+numpy>=2.4
+pandas>=2.3
+duckdb>=2.0
+scikit-learn>=1.8
+scipy>=1.17
+joblib
+lightgbm>=4.6
+streamlit>=1.55
+plotly>=7.1
+anthropic>=2.3
+fpdf2>=2.8
+matplotlib>=3.10

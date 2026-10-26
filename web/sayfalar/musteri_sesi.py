@@ -3,7 +3,7 @@ import streamlit as st
 
 from analiz import metrikler as m
 from hazirlama.ortak import env_degeri
-from web import ortak
+from web import demo, ortak
 from web.ortak import sayi, yuzde
 
 veri = st.session_state.veri
@@ -61,7 +61,7 @@ st.subheader("Müşteri sorusu cevap önerici")
 st.caption("Beden, kalıp ve stok bilgisi kodla hesaplanır (F3-04: önerilen beden gerçek satıcı cevaplarıyla %45–50 "
            "tam, %94–96 ±1 beden aynı); Claude yalnızca metni mağazanın üslubunda yazar. Yanlış bedenli taslak "
            "otomatik olarak şablona döner. Taslağı göndermeden önce okuyun.")
-anahtar = bool(env_degeri("ANTHROPIC_API_KEY"))
+anahtar = bool(env_degeri("ANTHROPIC_API_KEY")) and not demo.internet_demosu()
 sorular = m.tablolar(veri)["sorular"].dropna(subset=["model_kodu"]).sort_values("soru_tarihi", ascending=False)
 
 
