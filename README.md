@@ -71,7 +71,7 @@ trendyoll/
 │   ├── surum_karsilastirma.py  sahte veri v1/v2 etkisi (F1-06)
 │   └── dogrulama_raporu.py  F2-12 tüm modellerin doğrulama tablosu (--yeniden: hepsini baştan çalıştırır)
 ├── calistir.py              uçtan uca üretim hattı: temiz veri → panelin okuduğu tüm çıktılar (guncelle.py son adımı)
-├── web/                     F5 satıcı paneli (Streamlit): app.py, ortak.py, sayfalar/
+├── web/                     F5 satıcı paneli (Streamlit): app.py, ortak.py, sayfalar/; internet demosu: demo.py (docs/DEMO.md)
 ├── asistan/                 F4 veriyle konuşan asistan
 │   ├── bilgi_tabani.py      aranacak metin parçaları (metrik, belge, içgörü, tavsiye, ürün, kategori, ay)
 │   ├── arama.py             yerel embedding (multilingual-e5-base) ile arama; test seti degerlendirme/

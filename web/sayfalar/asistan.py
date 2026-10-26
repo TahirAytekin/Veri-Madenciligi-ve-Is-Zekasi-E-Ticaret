@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from hazirlama.ortak import env_degeri
-from web import ortak
+from web import demo, ortak
 
 veri = st.session_state.veri
 MODELLER = {"claude-haiku-5-5": "Haiku 5.5 (varsayılan, ≈ 0,08 sent/soru)",
@@ -24,6 +24,11 @@ st.caption("Mağazanın kendi verisiyle konuşun. Sayılar her zaman araçlarla 
            "tanımlar ve 'neden' soruları bilgi tabanından aranır. Değerlendirme: 32 soruda Haiku %96,9, Opus %100 "
            "(F4-05). Asistan yalnızca okur; veriyi değiştiremez.")
 
+if demo.internet_demosu():
+    st.info("Bu internet demosunda asistan kapalı: her soru ücretli bir yapay zekâ çağrısı yapar. Asistan, mağazanın "
+            "kendi verisiyle Türkçe soruları cevaplar; sayıları 10 araçla (metrik, SQL, senaryo, grafik …) hesaplar "
+            "ve kaynağını gösterir. Değerlendirme: 32 soruda %96,9 doğru (Model Doğrulama sayfası).")
+    st.stop()
 if not env_degeri("ANTHROPIC_API_KEY"):
     st.warning("`.env` dosyasında `ANTHROPIC_API_KEY` yok; asistan çalışmaz. Diğer sayfalar anahtarsız çalışır.")
     st.stop()

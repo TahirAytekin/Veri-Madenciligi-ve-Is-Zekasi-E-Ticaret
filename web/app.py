@@ -11,9 +11,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))       # proje kök�
 
 import streamlit as st  # noqa: E402
 
-from web import ortak  # noqa: E402
+from web import demo, ortak  # noqa: E402
 
 st.set_page_config(page_title="Satıcı Paneli", page_icon="📊", layout="wide")
+demo.baslat()                       # gerçek veri yoksa (internet demosu): sahte çıktıları hazırlar
 
 SAYFALAR = {
     "Mağaza": [st.Page("sayfalar/genel_bakis.py", title="Genel Bakış", icon="🏠", default=True),
