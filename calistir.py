@@ -8,8 +8,9 @@ ve aksiyon planı (F3) → ürün kartları (F3-05) → asistan bilgi tabanı ve
 
 Modeller burada YENİDEN EĞİTİLMEZ ve doğrulama sonuçları YAZILMAZ: model doğrulaması (docs/rapor/02_dogrulama.md)
 önceden kayıtlı ve 25.10.2026 verisiyle dondurulmuş bir sonuçtur; yeni veriyle sessizce değişmemeli. Eğitilmiş model
-dosyası yoksa (yalnızca F2-05) ilgili modülün eğitimi bir kez çalıştırılır. Her adım ayrı ölçülür; biri hata verirse
-diğerleri devam eder. Özet: ciktilar/<veri>/uretim.json (panel "son güncelleme" olarak gösterir).
+dosyası yoksa (F2-04 beden önerici, F2-05 talep; yalnızca ilk kurulumda) ilgili modülün eğitimi bir kez
+çalıştırılır. Her adım ayrı ölçülür; biri hata verirse diğerleri devam eder. Özet: ciktilar/<veri>/uretim.json
+(panel "son güncelleme" olarak gösterir).
 """
 import argparse
 import json
@@ -27,8 +28,15 @@ from modeller.ortak.kayit import tahmin_kaydet
 # 1) ADIMLAR
 # ====================================================
 
+def _model_hazir(model_id, modul):
+    """Eğitilmiş model yoksa (yalnızca ilk kurulumda) ilgili modül bir kez çalıştırılır: modeller sahteyle eğitilir."""
+    if not (CIKTILAR / "modeller" / f"{model_id}.joblib").exists():
+        subprocess.run([sys.executable, "-m", modul], cwd=PROJE, check=True, capture_output=True)
+
+
 def kalip(veri):
     from modeller import beden_uyumu
+    _model_hazir(beden_uyumu.MODEL_ID, "modeller.beden_uyumu")      # beden önerici (panel, asistan) bu modeli okur
     t = beden_uyumu.kalip_tablosu(veri)
     tahmin_kaydet(t, f"{beden_uyumu.MODEL_ID}_kalip", veri)
     return f"{len(t)} ürün, {int(t.kalip.isin(['dar', 'bol']).sum())} dar/bol"
@@ -37,9 +45,7 @@ def kalip(veri):
 def stok(veri):
     from modeller import talep
     from modeller.ortak.kayit import model_yukle
-    yol = CIKTILAR / "modeller" / f"{talep.MODEL_ID}.joblib"
-    if not yol.exists():                                   # yalnızca ilk kurulumda: model sahteyle bir kez eğitilir
-        subprocess.run([sys.executable, "-m", "modeller.talep"], cwd=PROJE, check=True, capture_output=True)
+    _model_hazir(talep.MODEL_ID, "modeller.talep")
     t = talep.stok_tablosu(veri, model_yukle(talep.MODEL_ID)["model"])
     tahmin_kaydet(t, f"{talep.MODEL_ID}_stok", veri)
     kritik = t[~t.temsili_stok.astype(bool) & (t.haftalik_hiz >= 1) & (t.stok_hafta < 3)]
