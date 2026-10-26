@@ -53,12 +53,23 @@ DAR_KATSAYI, BOL_KATSAYI = 0.60, 0.60   # K5: beden uyumsuzluğunun iade olasıl
 NEDEN_BEDEN_AGIRLIGI = 6.0             # K5: uyumsuz bedende iadenin beden nedeniyle açılma ağırlığı (v1: 3,0)
 SORUNLU_ORANI = 0.025                  # K5: kusurlu/yanlış ürün (kaliteyle artar; v1: 0,035)
 URUN_SAPMA = 0.85                      # K3: ürüne özgü kalıcı iade eğilimi, lognormal std (v1: yok)
+# Sahte veri v3 (F1-07): talep dinamiği ve iade eğilimi test öncesi gerçek veriye kalibre (python -m
+# hazirlama.kalibrasyon_talep). Ayrıntı: docs/rapor/sahte_v3_talep.md. Yeni rastgelelik ayrı üreteçten (v2 akışı aynı).
+KALICI_PHI = 0.95            # D1, D2: ürün talebinin haftalık log-çarpanı AR(1) katsayısı
+KALICI_SAPMA = 0.34          # D1, D2: AR(1) yenilik standart sapması
+SICRAMA_OLASILIGI = 0.015    # D1: ürün başına haftalık kalıcı sıçrama olasılığı
+SICRAMA_SAPMA = 0.8          # D1: sıçramanın log büyüklüğü
+POP_SAPMA = 1.4              # D3: popülerlik lognormal std (v2: 0,8)
+PENCERE_HAFTALIK = 387       # D3: test öncesi penceredeki (23.10.2025–15.07.2026) mağaza haftalık satış medyanı
+TESLIM_DONUSUMU = 0.9        # D3: birincil talep → teslim edilen satış birimi (tamamlayıcılar, iptaller); ayarla bulundu
+PENCERE = (date(2025, 10, 23), date(2026, 7, 16))
+IADE_EGILIMI = 4.5           # D4: iade olasılığı penceren başından sonuna bu kat artar (önce ve sonra sabit)
 MAGAZA = "DEMOSTORE"
-SURUM = "v1" if "--v1" in sys.argv else "v2"
+SURUM = "v1" if "--v1" in sys.argv else "v3" if "--v3" in sys.argv else "v2"
 if SURUM == "v1":   # karşılaştırma için F1-06 öncesi üretici: aynı tohumla eski veriyi birebir üretir
     KATEGORI_IADE, UYUM_SINIR, KALIP_OLASILIK, BEDEN_SECIMI = {}, 99, [0.20, 0.65, 0.15], [0.75, 0.15, 0.10]
     DAR_KATSAYI, BOL_KATSAYI, NEDEN_BEDEN_AGIRLIGI, SORUNLU_ORANI, URUN_SAPMA = 0.30, 0.32, 3.0, 0.035, 0
-CIKTI = VERI / ("sahte" + ("_v1" if SURUM == "v1" else "") + ("" if TOHUM == 42 else f"_t{TOHUM}"))
+CIKTI = VERI / ("sahte" + {"v1": "_v1", "v2": "", "v3": "_v3"}[SURUM] + ("" if TOHUM == 42 else f"_t{TOHUM}"))
 
 rng = np.random.default_rng(TOHUM)
 
@@ -402,7 +413,8 @@ gun_index = np.arange(D)
 for c in icerikler:
     m = modeller[c["m"]]
     k = KAT[m["kategori"]]
-    agirlik = (k["talep"] / k["model_sayisi"] * m["populerlik"] * c["pay"]
+    populerlik = m["populerlik"] ** (POP_SAPMA / 0.8) if SURUM == "v3" else m["populerlik"]   # aynı çekiliş
+    agirlik = (k["talep"] / k["model_sayisi"] * populerlik * c["pay"]
                * (0.5 + m["kalite"]) * (m["fiyat"] / kategori_ort_fiyat[m["kategori"]]) ** -1.0)
     yas = gun_index - gun_no(m["lansman"])
     omur = np.where(yas < 0, 0, (1 - np.exp(-(yas + 1) / 12)) * np.exp(-np.maximum(yas - 300, 0) / 500))
@@ -414,8 +426,24 @@ for c in icerikler:
 kategori_sok = {k: rng.lognormal(0, 0.15, D) for k in KAT}
 for c in icerikler:
     TALEP[c["c"]] *= gunluk * kategori_sok[modeller[c["m"]]["kategori"]]
+if SURUM == "v3":
+    # Ürün talebinin kalıcı bileşeni: haftalık AR(1) log-çarpan + seyrek kalıcı sıçramalar (D1, D2)
+    rng_v3 = np.random.default_rng(TOHUM + 2)
+    hafta_sayisi = D // 7 + 1
+    z = np.zeros((M, hafta_sayisi))
+    for w in range(1, hafta_sayisi):
+        sicrama = (rng_v3.random(M) < SICRAMA_OLASILIGI) * rng_v3.normal(0, SICRAMA_SAPMA, M)
+        z[:, w] = KALICI_PHI * z[:, w - 1] + rng_v3.normal(0, KALICI_SAPMA, M) + sicrama
+    z -= z.var() / 2                                                     # ortalama çarpan ≈ 1
+    kalici = np.exp(np.repeat(z, 7, axis=1)[:, :D])
+    TALEP *= kalici[c_model]
 TALEP[:, -1] *= SAAT[:BITIS.hour].sum()   # son gün yarım
-TALEP *= HEDEF_GUNLUK_SATIR / 1.1 / (TALEP[:, -90:].sum() / 90)
+if SURUM == "v3":
+    # Ölçek: test öncesi penceredeki haftalık satış (D3); v2'de son 90 güne (test penceresi içi) göre ölçekleniyordu
+    pencere_gun = (GUNLER.date >= PENCERE[0]) & (GUNLER.date < PENCERE[1])
+    TALEP *= PENCERE_HAFTALIK / 7 / TESLIM_DONUSUMU / (TALEP[:, pencere_gun].sum() / pencere_gun.sum())
+else:
+    TALEP *= HEDEF_GUNLUK_SATIR / 1.1 / (TALEP[:, -90:].sum() / 90)
 
 adet_matrisi = rng.poisson(TALEP)
 print(f"Birincil satış adedi: {adet_matrisi.sum():,}")
@@ -990,14 +1018,26 @@ ham_olasilik = (0.04 + 0.08 * (1 - kalite_dizi) + DAR_KATSAYI * np.maximum(-uyum
 urun_egilimi = np.random.default_rng(TOHUM + 1).lognormal(0, URUN_SAPMA, M) if URUN_SAPMA else np.ones(M)
 ham_olasilik = ham_olasilik * urun_egilimi[teslim_edilen.g_model.values]
 ham_olasilik = np.where(teslim_edilen.g_sorun.values, 0.40, ham_olasilik)
+if SURUM == "v3":
+    # İade eğilimi (D4): pencere boyunca log-doğrusal artış, öncesi ve sonrası sabit; genel düzey aşağıda ölçeklenir
+    teslim_gunu = pd.to_datetime(siparisler.set_index("paket_id").loc[teslim_edilen.paket_id, "teslim_tarihi"].values)
+    oran = np.clip((teslim_gunu - pd.Timestamp(PENCERE[0])) / (pd.Timestamp(PENCERE[1]) - pd.Timestamp(PENCERE[0])),
+                   0, 1)
+    ham_olasilik = ham_olasilik * IADE_EGILIMI ** np.asarray(oran, dtype=float)
 # Kategori düzeyi gerçeğe göre (K2): her kategorinin ortalama olasılığı hedef oranıyla orantılı; kategori içindeki
 # farklar (kalite, kalıp, beden uyumu) korunur
 kategori_dizi = np.array([modeller[m]["kategori"] for m in teslim_edilen.g_model])
+# Düzey referansı: v3'te test öncesi penceredeki teslimatlar (hedef oranlar o pencereden ölçüldü; zaman eğilimi
+# varken tüm dönem ortalaması pencereyi kaydırır). v1/v2'de tüm teslimatlar.
+referans = (oran > 0) & (oran < 1) if SURUM == "v3" else np.ones(len(teslim_edilen), dtype=bool)
+agirlik = teslim_edilen.adet.values * referans
 for kat in (np.unique(kategori_dizi) if KATEGORI_IADE else []):
     secili = kategori_dizi == kat
-    ort = np.average(ham_olasilik[secili], weights=teslim_edilen.adet.values[secili])
+    if agirlik[secili].sum() == 0:
+        continue
+    ort = np.average(ham_olasilik[secili], weights=agirlik[secili])
     ham_olasilik[secili] *= KATEGORI_IADE.get(kat, GENEL_IADE) / ort
-olcek = HEDEF_IADE_ORANI / np.average(ham_olasilik, weights=teslim_edilen.adet)
+olcek = HEDEF_IADE_ORANI / np.average(ham_olasilik, weights=agirlik)
 iade_olasiligi = np.clip(ham_olasilik * olcek, 0, 0.9)
 
 

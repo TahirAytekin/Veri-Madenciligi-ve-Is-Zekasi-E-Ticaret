@@ -203,12 +203,13 @@ def stok_tablosu(veri, model):
               "temsili_stok", "stok_hafta", "tukenme_tarihi"]].sort_values("stok_hafta").round(3)
 
 
-def calistir():
-    gercek_var = (VERI / "gercek" / "siparisler.csv").exists()
-    test = son_haftalar(talep_veri_seti("gercek"), TEST_HAFTA)[1] if gercek_var else None
-    sonuc = {"seviye1": {}, "gercek": {}}
-    son_modeller = {}
-    for tohum, veri in SAHTE_TOHUMLAR.items():
+def degerlendir(sahteler=None, test=None):
+    """F2-05 seçim kuralı ve ölçütleri; dosya yazmaz. sahteler: {tohum: sahte klasörü}; test: gerçek test satırları.
+
+    (sonuç, {tohum: son model}, {tohum: test tahmini}) döner. Sahte veri sürümü deneyleri (F1-07) bunu kullanır.
+    """
+    sonuc, son_modeller, tahminler = {"seviye1": {}, "gercek": {}}, {}, {}
+    for tohum, veri in (sahteler or SAHTE_TOHUMLAR).items():
         if not (VERI / veri / "siparisler.csv").exists():
             print(f"atlandı (veri yok): {veri}")
             continue
@@ -230,18 +231,23 @@ def calistir():
         son.fit(sahte[OZELLIKLER], sahte.adet)
         son_modeller[tohum] = son
         if test is not None:
-            p = tahmin(son, test)
+            p = tahminler[tohum] = tahmin(son, test)
             sonuc["gercek"][tohum] = {**_olc(test, p, referanslar(test)), "secilen": secilen, "ilk10": _ilk10(test, p),
                                       "varyantlar_gercek_wape": {   # şeffaflık: seçimde kullanılmadı
                                           a: wape(test.adet, tahmin(v[0], test)) for a, v in adaylar.items()}}
-            if tohum == 42:
-                tahmin_kaydet(test[["model_kodu", "hafta", "adet", "gecen_hafta", "ort4"]].assign(
-                    tahmin=p.round(3)), MODEL_ID, "gercek")
-
     if test is not None:
         sonuc["karar"] = sum(v["fark_en_iyi_referans"]["ust"] < 0 for v in sonuc["gercek"].values()) >= 2
         sonuc["test_haftalari"] = [str(h.date()) for h in sorted(test.hafta.unique())]
+    return sonuc, son_modeller, tahminler
 
+
+def calistir():
+    gercek_var = (VERI / "gercek" / "siparisler.csv").exists()
+    test = son_haftalar(talep_veri_seti("gercek"), TEST_HAFTA)[1] if gercek_var else None
+    sonuc, son_modeller, tahminler = degerlendir(test=test)
+    if test is not None and 42 in tahminler:
+        tahmin_kaydet(test[["model_kodu", "hafta", "adet", "gecen_hafta", "ort4"]].assign(
+            tahmin=tahminler[42].round(3)), MODEL_ID, "gercek")
     model_kaydet({"model": son_modeller[42], "ozellikler": OZELLIKLER}, MODEL_ID)
     for veri in ["sahte"] + (["gercek"] if gercek_var else []):
         tahmin_kaydet(stok_tablosu(veri, son_modeller[42]), f"{MODEL_ID}_stok", veri)

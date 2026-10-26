@@ -178,6 +178,7 @@ gantt
 | F1-04 | Gerçek–sahte karşılaştırma: dağılımlar ve özellik aralıkları. Sahte → gerçek aktarımının ön koşulu; farklar raporlanır | P1 | F1-02 | `docs/rapor/01_gercek_sahte.md` | Tahir | ✅ |
 | F1-05 | `analiz/senaryo.py`: ne olur simülatörü ("iade %X düşerse", "desi 1 azalırsa", "indirim %Y olursa", "komisyon değişirse"); isteğe bağlı ürün maliyeti girişi | P1 | F1-02 | modül + testler | Tahir | ✅ |
 | F1-06 | **Sahte veri v2:** sahte üreticiyi test öncesi gerçek veriye (23.10.2025–15.07.2026, toplu istatistikler) kalibre et; F2-02/F2-03'ü v2 ile yeniden çalıştır, v1 ile karşılaştır | P1 | F1-04, F2-03 | `docs/rapor/sahte_v2_kalibrasyon.md` + `hazirlama/kalibrasyon.py` | Tahir | ✅ |
+| F1-07 | **Sahte veri v3:** talep dinamiği (kalıcılık, yoğunlaşma, ölçek) ve iade eğilimi test öncesi gerçek veriye kalibre; F2-05 ve F2-02 v3 ile yeniden test | P2 | F1-06, F2-05 | `docs/rapor/sahte_v3_talep.md` + `hazirlama/kalibrasyon_talep.py` | Tahir | ✅ (A ✗: v3 ana veri olmadı; talep modeli naifle başa baş) |
 
 ### F2 — Tahmin modelleri: sahtede eğit, gerçekte doğrula (Gün 3–7)
 
