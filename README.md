@@ -82,7 +82,8 @@ trendyoll/
 │   ├── kurallar.py          14 kural (stok, kalıp, iade, zarar, indirim, kampanya, şikâyet, sezon ...)
 │   ├── motor.py             önceliklendirme ve haftalık aksiyon planı
 │   ├── urun_karti.py        ürün sağlık kartı: satış, katkı, iade, kalıp, şikâyet, stok, tavsiyeler
-│   └── cevap_oner.py        müşteri sorusu cevap taslağı: boy-kilo → beden (kodla) + LLM metni
+│   ├── cevap_oner.py        müşteri sorusu cevap taslağı: boy-kilo → beden (kodla) + LLM metni
+│   └── haftalik_rapor.py    haftalık PDF rapor (panelden indirilir; üretim hattının son adımı)
 ├── ciktilar/                üretilen raporlar, tahminler, tavsiyeler (git'e girmez, yeniden üretilir)
 ├── hazirlama/
 │   ├── ortak.py             tablo şemaları, kampanya takvimi, sınıflandırma kuralları

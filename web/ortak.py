@@ -189,6 +189,19 @@ def yukle(veri):
 # 3) BİLEŞENLER
 # ====================================================
 
+@st.cache_data(show_spinner="Haftalık rapor hazırlanıyor…")
+def haftalik_rapor(veri, surum=None):
+    from tavsiye.haftalik_rapor import pdf_uret
+    return pdf_uret(veri)
+
+
+def rapor_dugmesi(veri, yer=st):
+    """Haftalık PDF raporu indirme düğmesi (önbellekli; çıktılar değişince yeniden üretilir)."""
+    bit = veri_araligi(veri)[1]
+    yer.download_button("📄 Haftalık raporu indir (PDF)", haftalik_rapor(veri, _surum(veri)),
+                        file_name=f"haftalik_rapor_{veri}_{bit:%Y-%m-%d}.pdf", mime="application/pdf")
+
+
 def tema(fig, yukseklik=320):
     """Grafik teması: şeffaf zemin (açık/koyu temaya uyar), sessiz ızgara, tek eksen, palet sırası."""
     fig.update_layout(height=yukseklik, margin=dict(l=8, r=8, t=32, b=8), colorway=SERI,
