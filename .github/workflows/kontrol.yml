@@ -1,0 +1,54 @@
+# Her PR'da ve main'e her push'ta: yasaklı dosya kontrolü → testler (F0-05).
+# Gerçek veri ve .env GitHub'da yoktur; testler yalnızca sahte veriyle çalışır. Ağır testler (BERT, embedding)
+# atlanır (pytest.ini, AGIR_TESTLER); Hugging Face modelleri indirilmez.
+name: kontrol
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  yasakli-dosyalar:
+    name: Yasaklı dosya ve gizli bilgi
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - run: python .github/kontrol.py
+
+  testler:
+    name: Ruff ve testler (sahte veri)
+    needs: yasakli-dosyalar
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      PYTHONIOENCODING: utf-8
+      HF_HUB_OFFLINE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - name: Paketler (PyTorch yalnızca CPU)
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt -r requirements-dev.txt
+      - name: Kod stili
+        run: ruff check .
+      - name: Sahte veri hazırlığı
+        run: |
+          python hazirlama/ozellik_cikar.py sahte
+          python calistir.py --veri sahte --sadece kalip,stok,durum,tavsiye,kart
+      - name: Testler
+        run: python -m pytest -q
